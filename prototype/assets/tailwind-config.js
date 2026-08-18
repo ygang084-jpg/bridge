@@ -16,7 +16,8 @@ tailwind.config = {
         caution: { bg: '#FFFBEB', fg: '#B45309' },
         danger: { bg: '#FEF2F2', fg: '#B91C1C' },
         unknown: { bg: '#F1F5F9', fg: '#64748B' },
-        ai: { bg: '#EFF6FF', fg: '#1D4ED8' },
+        // 자동 요약 배지. AI 생성이 아니라 규칙 기반 문장 템플릿이므로 이름을 summary 로 둔다.
+        summary: { bg: '#EFF6FF', fg: '#1D4ED8' },
       },
       fontFamily: {
         sans: ['Noto Sans KR', 'sans-serif'],

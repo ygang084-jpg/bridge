@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/* 클래스 이름을 찾을 경로를 명시한다. v4 는 자동 탐색도 하지만,
+   src/ 밖에 파일을 두게 되면 조용히 스타일이 빠지므로 못박아 둔다. */
+@source "../";
+
+/* design-system/MASTER.md 의 색 토큰. 프로토타입의 tailwind-config.js 와 같은 값이다.
+   Tailwind v4 는 --color-* 변수를 그대로 유틸리티로 만든다 (bg-safe-bg, text-fg-muted …). */
+@theme {
+  --color-primary: #0f172a;
+  --color-on-primary: #ffffff;
+  --color-accent: #0369a1;
+  --color-on-accent: #ffffff;
+
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-fg: #0f172a;
+  --color-fg-muted: #64748b;
+  --color-border: #e2e8f0;
+
+  --color-safe-bg: #ecfdf3;
+  --color-safe-fg: #15803d;
+  --color-caution-bg: #fffbeb;
+  --color-caution-fg: #b45309;
+  --color-danger-bg: #fef2f2;
+  --color-danger-fg: #b91c1c;
+  --color-unknown-bg: #f1f5f9;
+  --color-unknown-fg: #64748b;
+
+  /* 자동 요약 배지. AI 생성이 아니므로 이름에 ai 를 쓰지 않는다. */
+  --color-summary-bg: #eff6ff;
+  --color-summary-fg: #1d4ed8;
+}
+
+html {
+  background-color: var(--color-bg);
+}
+
+body {
+  color: var(--color-fg);
+}
+
+/* 키보드 포커스가 보이지 않으면 접근성 요구를 지킬 수 없다. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

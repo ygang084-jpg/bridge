@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/refresh-summaries",
       "schedule": "10 19 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-news",
+      "schedule": "0 */6 * * *"
     }
   ]
 }

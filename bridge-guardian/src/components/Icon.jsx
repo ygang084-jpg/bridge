@@ -140,6 +140,27 @@ const PATHS = {
       <path d="M4.5 15v4.5h15V15" />
     </>
   ),
+
+  /* '내 교량' 화면의 관측 요인·카드 액션용. */
+  wind: (
+    <>
+      <path d="M3 8.5h9a2.5 2.5 0 1 0-2.5-2.5" />
+      <path d="M3 12.5h13a2.5 2.5 0 1 1-2.5 2.5" />
+      <path d="M3 16.5h6" />
+    </>
+  ),
+  thermometer: (
+    <>
+      <path d="M14 14.8V5.5a2 2 0 1 0-4 0v9.3a3.5 3.5 0 1 0 4 0z" />
+      <path d="M12 11v4.6" />
+    </>
+  ),
+  droplet: <path d="M12 3.5s5.5 5.6 5.5 9.5a5.5 5.5 0 0 1-11 0C6.5 9.1 12 3.5 12 3.5z" />,
+  plus: <path d="M12 5.5v13M5.5 12h13" />,
+  star: (
+    <path d="m12 4.5 2.4 5 5.4.7-3.9 3.7 1 5.4-4.9-2.7-4.9 2.7 1-5.4-3.9-3.7 5.4-.7z" />
+  ),
+  'chevron-right': <path d="m9.5 6 6 6-6 6" />,
 }
 
 export default function Icon({ name, size = 20, className = '' }) {

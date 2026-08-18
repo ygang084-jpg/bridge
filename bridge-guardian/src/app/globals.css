@@ -68,11 +68,34 @@
   }
 }
 
+/* 본문의 xl:px-32 와 같은 값. 여기가 빠지면 고지문만 왼쪽으로 튀어나온다. */
+@media (min-width: 1280px) {
+  .app-shell:has(.dashboard-wide) .app-disclosure {
+    padding-inline: 8rem;
+  }
+}
+
 /* 모바일 하단 탭바(fixed)가 상시 고지를 덮지 않게 자리를 비운다. */
 @media (max-width: 767px) {
   .app-shell:has(.dashboard-wide) .app-disclosure {
     padding-bottom: 6rem;
   }
+}
+
+/* 지도 화면(/map)의 고정 배경.
+   디자인 파일은 여기에 외부(Google) 지도 이미지를 깔았다. 그대로 쓰면 방문자
+   요청이 제3자 도메인으로 나가고 주소가 사라지면 배경도 사라지므로, 외부 요청
+   없이 CSS 로만 격자를 그린다. 실제 지도는 v1 에서 이 규칙을 갈아 끼운다.
+   지도가 아니라는 사실은 화면 안에 글로 밝힌다 — 배경만으로는 구분되지 않는다. */
+.map-canvas {
+  background-color: var(--color-surface);
+  /* 격자는 보이되 카드 위 글자와 경쟁하지 않을 정도로만. 선 색을 opacity 로
+     흐리게 만들지 않고 처음부터 연한 토큰(surface-variant)을 쓴다 —
+     레이어 전체에 opacity 를 걸면 그 위 요소의 대비까지 같이 떨어진다. */
+  background-image:
+    linear-gradient(to right, var(--color-surface-variant) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-surface-variant) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 /* Stitch 대시보드의 .glass-panel — 지도 위에 얹히는 '내 주변 교량' 패널.

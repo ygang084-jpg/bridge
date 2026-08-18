@@ -1,9 +1,16 @@
 import Link from 'next/link'
 import Icon from '@/components/Icon'
 import InfoStateBadge from '@/components/InfoStateBadge'
-import { fetchBridgeDetail, fetchBridgesForList } from '@/lib/supabase/readClient'
+import { TopNav, BottomNav } from '@/components/AppNav'
+import AppFooter from '@/components/AppFooter'
+import {
+  fetchBridgeDetail,
+  fetchBridgeNews,
+  fetchBridgesForList,
+} from '@/lib/supabase/readClient'
 import { resolveInfoState } from '@/lib/infoState'
 import { buildTimeline, summarizeManagement } from '@/lib/history'
+import { arrangeNews, classifyNews, excerptSentences } from '@/lib/news/classify.js'
 import { normalizeSafetyGrade } from '@/lib/summary'
 
 /**
@@ -36,21 +43,27 @@ import { normalizeSafetyGrade } from '@/lib/summary'
  * ---------------------------------------------------------------------------
  */
 export default async function DashboardPage() {
-  const data = await loadDashboard()
-  const historyHref = data.featured ? `/bridges/${data.featured.id}/history` : '/bridges'
+  // 뉴스는 교량 데이터와 서로 기다릴 필요가 없다.
+  const [data, news] = await Promise.all([loadDashboard(), fetchBridgeNews()])
+  // 대표 교량이 없으면 '기록'으로 갈 곳이 없다. 억지로 목록을 가리키면
+  // 내비의 '기록' 항목이 실제와 다른 곳으로 데려간다.
+  const historyHref = data.featured ? `/bridges/${data.featured.id}/history` : null
 
   return (
     <>
-      <TopNav historyHref={historyHref} />
+      <TopNav active="home" historyHref={historyHref} />
 
-      <main className="dashboard-wide w-full flex-1 space-y-xl px-margin-mobile py-lg md:px-margin-desktop">
+      {/* 좌우 여백: 16px → 64px(md) → 128px(xl). 넓은 화면에서 본문이 화면
+          끝까지 붙지 않게 한 단계 더 둔다. 상단 내비·갱신 리스트·푸터·상시
+          고지도 같은 값을 쓴다 — 한 곳만 바꾸면 선이 어긋난다. */}
+      <main className="dashboard-wide w-full flex-1 space-y-xl px-margin-mobile py-lg md:px-margin-desktop xl:px-32">
         <Hero />
 
         <div className="grid grid-cols-1 gap-gutter md:grid-cols-12">
           <MapArea featured={data.featured} />
           <div className="flex flex-col gap-gutter md:col-span-4">
             <TodayCard todayHref={data.featured ? `/bridges/${data.featured.id}/today` : null} />
-            <EmergencyCard />
+            <SpecCard featured={data.featured} />
           </div>
         </div>
 
@@ -58,17 +71,16 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 gap-gutter md:grid-cols-2">
           <HealthCard featured={data.featured} />
-          <TimeMachineCard featured={data.featured} historyHref={historyHref} />
+          <TimeMachineCard featured={data.featured} />
         </div>
 
-        <ReportBand />
       </main>
 
-      <BottomNav historyHref={historyHref} />
+      <BottomNav active="home" historyHref={historyHref} />
 
-      <UpdatesSection bridges={data.cards} fetchedAt={data.fetchedAt} sources={data.sources} />
+      <NewsSection items={news.items} fetchedAt={data.fetchedAt} sources={data.sources} />
 
-      <DashFooter />
+      <AppFooter />
     </>
   )
 }
@@ -110,6 +122,9 @@ async function loadDashboard() {
         name: bridge.name,
         address: bridge.address ?? null,
         completedYear: bridge.completed_year ?? null,
+        facilityType: bridge.facility_type ?? null,
+        facilityClass: bridge.facility_class ?? null,
+        lengthM: bridge.length_m ?? null,
         infoState: info.state,
         infoLabel: info.label,
         recordCount: info.recordCount,
@@ -141,112 +156,6 @@ function latestGrade(history) {
   return graded.length > 0 ? normalizeSafetyGrade(graded[0].safety_grade) : null
 }
 
-/* ── 내비게이션 ──────────────────────────────────────────────────────── */
-
-/** 지도·내 정보는 v0 에 목적지가 없다. 링크로 두면 눌러도 아무 일이 없으므로 비활성으로 표시한다. */
-const NAV = [
-  { key: 'home', label: '홈', icon: 'home', href: '/' },
-  { key: 'map', label: '지도', icon: 'map', href: null },
-  { key: 'bridges', label: '내 교량', icon: 'building', href: '/bridges' },
-  { key: 'history', label: '기록', icon: 'clock', href: 'HISTORY' },
-  { key: 'me', label: '내 정보', icon: 'user', href: null },
-]
-
-function TopNav({ historyHref }) {
-  return (
-    <nav className="sticky top-0 z-50 hidden border-b border-outline-variant/30 bg-surface/80 shadow-sm backdrop-blur-md md:block">
-      <div className="flex h-16 w-full items-center justify-between px-margin-desktop">
-        <span className="text-headline-md font-bold tracking-tight text-primary">BRIDGE SAFE</span>
-
-        <div className="flex items-center space-x-6">
-          {NAV.filter((item) => item.key !== 'me').map((item) => {
-            const href = item.href === 'HISTORY' ? historyHref : item.href
-            if (!href) {
-              return (
-                <span
-                  key={item.key}
-                  aria-disabled="true"
-                  title="v0 에서는 제공하지 않습니다"
-                  className="cursor-not-allowed text-label-md text-on-surface-variant/50"
-                >
-                  {item.label}
-                </span>
-              )
-            }
-            const active = item.key === 'home'
-            return (
-              <Link
-                key={item.key}
-                href={href}
-                aria-current={active ? 'page' : undefined}
-                className={
-                  active
-                    ? 'border-b-2 border-primary pb-1 text-label-md text-primary'
-                    : 'text-label-md text-on-surface-variant transition-colors hover:text-primary'
-                }
-              >
-                {item.label}
-              </Link>
-            )
-          })}
-        </div>
-
-        {/* 디자인의 account_circle 자리. v0 는 로그인이 없어 계정 화면이 존재하지 않는다. */}
-        <span
-          aria-disabled="true"
-          title="v0 는 로그인이 없습니다"
-          className="cursor-not-allowed rounded-lg p-2 text-on-surface-variant/50"
-        >
-          <Icon name="user" size={22} />
-        </span>
-      </div>
-    </nav>
-  )
-}
-
-function BottomNav({ historyHref }) {
-  return (
-    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl border-t border-outline-variant/20 bg-surface-container-lowest px-4 py-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] md:hidden">
-      {NAV.map((item) => {
-        const href = item.href === 'HISTORY' ? historyHref : item.href
-        const active = item.key === 'home'
-        const inner = (
-          <>
-            <Icon name={item.icon} size={20} className="mb-1" />
-            <span className="text-caption">{item.label}</span>
-          </>
-        )
-        if (!href) {
-          return (
-            <span
-              key={item.key}
-              aria-disabled="true"
-              title="v0 에서는 제공하지 않습니다"
-              className="flex min-h-[44px] cursor-not-allowed flex-col items-center justify-center rounded-xl px-3 py-1 text-on-surface-variant/40"
-            >
-              {inner}
-            </span>
-          )
-        }
-        return (
-          <Link
-            key={item.key}
-            href={href}
-            aria-current={active ? 'page' : undefined}
-            className={`flex min-h-[44px] flex-col items-center justify-center rounded-xl px-3 py-1 transition-colors ${
-              active
-                ? 'bg-secondary-container/50 text-primary'
-                : 'text-on-surface-variant hover:bg-surface-variant/30'
-            }`}
-          >
-            {inner}
-          </Link>
-        )
-      })}
-    </nav>
-  )
-}
-
 /* ── 섹션 ────────────────────────────────────────────────────────────── */
 
 function Hero() {
@@ -262,60 +171,22 @@ function Hero() {
   )
 }
 
-/** 벤토 왼쪽 8칸 — 지도 자리 + 위에 얹히는 '내 주변 교량' 유리 패널. */
-function MapArea({ featured }) {
+/** 벤토 왼쪽 8칸 — 지도 자리. 영역 전체가 '내 교량' 화면으로 가는 링크다. */
+function MapArea() {
   return (
     <div className="relative h-[500px] overflow-hidden rounded-xl border border-outline-variant shadow-sm md:col-span-8">
-      {/* 라벨을 가운데가 아니라 오른쪽 아래에 둔다 — 가운데 두면 위에 얹히는
-          유리 패널에 가려 글자가 잘린다. */}
-      <div className="absolute inset-0 bg-surface-variant">
-        <span className="absolute right-4 bottom-4 text-on-surface-variant">
-          지도 — v1 에서 도입
+      <Link
+        href="/map"
+        aria-label="지도 화면으로 이동"
+        className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-variant text-on-surface-variant transition-colors hover:bg-surface-dim"
+      >
+        <Icon name="map" size={28} />
+        <span className="flex items-center gap-1.5">
+          지도 화면으로 이동
+          <Icon name="chevron-right" size={16} />
         </span>
-      </div>
-
-      <div className="glass-panel absolute top-4 right-4 left-4 rounded-xl p-md md:right-auto md:w-[360px]">
-        <h2 className="mb-sm flex items-center gap-xs text-headline-md text-primary">
-          <Icon name="map-pin" size={20} />
-          내 주변 교량
-        </h2>
-
-        {featured ? (
-          <div className="rounded-lg border border-outline-variant/50 bg-surface-container-lowest p-sm">
-            <div className="mb-xs flex items-start justify-between gap-2">
-              <Link
-                href={`/bridges/${featured.id}`}
-                className="text-lg font-bold text-primary hover:underline"
-              >
-                {featured.name}
-              </Link>
-              <GradeChip grade={featured.grade} />
-            </div>
-
-            {/* 디자인의 '특별한 통행 제한 없음' 자리. 근거가 없으면 '없음'이라고
-                적을 수 없다 — 정보가 없는 것을 안전 신호로 바꿔 읽히게 만든다. */}
-            <p className="mb-sm flex items-center gap-1 text-sm text-on-surface-variant">
-              <Icon name="minus-circle" size={14} />
-              통행 제한 정보는 아직 제공되지 않습니다
-            </p>
-
-            <ul className="space-y-1 text-xs text-on-surface-variant">
-              <li>준공: {featured.completedYear ? `${featured.completedYear}년` : '공개 정보 없음'}</li>
-              <li>최근 점검: {featured.lastInspectionYearMonth ?? '공개 정보 없음'}</li>
-              <li>
-                최근 보수:{' '}
-                {featured.lastRepairYearMonth
-                  ? `${featured.lastRepairYearMonth} ${featured.lastRepairType ?? ''}`.trim()
-                  : '공개 정보 없음'}
-              </li>
-            </ul>
-          </div>
-        ) : (
-          <p className="rounded-lg bg-surface-container-lowest p-sm text-sm text-on-surface-variant">
-            표시할 교량을 아직 불러오지 못했습니다.
-          </p>
-        )}
-      </div>
+        <span className="text-sm">지도 렌더링은 v1 에서 도입합니다</span>
+      </Link>
     </div>
   )
 }
@@ -374,25 +245,64 @@ function TodayCard({ todayHref }) {
   )
 }
 
-function EmergencyCard() {
+/**
+ * 교량 제원 — 어떤 재료로, 어떤 구조 형식으로 지었는지.
+ *
+ * 구조 형식(아치교·트러스교·사장교 …)과 사용 재료는 지금 DB 에 담을 칸이
+ * 없다. `bridges` 에 있는 것은 시설물 종류(콘크리트교·강교), 종별, 연장뿐이다.
+ * 시설물 종류가 재료를 짐작하게 하지만 구조 형식과는 다른 값이므로,
+ * 있는 값을 구조 형식 자리에 옮겨 적지 않고 빈 칸으로 둔다.
+ * 공공데이터 응답에 어떤 필드로 오는지가 §13 Q2 에서 정해지면 채워진다.
+ */
+function SpecCard({ featured }) {
+  if (!featured) return <EmptyPanel title="교량 제원" icon="building" />
+
+  const rows = [
+    { label: '구조 형식', value: null, hint: '아치교 · 트러스교 · 사장교 등' },
+    { label: '사용 재료', value: null, hint: '강재 · 콘크리트 등' },
+    { label: '시설물 종류', value: featured.facilityType },
+    { label: '종별', value: featured.facilityClass },
+    { label: '연장', value: featured.lengthM ? `${featured.lengthM}m` : null },
+    { label: '준공', value: featured.completedYear ? `${featured.completedYear}년` : null },
+  ]
+
   return (
-    <div className="rounded-xl border border-error/20 bg-error-container/20 p-md shadow-sm">
-      <h2 className="mb-sm flex items-center gap-xs text-headline-md text-error">
-        <Icon name="alert-triangle" size={20} />
-        비상대피경로
+    <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-md shadow-sm">
+      <h2 className="mb-sm flex items-center gap-xs text-headline-md text-primary">
+        <Icon name="building" size={20} />
+        교량 제원
       </h2>
-      <p className="mb-md text-sm text-on-surface-variant">
-        대피 경로는 안내하지 않습니다. 잘못된 안내가 곧 인명 피해로 이어지기 때문입니다. 통제와
-        우회는 관리기관과 내비게이션의 안내를 따라 주세요.
+      <p className="mb-md text-sm text-on-surface-variant">{featured.name}</p>
+
+      <dl className="flex flex-col">
+        {rows.map((row, index) => (
+          <div
+            key={row.label}
+            className={`flex items-start justify-between gap-3 py-2 text-sm ${
+              index < rows.length - 1 ? 'border-b border-outline-variant/30' : ''
+            }`}
+          >
+            <dt className="shrink-0 text-on-surface-variant">
+              {row.label}
+              {row.hint && (
+                <span className="mt-0.5 block text-xs text-on-surface-variant/70">{row.hint}</span>
+              )}
+            </dt>
+            <dd
+              className={`text-right ${
+                row.value ? 'font-medium text-on-surface' : 'text-on-surface-variant'
+              }`}
+            >
+              {row.value ?? '공개 정보 없음'}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <p className="mt-sm text-xs leading-[18px] text-on-surface-variant">
+        구조 형식과 사용 재료는 아직 받아 오는 값이 없습니다. 시설물 종류를 그 자리에 옮겨 적지
+        않았습니다 — 다른 값입니다.
       </p>
-      <button
-        type="button"
-        disabled
-        title="대피 경로 안내는 제공하지 않습니다"
-        className="w-full cursor-not-allowed rounded-lg bg-error/30 py-2 font-bold text-on-error"
-      >
-        대피경로 확인 — 제공하지 않음
-      </button>
     </div>
   )
 }
@@ -428,11 +338,11 @@ function NearbySection({ bridges, loadFailed }) {
                 <span className="min-w-0 truncate text-base font-bold text-primary">
                   {bridge.name}
                 </span>
-                {bridge.grade ? (
-                  <GradeChip grade={bridge.grade} />
-                ) : (
-                  <InfoStateBadge state={bridge.infoState} label={bridge.infoLabel} size="sm" />
-                )}
+                {/* 등급이 아니라 이력이 있는지 없는지만 보여준다. 등급은 그 시점
+                    점검의 판정 결과라 카드에서 교량의 속성처럼 읽히고, 법정 정의도
+                    아직 확인하지 못했다. 여기서 알아야 할 것은 '들어가면 볼 기록이
+                    있는가'다. */}
+                <InfoStateBadge state={bridge.infoState} label={bridge.infoLabel} size="sm" />
               </div>
             </Link>
           ))}
@@ -498,9 +408,10 @@ function HealthCard({ featured }) {
 /** 디자인의 '교량 타임머신' — 가로 타임라인. 노드는 실제 이력에서 만든다. */
 const EVENT_EMOJI = { 준공: '🏗️', 보수: '🛠️', 보강: '🛠️' }
 
-function TimeMachineCard({ featured, historyHref }) {
+function TimeMachineCard({ featured }) {
   const items = featured?.timeline?.items ?? []
   if (items.length === 0) return <EmptyPanel title="교량 타임머신" icon="clock" />
+  const historyHref = `/bridges/${featured.id}/history`
 
   // 가로 타임라인은 오래된 것이 왼쪽이어야 읽힌다. buildTimeline 은 최신이 위다.
   const ordered = [...items].reverse()
@@ -559,128 +470,130 @@ function TimeMachineCard({ featured, historyHref }) {
   )
 }
 
-function ReportBand() {
-  return (
-    <section className="flex flex-col items-center justify-between rounded-xl bg-primary p-lg text-on-primary md:flex-row">
-      <div className="mb-md md:mb-0">
-        <h2 className="mb-xs text-[32px] leading-10 font-bold">
-          <span aria-hidden="true">📸</span> 이상징후 제보
-        </h2>
-        <p className="mb-sm text-on-primary/80">&ldquo;어? 다리에 이상한 부분이 보여요.&rdquo;</p>
-        {/* 디자인에는 '제보된 사진은 AI가 1차 분류하여 담당 기관에 전달됩니다'가
-            적혀 있었다. 전달 경로가 없고 AI 도 쓰지 않으므로 사실로 바꿨다. */}
-        <p className="text-xs text-on-primary/60">
-          * 아직 접수·전달 경로가 없어 준비 중입니다. 접수만 받고 아무 일도 일어나지 않는 창구를
-          만들지 않으려고 열지 않았습니다.
-        </p>
-      </div>
-      <button
-        type="button"
-        disabled
-        title="제보 접수는 준비 중입니다"
-        className="flex cursor-not-allowed items-center rounded-lg bg-on-primary/40 px-8 py-3 font-bold text-primary"
-      >
-        <Icon name="upload" size={18} className="mr-2" />
-        사진 올리기 — 준비 중
-      </button>
-    </section>
-  )
+/**
+ * 교량 뉴스 — 공지사항 게시판 형식.
+ * ---------------------------------------------------------------------------
+ * 출처는 네이버 뉴스 검색 API 이고, 스케줄러가 bridge_news 에 채운 것을 읽는다
+ * (화면에서 직접 부르지 않는다 — §11 3초, 키 보호).
+ *
+ * 항목마다 말머리 · 제목 · 카테고리/지역/발표일 · 요약 · 출처를 낸다.
+ * 요청받은 형식에서 두 가지를 다르게 했다 :
+ *
+ *   · 요약을 새로 쓰지 않는다. 기사 원문 발췌를 2문장까지 자른 것이다.
+ *     우리가 다시 쓰면 원문에 없는 뜻이 섞이고, 그 문장이 교량 상태에 대한
+ *     우리 주장이 된다 (PRD §7).
+ *   · 제목을 28자로 줄이지 않는다. 실제 기사 제목을 자르면 뜻이 바뀔 수 있어
+ *     전문을 두고 넘치는 줄만 CSS 로 접는다.
+ *
+ * '영향받는 대상'은 네이버 응답에 없는 값이라 넣지 않았다. 요청 형식에도
+ * '해당 없으면 생략'이라고 되어 있다.
+ *
+ * 말머리는 우리 판단이 아니라 제목·요약에 있던 낱말에서 나온다. 그 낱말을
+ * 항목마다 함께 보여주므로 왜 그 태그가 붙었는지 확인할 수 있다.
+ * ---------------------------------------------------------------------------
+ */
+const NEWS_LIMIT = 6
+
+/** 말머리 색. 태그마다 다르지만 색만으로 뜻을 전하지 않는다 — 글자가 태그 이름이다. */
+const TAG_TONE = {
+  긴급: 'bg-danger-bg text-danger-fg',
+  공지: 'bg-caution-bg text-caution-fg',
+  정책: 'bg-summary-bg text-summary-fg',
+  기술: 'bg-summary-bg text-summary-fg',
+  해외: 'bg-surface-variant text-on-surface-variant',
+  안내: 'bg-surface-variant text-on-surface-variant',
 }
 
-/** 디자인의 '데이터 갱신 소식' 자리. 지어낸 공지 대신 실제 수집 상태를 적는다. */
-function UpdatesSection({ bridges, fetchedAt, sources }) {
-  const rows = [
-    ...bridges.map((bridge) => ({
-      text: `${bridge.name} — 공개된 관리 기록 ${bridge.recordCount}건`,
-      date: fetchedAt,
-    })),
-    { text: '통행제한·기상·하천수위 정보는 아직 제공하지 않습니다', date: null },
-  ]
+function NewsSection({ items = [], fetchedAt, sources }) {
+  const classified = items.map((item) => ({ ...item, ...classifyNews(item) }))
+  const rows = arrangeNews(classified, NEWS_LIMIT)
 
   return (
-    <div className="mb-xl w-full px-margin-mobile md:px-margin-desktop">
+    <div className="mb-xl w-full px-margin-mobile md:px-margin-desktop xl:px-32">
       <div className="rounded-xl border border-outline-variant/50 bg-surface-container-lowest p-md shadow-sm">
-        <div className="mb-md flex items-center justify-between">
-          <h2 className="text-headline-md font-bold text-primary">데이터 갱신 소식</h2>
+        <div className="mb-md flex items-center justify-between gap-4 border-b border-outline-variant pb-3">
+          <h2 className="text-headline-md font-bold text-primary">교량에 대한 모든 것 · 뉴스</h2>
           <span className="text-sm text-on-surface-variant">
-            {sources.length > 0 ? sources.join(' · ') : '출처 미표기'}
+            {rows.length > 0 ? `${rows.length}건` : '수집 전'}
           </span>
         </div>
-        <div>
-          {rows.map((row, index) => (
-            <div
-              key={row.text}
-              className={`flex items-center justify-between gap-4 py-3 ${
-                index < rows.length - 1 ? 'border-b border-outline-variant/20' : ''
-              }`}
-            >
-              <span className="text-body-md text-on-surface-variant">{row.text}</span>
-              <span className="shrink-0 text-sm text-on-surface-variant/60">
-                {row.date ? formatFetchedAt(row.date) : '—'}
-              </span>
-            </div>
-          ))}
-        </div>
+
+        {rows.length === 0 ? (
+          <div className="rounded-lg bg-surface-container-low p-md">
+            <p className="flex items-start gap-1.5 text-body-md text-on-surface-variant">
+              <Icon name="minus-circle" size={16} className="mt-0.5" />
+              아직 수집된 기사가 없습니다.
+            </p>
+            <p className="mt-2 text-sm leading-[22px] text-on-surface-variant">
+              기사 제목과 날짜는 지어낼 수 없어 목록을 비워 두었습니다. 네이버 검색 키를 넣고 수집
+              라우트를 한 번 돌리면 여기에 채워집니다.
+            </p>
+          </div>
+        ) : (
+          <ol className="flex flex-col">
+            {rows.map((row, index) => (
+              <li
+                key={row.id ?? row.url}
+                className={index < rows.length - 1 ? 'border-b border-outline-variant/20' : undefined}
+              >
+                <a
+                  href={row.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block py-4 transition-colors hover:bg-surface-container-low/60"
+                >
+                  <div className="flex items-start gap-2">
+                    <span
+                      className={`shrink-0 rounded px-2 py-0.5 text-caption font-bold ${
+                        TAG_TONE[row.tag] ?? TAG_TONE.안내
+                      }`}
+                      title={row.tagHint}
+                    >
+                      [{row.tag}]
+                    </span>
+                    <h3 className="line-clamp-2 text-body-md font-semibold text-on-surface">
+                      {row.title}
+                    </h3>
+                  </div>
+
+                  <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-caption text-on-surface-variant">
+                    <span>{row.category}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{row.region ?? '지역 미표기'}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{row.published_at ? formatFetchedAt(row.published_at) : '발표일 미표기'}</span>
+                  </p>
+
+                  {row.description && (
+                    <p className="mt-2 line-clamp-2 text-sm leading-[22px] text-on-surface-variant">
+                      {excerptSentences(row.description)}
+                    </p>
+                  )}
+
+                  <p className="mt-2 text-caption text-on-surface-variant/70">
+                    출처 {row.publisher ?? '출처 미표기'}
+                    {row.matched.length > 0 && ` · 분류 근거 '${row.matched.join("', '")}'`}
+                  </p>
+                </a>
+              </li>
+            ))}
+          </ol>
+        )}
+
+        <p className="mt-md border-t border-outline-variant/30 pt-3 text-xs leading-[18px] text-on-surface-variant">
+          기사는 <strong className="font-semibold">언론 보도이며 공식 기록이 아닙니다.</strong>{' '}
+          네이버 뉴스 검색 결과를 옮긴 것이고, 요약은 기사 원문 발췌입니다. 말머리와 카테고리는
+          제목·요약에 있던 낱말로 붙인 것이며 저희가 사안의 심각성을 판정한 것이 아닙니다.
+          <br />
+          화면의 관리 기록 출처: {sources.length > 0 ? sources.join(' · ') : '출처 미표기'}
+          {fetchedAt ? ` · ${formatFetchedAt(fetchedAt)} 수집` : ''}
+        </p>
       </div>
     </div>
   )
 }
 
-const FOOTER_LINKS = ['공공기관 정보', '문의하기', '법적 고지', '개인정보 처리방침']
-
-function DashFooter() {
-  return (
-    <footer className="w-full border-t border-outline-variant bg-surface-container-low pb-24 md:pb-0">
-      <div className="flex w-full flex-col items-start justify-between gap-md px-margin-mobile py-lg md:flex-row md:items-center md:px-margin-desktop">
-        <div className="flex flex-col">
-          <span className="mb-sm text-headline-md font-bold text-primary">BRIDGE SAFE</span>
-          {/* 디자인에는 '© 2024 국가교량안전기관'이 적혀 있었다.
-              실재하지 않는 기관이므로 쓰지 않는다. */}
-          <span className="text-caption text-on-surface-variant">
-            공공데이터를 옮겨 보여주는 프로젝트입니다. 공식 기관이 운영하지 않습니다.
-          </span>
-        </div>
-        <nav className="flex flex-wrap justify-center gap-md">
-          {FOOTER_LINKS.map((label) => (
-            <span
-              key={label}
-              aria-disabled="true"
-              title="아직 준비되지 않았습니다"
-              className="cursor-not-allowed text-body-md text-on-surface-variant/50"
-            >
-              {label}
-            </span>
-          ))}
-        </nav>
-      </div>
-    </footer>
-  )
-}
-
 /* ── 공통 조각 ───────────────────────────────────────────────────────── */
-
-function GradeChip({ grade }) {
-  if (!grade) {
-    return (
-      <span className="shrink-0 rounded-full bg-unknown-bg px-2 py-1 text-xs font-bold text-unknown-fg">
-        등급 정보 없음
-      </span>
-    )
-  }
-  // 디자인은 등급 칩을 초록(secondary-container)으로, 문구를 '안전 B등급'으로
-  // 뒀다. 둘 다 그대로 쓸 수 없다 — 등급의 법정 정의를 아직 구하지 못해
-  // (§13 Q4) 어느 등급이 좋고 나쁜지를 우리가 말할 근거가 없는데, 초록색과
-  // '안전'이라는 말은 그 판정을 이미 해버린다. 실제로 C등급도 초록으로 나왔다.
-  // 칩의 자리·모양은 그대로 두고 색만 중립으로, 문구는 등급 값만 적는다.
-  return (
-    <span
-      className="shrink-0 rounded-full bg-surface-variant px-2 py-1 text-xs font-bold text-on-surface-variant"
-      title="등급은 그 시점 점검의 판정 결과입니다. 교량의 항상적 속성도 아니고 통행 제한 여부와도 별개 정보입니다"
-    >
-      {grade}등급
-    </span>
-  )
-}
 
 function EmptyPanel({ title, icon }) {
   return (

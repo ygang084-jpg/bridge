@@ -73,6 +73,30 @@ export async function fetchBridgesForList() {
   }
 }
 
+/**
+ * 교량 뉴스 — 스케줄러가 채운 bridge_news 에서 최신순으로 읽는다.
+ *
+ * 조회에 실패하면 던지지 않고 빈 목록을 준다. 뉴스는 이 화면의 본체가 아니라
+ * 곁가지이므로, 기사를 못 읽었다고 대시보드 전체가 오류 화면이 되면 안 된다.
+ * 대신 available 로 '출처가 없어 비었는지 / 읽기에 실패했는지'를 구분해 준다.
+ */
+/* 화면은 6건만 쓰지만 넉넉히 읽는다 — 말머리 고정과 '같은 카테고리 3연속 방지'가
+   고를 후보를 남겨 둬야 동작한다. */
+export async function fetchBridgeNews(limit = 24) {
+  const client = getReadClient()
+  if (!client) return { items: [], available: false }
+
+  const { data, error } = await client
+    .from('bridge_news')
+    // description 은 화면의 '요약' 두 줄에 쓴다 — 우리가 쓴 문장이 아니라 원문 발췌다.
+    .select('id, title, url, publisher, description, published_at, source')
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .limit(limit)
+
+  if (error) return { items: [], available: false }
+  return { items: data ?? [], available: true }
+}
+
 /** 상세·타임라인용 교량 1건 + 이력 전체 + 저장된 요약. */
 export async function fetchBridgeDetail(bridgeId) {
   const client = getReadClient()

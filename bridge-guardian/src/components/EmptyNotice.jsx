@@ -12,25 +12,25 @@ import Icon from './Icon'
  */
 export default function EmptyNotice({ headline, note, managerOrg, managerContact, backHref, backLabel = '목록으로' }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+    <section className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
       <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-unknown-bg text-unknown-fg">
         <Icon name="minus-circle" size={28} />
       </span>
 
       <h2 className="text-[20px] leading-7 font-bold text-primary">{headline}</h2>
-      {note && <p className="mt-2 text-[15px] leading-[24px] text-fg-muted">{note}</p>}
+      {note && <p className="mt-2 text-[15px] leading-[24px] text-on-surface-variant">{note}</p>}
 
       {(managerOrg || managerContact) && (
-        <div className="mt-5 rounded-lg bg-surface-muted p-4">
-          <p className="flex items-center gap-1.5 text-[13px] font-medium text-fg-muted">
+        <div className="mt-5 rounded-lg bg-surface-container-low p-4">
+          <p className="flex items-center gap-1.5 text-[13px] font-medium text-on-surface-variant">
             <Icon name="building" size={14} />
             관리기관에 직접 확인하기
           </p>
-          {managerOrg && <p className="mt-1 text-[16px] font-medium text-fg">{managerOrg}</p>}
+          {managerOrg && <p className="mt-1 text-[16px] font-medium text-on-surface">{managerOrg}</p>}
           {managerContact ? (
-            <p className="mt-0.5 text-[15px] text-fg">{managerContact}</p>
+            <p className="mt-0.5 text-[15px] text-on-surface">{managerContact}</p>
           ) : (
-            <p className="mt-0.5 text-[13px] text-fg-muted">
+            <p className="mt-0.5 text-[13px] text-on-surface-variant">
               문의처가 공개 데이터에 없습니다.
             </p>
           )}

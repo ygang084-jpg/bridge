@@ -104,14 +104,18 @@ export default function BridgeList({ bridges, initialMode = 'nearby' }) {
         <Icon
           name="search"
           size={18}
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-fg-muted"
+          className="absolute top-1/2 left-3 -translate-y-1/2 text-on-surface-variant"
         />
+        {/* 테두리만 카드와 다른 outline(#75777f)을 쓴다. 입력칸의 경계는 어디에
+            입력하는지를 알려주는 유일한 표시라 WCAG 1.4.11 이 3:1 을 요구하는데,
+            카드용 outline-variant(#c5c6cf)는 흰 배경 대비 1.70:1 로 미달이다.
+            outline 은 4.47:1. */}
         <input
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="지역명 또는 교량명으로 찾기"
-          className="min-h-[44px] w-full rounded-lg border border-border bg-surface pr-4 pl-10 text-[16px] text-fg placeholder:text-fg-muted"
+          className="min-h-[44px] w-full rounded-lg border border-outline bg-surface-container-lowest pr-4 pl-10 text-[16px] text-on-surface placeholder:text-on-surface-variant"
         />
       </label>
 
@@ -121,7 +125,7 @@ export default function BridgeList({ bridges, initialMode = 'nearby' }) {
         hasQuery={Boolean(query.trim())}
       />
 
-      <p className="text-[13px] text-fg-muted">
+      <p className="text-[13px] text-on-surface-variant">
         {position && !query.trim() && !showAll
           ? `현재 위치 기준 ${(DEFAULT_RADIUS_M / 1000).toFixed(0)}km 안 · 총 ${withinRadius.length}곳`
           : `총 ${withinRadius.length}곳`}
@@ -140,13 +144,13 @@ export default function BridgeList({ bridges, initialMode = 'nearby' }) {
             <li key={bridge.id}>
               <Link
                 href={`/bridges/${bridge.id}`}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface p-4 shadow-sm transition-colors hover:bg-surface-muted"
+                className="flex items-center justify-between gap-3 rounded-xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm transition-colors hover:bg-surface-container-low"
               >
                 <div className="min-w-0">
                   <p className="truncate text-[17px] font-semibold text-primary">
                     {bridge.name}
                   </p>
-                  <p className="mt-0.5 truncate text-[13px] text-fg-muted">
+                  <p className="mt-0.5 truncate text-[13px] text-on-surface-variant">
                     {[bridge.address, formatDistance(bridge.distance)]
                       .filter(Boolean)
                       .join(' · ') || '소재지 정보 없음'}
@@ -187,8 +191,8 @@ function LocationNotice({ state, onRetry, hasQuery }) {
   if (!message) return null
 
   return (
-    <div className="rounded-lg bg-surface-muted p-3">
-      <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-fg-muted">
+    <div className="rounded-lg bg-surface-container-low p-3">
+      <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-on-surface-variant">
         <Icon name="info" size={14} className="mt-0.5" />
         {message}
       </p>
@@ -208,18 +212,18 @@ function LocationNotice({ state, onRetry, hasQuery }) {
 /** F-01 ⑤ — 결과가 없어도 빈 화면으로 끝내지 않는다. */
 function EmptyResult({ hasQuery, hasPosition, onShowAll, totalCount }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+    <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 text-center shadow-sm">
       <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-unknown-bg text-unknown-fg">
         <Icon name="search" size={24} />
       </span>
-      <p className="text-[16px] font-medium text-fg">
+      <p className="text-[16px] font-medium text-on-surface">
         {hasQuery
           ? '검색어와 맞는 교량을 찾지 못했습니다.'
           : hasPosition
             ? '반경 3km 안에 등록된 교량이 없습니다.'
             : '표시할 교량이 없습니다.'}
       </p>
-      <p className="mt-2 text-[14px] leading-[22px] text-fg-muted">
+      <p className="mt-2 text-[14px] leading-[22px] text-on-surface-variant">
         공개 데이터에 등록된 교량만 표시합니다. 없는 것이 곧 다리가 없다는 뜻은 아닙니다.
       </p>
       {hasPosition && !hasQuery && totalCount > 0 && (

@@ -77,8 +77,8 @@ export default async function BridgeDetailPage({ params }) {
             <InfoStateBadge state={info.state} label={info.label} size="sm" />
           </div>
 
-          <div className="rounded-xl border border-border bg-surface shadow-sm">
-            <dl className="divide-y divide-border">
+          <div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm">
+            <dl className="divide-y divide-outline-variant">
               <FactRow
                 label="준공"
                 value={bridge.completed_year ? `${bridge.completed_year}년` : null}
@@ -106,11 +106,11 @@ export default async function BridgeDetailPage({ params }) {
               여기서 또 적으면 한 화면에 같은 문장이 두 번 나온다. */}
           {info.state !== INFO_STATE.ABSENT && (
             <>
-              <p className="mt-2 text-[13px] leading-[18px] text-fg-muted">
+              <p className="mt-2 text-[13px] leading-[18px] text-on-surface-variant">
                 {described.headline}
               </p>
               {described.note && (
-                <p className="mt-1 text-[13px] leading-[18px] text-fg-muted">{described.note}</p>
+                <p className="mt-1 text-[13px] leading-[18px] text-on-surface-variant">{described.note}</p>
               )}
             </>
           )}
@@ -126,7 +126,7 @@ export default async function BridgeDetailPage({ params }) {
           </Link>
           <Link
             href={`/bridges/${id}/today`}
-            className="flex min-h-[44px] items-center justify-center gap-2 rounded-lg border border-border bg-surface px-5 text-[16px] font-medium text-fg transition-colors hover:bg-surface-muted"
+            className="flex min-h-[44px] items-center justify-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-5 text-[16px] font-medium text-on-surface transition-colors hover:bg-surface-container-low"
           >
             오늘의 상태 보기
           </Link>
@@ -135,8 +135,8 @@ export default async function BridgeDetailPage({ params }) {
         {/* 기본 정보 */}
         <section>
           <h2 className="mb-3 text-[20px] leading-7 font-bold text-primary">기본 정보</h2>
-          <div className="rounded-xl border border-border bg-surface shadow-sm">
-            <dl className="divide-y divide-border">
+          <div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm">
+            <dl className="divide-y divide-outline-variant">
               <FactRow label="교량명" value={bridge.name} />
               <FactRow label="소재지" value={bridge.address} />
               <FactRow label="관리기관" value={bridge.manager_org} />
@@ -171,15 +171,15 @@ function FactRow({ label, value, detail, source, asOf }) {
   return (
     <div className="p-4">
       <div className="flex items-baseline justify-between gap-3">
-        <dt className="text-[16px] text-fg-muted">{label}</dt>
+        <dt className="text-[16px] text-on-surface-variant">{label}</dt>
         <dd
           className={`text-right text-[16px] ${
-            hasValue ? 'font-medium text-fg' : 'text-fg-muted'
+            hasValue ? 'font-medium text-on-surface' : 'text-on-surface-variant'
           }`}
         >
           {hasValue ? value : '공개 정보 없음'}
           {hasValue && detail && (
-            <span className="block text-[13px] font-normal text-fg-muted">{detail}</span>
+            <span className="block text-[13px] font-normal text-on-surface-variant">{detail}</span>
           )}
         </dd>
       </div>

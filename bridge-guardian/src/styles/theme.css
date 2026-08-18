@@ -1,0 +1,171 @@
+/* BRIDGE SAFE — Stitch 디자인 토큰 (팔레트 소스 오브 트루스)
+ *
+ * 출처: Stitch 다운로드 파일의 <script id="tailwind-config"> 블록
+ *      bridge_safe_6 (랜딩) · bridge_safe_9 (메인 대시보드) — 두 화면의
+ *      config 76개 토큰이 값까지 완전히 같다(키 순서만 다름). 대조 확인함.
+ * 값은 원본 그대로 옮긴 것이며 추측·보정·추가한 값이 없다.
+ *
+ * @theme 블록이므로 Tailwind v4 가 여기서 유틸리티를 만든다
+ * (bg-primary-fixed, text-on-surface-variant, p-gutter, text-display-lg …).
+ * globals.css 가 이 파일을 import 하며, 이 파일의 값을 다른 곳에서 덮어쓰지
+ * 않는다 — 덮어쓰면 여기 적힌 값과 실제 화면 색이 달라진다.
+ *
+ * 이름 규칙은 Tailwind v4 테마 변수 관례를 따랐다
+ * (--color-*, --font-*, --text-*, --spacing-*, --radius-*).
+ * 원본 config 의 토큰 이름 자체는 바꾸지 않았다.
+ *
+ * 원본에 없어서 여기에 없는 것: 상태 신호색(safe/caution/danger/unknown/summary).
+ * 그 5쌍은 design-system/MASTER.md 가 접근성 기준으로 직접 고른 값이며
+ * globals.css 에 따로 둔다.
+ */
+
+@theme {
+  /* ── Color ─────────────────────────────────────────────── */
+
+  /* Primary */
+  --color-primary: #031635;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1a2b4b;
+  --color-on-primary-container: #8293b8;
+  --color-primary-fixed: #d8e2ff;
+  --color-primary-fixed-dim: #b6c6ef;
+  --color-on-primary-fixed: #081b3a;
+  --color-on-primary-fixed-variant: #364768;
+  --color-inverse-primary: #b6c6ef;
+
+  /* Secondary */
+  --color-secondary: #006d37;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #6bfe9c;
+  --color-on-secondary-container: #00743a;
+  --color-secondary-fixed: #6bfe9c;
+  --color-secondary-fixed-dim: #4ae183;
+  --color-on-secondary-fixed: #00210c;
+  --color-on-secondary-fixed-variant: #005228;
+
+  /* Tertiary */
+  --color-tertiary: #735c00;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #cea700;
+  --color-on-tertiary-container: #4e3e00;
+  --color-tertiary-fixed: #ffe084;
+  --color-tertiary-fixed-dim: #eec209;
+  --color-on-tertiary-fixed: #231b00;
+  --color-on-tertiary-fixed-variant: #574500;
+
+  /* Error */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Surface / Background */
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+  --color-surface: #f8f9fa;
+  --color-on-surface: #191c1d;
+  --color-surface-variant: #e1e3e4;
+  --color-on-surface-variant: #44474e;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-dim: #d9dadb;
+  --color-surface-tint: #4e5e81;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container: #edeeef;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+
+  /* Outline */
+  --color-outline: #75777f;
+  --color-outline-variant: #c5c6cf;
+
+  /* Inverse */
+  --color-inverse-surface: #2e3132;
+  --color-inverse-on-surface: #f0f1f2;
+
+  /* ── Font family ───────────────────────────────────────── */
+  /* 원본 config 에는 폴백이 없다. 원본의 body 규칙만
+     'Noto Sans KR', sans-serif 로 폴백을 갖고 있다.
+     ⚠️ Hanken Grotesk 는 이 앱에서 로드하지 않는다 (layout.jsx 는 next/font 로
+     Noto Sans KR 만 받는다). 따라서 font-display-lg / font-headline-* 를 쓰면
+     조용히 폴백된다. 쓰기 전에 폰트를 먼저 추가할 것. */
+  --font-display-lg: 'Hanken Grotesk';
+  --font-headline-lg: 'Hanken Grotesk';
+  --font-headline-lg-mobile: 'Hanken Grotesk';
+  --font-headline-md: 'Hanken Grotesk';
+  --font-body-lg: 'Noto Sans KR';
+  --font-body-md: 'Noto Sans KR';
+  --font-label-md: 'Noto Sans KR';
+  --font-caption: 'Noto Sans KR';
+
+  /* ── Font size (크기 / 행간 / 자간 / 굵기) ─────────────── */
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--font-weight: 600;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--font-weight: 500;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 400;
+
+  /* ── Spacing ───────────────────────────────────────────── */
+  --spacing-xs: 4px;
+  --spacing-base: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 24px;
+  --spacing-gutter: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 80px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 64px;
+
+  /* ── Border radius ─────────────────────────────────────── */
+  /* 원본 키 이름은 "DEFAULT". Tailwind v4 에서 맨 `rounded` 에 해당하는
+     변수는 --radius 이므로 이름만 맞췄다. 값은 그대로 0.25rem. */
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+}
+
+/* 원본 파일에 함께 들어 있던 설정 (토큰은 아니지만 값 보존용으로 기록)
+ *
+ * darkMode: 'class'
+ * body { font-family: 'Noto Sans KR', sans-serif; }
+ * .hanken-font { font-family: 'Hanken Grotesk', sans-serif; }
+ *
+ * bridge_safe_9 에만 있던 컴포넌트 스타일 (토큰이 아니라 옮기지 않음):
+ *   .glass-panel { background: rgba(255,255,255,0.85);
+ *                  backdrop-filter: blur(12px);
+ *                  border: 1px solid rgba(255,255,255,0.3);
+ *                  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07); }
+ *   → MASTER.md §9 가 글래스모피즘·강한 블러를 금지 항목으로 둔다.
+ *
+ * 웹폰트 (원본의 <link>):
+ *   https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap
+ *   https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap
+ */

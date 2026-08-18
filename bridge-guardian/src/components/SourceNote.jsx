@@ -13,7 +13,7 @@ export default function SourceNote({ source, asOf, align = 'right', className = 
   const alignment = align === 'right' ? 'text-right' : 'text-left'
 
   return (
-    <p className={`mt-1 text-[13px] leading-[18px] text-fg-muted ${alignment} ${className}`}>
+    <p className={`mt-1 text-[13px] leading-[18px] text-on-surface-variant ${alignment} ${className}`}>
       {text}
     </p>
   )

@@ -37,7 +37,7 @@ export default async function BridgeTodayPage({ params }) {
       <ScreenHeader title="오늘의 상태" backHref={`/bridges/${id}`} />
 
       <main className="flex flex-1 flex-col gap-5 px-4 py-5">
-        <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+        <section className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
           <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-unknown-bg text-unknown-fg">
             <Icon name="minus-circle" size={28} />
           </span>
@@ -45,16 +45,16 @@ export default async function BridgeTodayPage({ params }) {
           <h2 className="text-[20px] leading-7 font-bold text-primary">
             오늘의 상태는 아직 제공하지 않습니다.
           </h2>
-          <p className="mt-2 text-[15px] leading-[24px] text-fg-muted">
+          <p className="mt-2 text-[15px] leading-[24px] text-on-surface-variant">
             {bridge.name}의 통행 제한 여부와 기상 조건을 표시하려면, 어떤 값을 기준으로
             &lsquo;기준치를 넘었다&rsquo;고 적을지가 먼저 정해져야 합니다. 그 기준을 저희가 임의로
             정하면, 공식 기관이 발표하지 않은 판정을 저희가 하는 것이 됩니다. 그래서 기준의
             출처가 확보될 때까지 이 화면을 비워 둡니다.
           </p>
 
-          <div className="mt-5 rounded-lg bg-surface-muted p-4">
-            <p className="text-[13px] font-medium text-fg-muted">확정되어야 하는 것</p>
-            <ul className="mt-2 flex flex-col gap-2 text-[14px] leading-[22px] text-fg">
+          <div className="mt-5 rounded-lg bg-surface-container-low p-4">
+            <p className="text-[13px] font-medium text-on-surface-variant">확정되어야 하는 것</p>
+            <ul className="mt-2 flex flex-col gap-2 text-[14px] leading-[22px] text-on-surface">
               <li>
                 <span className="font-medium">공개 데이터 명세</span> — 통행 제한·기상 특보·하천
                 수위가 실제로 어떤 필드로 제공되는지
@@ -67,9 +67,9 @@ export default async function BridgeTodayPage({ params }) {
           </div>
         </section>
 
-        <section className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+        <section className="rounded-xl border border-outline-variant bg-surface-container-lowest p-5 shadow-sm">
           <h3 className="text-[16px] font-semibold text-primary">지금 확인할 수 있는 것</h3>
-          <p className="mt-1 text-[14px] leading-[22px] text-fg-muted">
+          <p className="mt-1 text-[14px] leading-[22px] text-on-surface-variant">
             이 교량이 준공 이후 어떻게 관리되어 왔는지는 지금도 볼 수 있습니다.
           </p>
           <Link
@@ -81,7 +81,7 @@ export default async function BridgeTodayPage({ params }) {
           </Link>
         </section>
 
-        <p className="text-[13px] leading-[18px] text-fg-muted">
+        <p className="text-[13px] leading-[18px] text-on-surface-variant">
           통행 제한의 1차 출처는 관리기관과 내비게이션입니다. 실시간 통제 정보는 그쪽에서
           확인하십시오.
         </p>

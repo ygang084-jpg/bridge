@@ -56,7 +56,7 @@ export default async function BridgeHistoryPage({ params }) {
             <h2 className="text-[20px] leading-7 font-bold text-primary">
               공개된 기록을 시간순으로
             </h2>
-            <p className="mt-1 text-[14px] leading-[22px] text-fg-muted">
+            <p className="mt-1 text-[14px] leading-[22px] text-on-surface-variant">
               {described.headline}
             </p>
           </div>
@@ -64,13 +64,13 @@ export default async function BridgeHistoryPage({ params }) {
         </div>
 
         {described.note && (
-          <p className="rounded-lg bg-surface-muted p-3 text-[13px] leading-[18px] text-fg-muted">
+          <p className="rounded-lg bg-surface-container-low p-3 text-[13px] leading-[18px] text-on-surface-variant">
             {described.note}
           </p>
         )}
 
         {timeline.items.length > 0 ? (
-          <section className="rounded-xl border border-border bg-surface p-4 shadow-sm">
+          <section className="rounded-xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm">
             <Timeline items={timeline.items} sinceLatestText={timeline.sinceLatestText} />
           </section>
         ) : (
@@ -86,15 +86,15 @@ export default async function BridgeHistoryPage({ params }) {
 
         {/* 날짜를 읽을 수 없어 타임라인에 넣지 못한 기록. 조용히 버리지 않는다. */}
         {timeline.unreadable.length > 0 && (
-          <section className="rounded-lg border border-border bg-surface-muted p-4">
-            <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-fg-muted">
+          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-4">
+            <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-on-surface-variant">
               <Icon name="warning-circle" size={14} className="mt-0.5" />
               날짜를 읽을 수 없어 시간순에 넣지 못한 기록이 {timeline.unreadable.length}건
               있습니다. 원본 데이터의 날짜 형식이 다릅니다.
             </p>
             <ul className="mt-2 flex flex-col gap-1">
               {timeline.unreadable.map((row, index) => (
-                <li key={row.id ?? index} className="text-[13px] text-fg-muted">
+                <li key={row.id ?? index} className="text-[13px] text-on-surface-variant">
                   {row.event_type ?? '기타'} — {row.reason}
                 </li>
               ))}
@@ -103,7 +103,7 @@ export default async function BridgeHistoryPage({ params }) {
         )}
 
         {info.state !== INFO_STATE.ABSENT && (
-          <p className="text-[13px] leading-[18px] text-fg-muted">
+          <p className="text-[13px] leading-[18px] text-on-surface-variant">
             기록의 순서와 간격을 그대로 옮겼습니다. 이 목록을 우리가 요약하거나 평가하지
             않습니다.
           </p>

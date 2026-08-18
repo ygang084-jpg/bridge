@@ -12,9 +12,9 @@ import { SUMMARY_BADGE_LABEL, SUMMARY_DISCLOSURE, SUMMARY_QUALIFIER } from '@/li
  */
 export default function SummaryCard({ summaryText, historyHref }) {
   return (
-    <section className="relative rounded-xl border border-border bg-surface py-4 pl-5 pr-4 shadow-sm before:absolute before:top-0 before:bottom-0 before:left-0 before:w-1 before:rounded-l-xl before:bg-accent before:content-['']">
+    <section className="relative rounded-xl border border-outline-variant bg-surface-container-lowest py-4 pl-5 pr-4 shadow-sm before:absolute before:top-0 before:bottom-0 before:left-0 before:w-1 before:rounded-l-xl before:bg-accent before:content-['']">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-[13px] font-medium text-fg-muted">{SUMMARY_QUALIFIER}</span>
+        <span className="text-[13px] font-medium text-on-surface-variant">{SUMMARY_QUALIFIER}</span>
         <span className="inline-flex items-center gap-1 rounded-full bg-summary-bg px-3 py-1 text-[14px] font-medium text-summary-fg">
           <Icon name="file-text" size={14} />
           {SUMMARY_BADGE_LABEL}
@@ -30,14 +30,14 @@ export default function SummaryCard({ summaryText, historyHref }) {
           </p>
           {/* '점검을 하지 않았다는 뜻이 아닙니다'는 아래 EmptyNotice 가 문의처와 함께
               말한다. 여기서 같은 문장을 또 쓰면 한 화면에 두 번 나온다. */}
-          <p className="mt-2 text-[14px] leading-[22px] text-fg-muted">
+          <p className="mt-2 text-[14px] leading-[22px] text-on-surface-variant">
             근거가 부족할 때는 문장을 지어내지 않고 비워 둡니다. 무엇이 없는지는 아래에서
             확인하실 수 있습니다.
           </p>
         </div>
       )}
 
-      <p className="mt-3 flex items-start gap-1.5 text-[13px] leading-[18px] text-fg-muted">
+      <p className="mt-3 flex items-start gap-1.5 text-[13px] leading-[18px] text-on-surface-variant">
         <Icon name="info" size={14} className="mt-0.5" />
         {SUMMARY_DISCLOSURE}
       </p>

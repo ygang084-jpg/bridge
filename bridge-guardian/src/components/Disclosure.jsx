@@ -13,8 +13,8 @@ export const DISCLOSURE_TEXT =
 
 export default function Disclosure() {
   return (
-    <footer className="border-t border-border px-4 py-5">
-      <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-fg-muted">
+    <footer className="app-disclosure border-t border-outline-variant px-4 py-5">
+      <p className="flex items-start gap-1.5 text-[13px] leading-[18px] text-on-surface-variant">
         <Icon name="info" size={14} className="mt-0.5" />
         {DISCLOSURE_TEXT}
       </p>

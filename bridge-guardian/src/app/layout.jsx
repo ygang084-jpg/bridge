@@ -29,8 +29,11 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko" className={notoSansKR.className}>
-      <body className="bg-bg text-fg">
-        <div className="mx-auto flex min-h-screen max-w-[480px] flex-col">
+      <body className="bg-background text-on-surface">
+        {/* 폭은 globals.css 의 .app-shell 이 정한다. 기본 480px(MASTER.md §3),
+            메인 대시보드만 넓어진다 — 어느 화면인지는 자식만 알기 때문에
+            여기서 분기하지 않고 :has() 로 뒤집는다. */}
+        <div className="app-shell mx-auto flex min-h-screen flex-col">
           {children}
           {/* PRD §7 표시규칙 2 · F-05 ④ — 모든 화면에 상시 노출 */}
           <Disclosure />

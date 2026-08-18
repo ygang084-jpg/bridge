@@ -102,9 +102,17 @@ export default async function BridgeDetailPage({ params }) {
             </dl>
           </div>
 
-          <p className="mt-2 text-[13px] leading-[18px] text-fg-muted">{described.headline}</p>
-          {described.note && (
-            <p className="mt-1 text-[13px] leading-[18px] text-fg-muted">{described.note}</p>
+          {/* '이력 없음'일 때는 아래 EmptyNotice 가 같은 문구를 문의처와 함께 보여준다.
+              여기서 또 적으면 한 화면에 같은 문장이 두 번 나온다. */}
+          {info.state !== INFO_STATE.ABSENT && (
+            <>
+              <p className="mt-2 text-[13px] leading-[18px] text-fg-muted">
+                {described.headline}
+              </p>
+              {described.note && (
+                <p className="mt-1 text-[13px] leading-[18px] text-fg-muted">{described.note}</p>
+              )}
+            </>
           )}
         </section>
 

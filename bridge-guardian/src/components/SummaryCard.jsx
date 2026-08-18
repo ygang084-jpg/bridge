@@ -26,11 +26,13 @@ export default function SummaryCard({ summaryText, historyHref }) {
       ) : (
         <div>
           <p className="text-[20px] leading-7 font-bold text-primary">
-            한 문장으로 옮길 수 있는 공개 정보가 아직 없습니다.
+            한 문장으로 옮길 공개 정보가 아직 없습니다.
           </p>
+          {/* '점검을 하지 않았다는 뜻이 아닙니다'는 아래 EmptyNotice 가 문의처와 함께
+              말한다. 여기서 같은 문장을 또 쓰면 한 화면에 두 번 나온다. */}
           <p className="mt-2 text-[14px] leading-[22px] text-fg-muted">
-            점검을 하지 않았다는 뜻이 아닙니다. 요약을 만들 근거가 부족할 때는 문장을
-            지어내지 않고 비워 둡니다.
+            근거가 부족할 때는 문장을 지어내지 않고 비워 둡니다. 무엇이 없는지는 아래에서
+            확인하실 수 있습니다.
           </p>
         </div>
       )}

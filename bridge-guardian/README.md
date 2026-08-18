@@ -1,6 +1,6 @@
 # bridge-guardian
 
-BRIDGE SAFE 웹앱. 요구사항은 [`../docs/prd.md`](../docs/prd.md) (PRD v0.4) 이고,
+BRIDGE SAFE 웹앱. 요구사항은 [`../prd.md`](../prd.md) (PRD v0.4) 이고,
 문서와 구현이 어긋난 부분은 그 문서의 **§15 부록**에 모아 두었다.
 
 ## 스택

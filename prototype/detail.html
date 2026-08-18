@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIDGE SAFE — 교량 상세</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="assets/tailwind-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<style>body{font-family:'Noto Sans KR',sans-serif;}</style>
+</head>
+<body class="bg-bg text-fg">
+<div class="max-w-app mx-auto min-h-screen flex flex-col">
+
+  <!-- 상단 바 -->
+  <header class="sticky top-0 z-10 bg-surface border-b border-border">
+    <div class="h-14 px-2 flex items-center gap-1">
+      <a href="list.html" class="w-11 h-11 flex items-center justify-center text-fg hover:text-primary transition-colors duration-150" aria-label="뒤로가기">
+        <i class="ph ph-arrow-left text-[22px]"></i>
+      </a>
+      <h1 class="text-[17px] font-semibold text-primary">한강대교</h1>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 py-5 flex flex-col gap-6">
+
+    <!-- 한 문장 요약 (AI) -->
+    <section class="relative rounded-xl bg-surface shadow-sm border border-border pl-5 pr-4 py-4 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-accent">
+      <div class="flex justify-end mb-2">
+        <span class="inline-flex items-center gap-1 rounded-full bg-ai-bg text-ai-fg text-[14px] font-medium px-3 py-1">
+          <i class="ph ph-sparkle text-[14px]"></i> AI 요약
+        </span>
+      </div>
+      <p class="text-[24px] leading-8 font-extrabold text-primary">
+        오늘 오전, 통행을 막을 만한 제한이나 기준치를 넘는 기상 상황은 확인되지 않았습니다.
+      </p>
+      <p class="mt-3 text-[13px] leading-[18px] text-fg-muted flex items-start gap-1.5">
+        <i class="ph ph-info text-[14px] mt-0.5 shrink-0"></i>
+        AI 분석은 참고용이며 공식 안전진단을 대체하지 않습니다.
+      </p>
+    </section>
+
+    <!-- 오늘의 위험요인 바로가기 -->
+    <a href="risk.html"
+       class="min-h-[44px] flex items-center justify-center gap-2 rounded-lg bg-primary text-on-primary text-[16px] font-medium px-5 transition-colors duration-150 hover:bg-primary/90">
+      <i class="ph ph-cloud-lightning text-[18px]"></i>
+      오늘의 위험요인 보기
+    </a>
+
+    <!-- 공식 정보 원문 -->
+    <section>
+      <h2 class="text-[20px] leading-7 font-bold text-primary mb-3">공식 정보</h2>
+      <ul class="rounded-xl border border-border bg-surface shadow-sm divide-y divide-border">
+
+        <li class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[16px] text-fg-muted">준공연도</span>
+            <span class="text-[16px] font-medium">1917년</span>
+          </div>
+          <p class="mt-1 text-[13px] text-fg-muted text-right">국가교량정보시스템 · 2025.01 기준</p>
+        </li>
+
+        <li class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[16px] text-fg-muted flex items-center gap-1">
+              안전등급
+              <i class="ph ph-info text-[14px]" title="법정 안전등급 정의: A(우수)~E(불량) 5단계. 정기·정밀 안전점검 결과에 따라 관리기관이 지정합니다."></i>
+            </span>
+            <span class="text-[16px] font-medium">B등급</span>
+          </div>
+          <p class="mt-1 text-[13px] text-fg-muted text-right">시설안전공단 정기점검 · 2025.11 기준</p>
+        </li>
+
+        <li class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[16px] text-fg-muted">최근 점검일</span>
+            <span class="text-[16px] font-medium">2025.11.03</span>
+          </div>
+          <p class="mt-1 text-[13px] text-fg-muted text-right">시설안전공단 · 정기 안전점검</p>
+        </li>
+
+        <li class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[16px] text-fg-muted">통행제한 여부</span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-safe-bg text-safe-fg text-[14px] font-medium px-2.5 py-1">
+              <i class="ph ph-check-circle text-[14px]"></i> 없음
+            </span>
+          </div>
+          <p class="mt-1 text-[13px] text-fg-muted text-right">관할 지자체 · 2026.08.18 기준</p>
+        </li>
+
+        <li class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[16px] text-fg-muted">관리기관</span>
+            <span class="text-[16px] font-medium">서울특별시 시설안전본부</span>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- 점검·보수 이력 (Should) -->
+    <section>
+      <h2 class="text-[20px] leading-7 font-bold text-primary mb-3">점검·보수 이력</h2>
+      <ul class="rounded-xl border border-border bg-surface shadow-sm divide-y divide-border">
+        <li class="p-4">
+          <p class="text-[16px] font-medium">정기 안전점검 — 이상 없음</p>
+          <p class="mt-1 text-[13px] text-fg-muted">2025.11.03 · 시설안전공단</p>
+        </li>
+        <li class="p-4">
+          <p class="text-[16px] font-medium">교면 방수 보수공사 완료</p>
+          <p class="mt-1 text-[13px] text-fg-muted">2023.06.15 · 서울특별시 시설안전본부</p>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="px-4 py-5 border-t border-border">
+    <p class="text-[13px] leading-[18px] text-fg-muted flex items-start gap-1.5">
+      <i class="ph ph-info text-[14px] mt-0.5 shrink-0"></i>
+      AI 분석은 참고용이며 공식 안전진단을 대체하지 않습니다.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

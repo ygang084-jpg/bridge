@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BRIDGE SAFE - 매일 건너는 다리, 그 너머의 안전까지</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#8293b8",
+                        "on-primary-fixed-variant": "#364768",
+                        "inverse-primary": "#b6c6ef",
+                        "on-background": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-primary-fixed": "#081b3a",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#031635",
+                        "secondary-fixed": "#6bfe9c",
+                        "outline-variant": "#c5c6cf",
+                        "surface": "#f8f9fa",
+                        "secondary": "#006d37",
+                        "tertiary": "#735c00",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#00210c",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#4ae183",
+                        "surface-tint": "#4e5e81",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b6c6ef",
+                        "inverse-surface": "#2e3132",
+                        "on-surface-variant": "#44474e",
+                        "tertiary-container": "#cea700",
+                        "outline": "#75777f",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed": "#ffe084",
+                        "primary-container": "#1a2b4b",
+                        "tertiary-fixed-dim": "#eec209",
+                        "secondary-container": "#6bfe9c",
+                        "on-secondary-fixed-variant": "#005228",
+                        "on-tertiary-container": "#4e3e00",
+                        "on-secondary-container": "#00743a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "xl": "80px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "lg": "48px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Noto Sans KR"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Noto Sans KR"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-md": ["Noto Sans KR"],
+                        "caption": ["Noto Sans KR"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .hanken-font { font-family: 'Hanken Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pt-20 flex flex-col antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter md:px-margin-desktop py-4 max-w-[1440px] mx-auto bg-surface/80 dark:bg-surface-container-highest/80 backdrop-blur-md shadow-sm">
+<a class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight" href="#">BRIDGE SAFE</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all duration-300 px-3 py-2 rounded-lg" href="#">대시보드</a>
+<a class="text-primary dark:text-secondary-fixed-dim font-bold border-b-2 border-primary dark:border-secondary-fixed-dim pb-1 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all duration-300 px-3 py-2 rounded-lg" href="#">소개</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all duration-300 px-3 py-2 rounded-lg" href="#">기능</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all duration-300 px-3 py-2 rounded-lg" href="#">앱 미리보기</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all duration-300 px-3 py-2 rounded-lg" href="#">고객지원</a>
+</div>
+<button class="bg-primary text-on-primary hover:opacity-90 px-6 py-2 rounded-full font-label-md text-label-md transition-all">앱 실행하기</button>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="px-gutter md:px-margin-desktop py-xl max-w-[1440px] mx-auto grid md:grid-cols-2 gap-lg items-center mt-12">
+<div class="space-y-6">
+<h1 class="font-display-lg text-display-lg text-primary leading-tight">매일 건너는 다리,<br>그 너머의 안전까지.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">BRIDGE SAFE는 공공 데이터와 AI 기술을 결합하여 국민 모두가 안심하고 이동할 수 있는 교량 안전 정보를 제공합니다.</p>
+<div class="pt-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
+                        지금 시작하기
+                        <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A modern vector illustration of a city bridge against a bright, clear sky. The style is clean, corporate, and trustworthy, using a palette of deep navy, soft blues, and white. The aesthetic is flat yet detailed, evoking a sense of structural engineering and civic safety." src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Az3tgchthp2CNFD4dJVV5ip2IF168AEIPxcfR_mKvw&amp;s=10">
+</div>
+</section>
+<!-- Mission Section -->
+<section class="bg-surface-container-low py-xl">
+<div class="px-gutter md:px-margin-desktop max-w-[1440px] mx-auto text-center space-y-md">
+<h2 class="font-headline-lg text-headline-lg text-primary">왜 BRIDGE SAFE인가요?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto">
+                    우리는 매일 교량을 이용하지만, 그 안전성에 대해서는 알기 어렵습니다. BRIDGE SAFE는 분산된 공공 데이터를 통합하고 분석하여, 투명한 안전 정보를 바탕으로 사고를 예방하는 시민 중심의 인프라 모니터링 서비스입니다.
+                </p>
+<div class="grid md:grid-cols-3 gap-6 pt-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_20px_rgba(26,43,75,0.05)] border border-outline-variant/20 flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-primary-fixed text-on-primary-fixed rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">visibility</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">투명한 정보 공개</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">어렵고 복잡한 교량 진단 데이터를 누구나 이해하기 쉽게 시각화하여 제공합니다.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_20px_rgba(26,43,75,0.05)] border border-outline-variant/20 flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-primary-fixed text-on-primary-fixed rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">shield</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">사고 예방 우선</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">위험 징후를 조기에 발견하고 알림을 제공하여 대형 사고를 선제적으로 방지합니다.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_20px_rgba(26,43,75,0.05)] border border-outline-variant/20 flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-primary-fixed text-on-primary-fixed rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">diversity_3</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">시민 참여형</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">전문가뿐만 아니라 시민 누구나 안전 감시자가 되어 함께 인프라를 지킵니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Showcase -->
+<section class="px-gutter md:px-margin-desktop py-xl max-w-[1440px] mx-auto space-y-xl">
+<div class="text-center">
+<h2 class="font-headline-lg text-headline-lg text-primary">주요 기능</h2>
+</div>
+<div class="grid md:grid-cols-2 gap-lg items-center">
+<div class="order-2 md:order-1 h-[300px] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(26,43,75,0.1)] border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A clean, modern dashboard interface showing a bridge status with gauges and a 3D wireframe bridge model. The color palette features deep navy, soft grays, and status indicators in green and yellow. The style is highly technical yet accessible and bright." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRfABBt4nJDd8doubr8X8K_zZyVvG6Q6wgjAsu4RpCMqyAzwWW7ymTKcy5DKUWTQbHsl5ttyYcR8-6H7O43yMCm_azEbuxyZ2essdf8V1SljIcBbNE76kXPox8EFEodaFuAnaHLjeg0k3pJAjqzBRuBlmstF8wSi2a52UUrrIQJstDw_GJ0ctvwFx9LbqtWExJPYhlcGtYhhvByAHm_c8R9H6NpAXUgPa7sfFCTXKRcs_oGxNAjoQAfw">
+</div>
+<div class="order-1 md:order-2 space-y-4">
+<div class="inline-block bg-secondary-fixed/20 text-secondary px-3 py-1 rounded-full font-label-md text-label-md">AI 분석</div>
+<h3 class="font-headline-lg text-headline-lg text-primary">AI 교량 진단</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">센서 데이터와 기상 정보를 종합하여 AI가 분석하는 실시간 안전 데이터를 확인하세요. 직관적인 상태 지표를 통해 즉각적인 대응이 가능합니다.</p>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-lg items-center">
+<div class="space-y-4">
+<div class="inline-block bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full font-label-md text-label-md">커뮤니티</div>
+<h3 class="font-headline-lg text-headline-lg text-primary">시민 참여 제보</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">우리 동네 교량의 이상 징후를 발견하셨나요? 사진과 함께 간편하게 제보하고, 담당 기관의 처리 현황을 실시간으로 추적할 수 있습니다.</p>
+</div>
+<div class="h-[300px] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(26,43,75,0.1)] border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A mobile app interface displaying a map with pinpoints indicating user reports on bridge conditions. A form overlay shows options to upload a photo and describe an issue. The UI is clean, utilizing white cards and a light map background with clear navy typography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1c4026ILgTK9I3lL3m47ahBiZIEsOyPO4hyo9dUGG5m0Queh11mLNbBwRUgG-7ztxZ41huEWY4p-VxqfLERiy3bp3lXayxCoOAmkcdAyOWtN5J6qYjOUAbxmL7Y4EOocEjIvskUDzRBpOHUgZQAPo_safaOb3NsWSDP3mAbPlwFQD4uJ_KnhQSAJksb60MoSOj2Hl4IoWlXSi73eOwrh-w1dudnpDXr5h6c0opyRODBSt0_YAdJQPrQ">
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-lg items-center">
+<div class="order-2 md:order-1 h-[300px] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(26,43,75,0.1)] border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A sleek timeline visualization on a digital interface showing the maintenance history of a specific bridge. It features a soft, curved line chart indicating structural integrity over time, with milestone markers. The aesthetic is 'digital twin', clean and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmgyT6TqF41y29thGA4NWycDsBXN2mnn4mZaN92UNUggwToeTxxSuHWtVrGgkydRMw24VBoCWJGW4VxYUll2kIMH3vvjBhyizXwj1Kf4IWUCOOj3seIZSVx2dAuFjFuxsg7-0p4jR5rXck4tPgI12skUPwbTGQhnq_JVbDpYvwuf8JZMewK2YSVhAhrUbLlMdN17ivQjA-kgEUV2XGyrXHX2-je9so4q6HY3doWp7piiB8dEhobcEzxw">
+</div>
+<div class="order-1 md:order-2 space-y-4">
+<div class="inline-block bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full font-label-md text-label-md">이력</div>
+<h3 class="font-headline-lg text-headline-lg text-primary">교량 타임머신</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">과거의 점검 기록, 보수 이력, 그리고 시간의 흐름에 따른 안전 등급 변화를 한눈에 볼 수 있는 타임라인 뷰를 제공합니다.</p>
+</div>
+</div>
+</section>
+<!-- App Previews -->
+<section class="bg-surface-container-low py-xl">
+<div class="px-gutter md:px-margin-desktop max-w-[1440px] mx-auto text-center space-y-lg">
+<h2 class="font-headline-lg text-headline-lg text-primary">언제 어디서나, 안전을 곁에</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">웹 대시보드와 모바일 앱을 통해 최적화된 경험을 제공합니다.</p>
+<div class="grid md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
+<div class="relative bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 p-4 aspect-[4/3] flex items-center justify-center overflow-hidden group">
+<img class="w-full h-auto rounded shadow-lg transform group-hover:scale-105 transition-transform duration-500" data-alt="A high-fidelity mockup of the BRIDGE SAFE desktop dashboard. It features a prominent map interface with overlay cards showing real-time bridge health statistics, weather impacts, and recent alerts. The design uses the established light mode corporate style with deep navy accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh-5yJaRDUsRSmibDqZWx4nGDR4lzG-tkRxanjQ3bPcyMmgL7GubBNQ4UspL8vAM8_pFfBpu-GFQlrkVy-hGFtmJ-tgcB-2_kHxhA1FP5MVyWBvAA2yIWlX-2x8TpQMZ128KR25jlKyRKvCwD3VwgayCtA6ArInEe4nLj_1JA-8vVqdyfyN2gFVCEm1GrIS2EbBdeWkDlrO0yjA34JDZri47GiqaaTl0jDTcx9Qxv2-sJoWlAvAHJ9wA">
+</div>
+<div class="relative bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 p-4 aspect-[4/3] flex items-center justify-center overflow-hidden group">
+<img class="w-[45%] h-auto rounded-[2rem] shadow-xl border-4 border-surface-container-highest transform group-hover:scale-105 transition-transform duration-500" data-alt="A high-fidelity mockup of the BRIDGE SAFE mobile application. It shows a list of nearby bridges with their current safety status chips (green/yellow/red). The interface is card-based, clean, and optimized for mobile viewing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKkqlENTcP8yYIgdBC03TfMygWKWuSOiTB-RJwZrJLMGAEXNGlJdjzIU1B0V2tqHbYN_bWTegrVTl_gUUPHC3GkNQ4tJN2q72aPiUjCHkuWlB4zVoGvXu0i5gm3XgsQFYN8xPG78dzJTLIJ6Hxm757g_3RIixsR02AArBuXZAL-pZ0XlBINCoqUT624KEkTkrrWh94ZwPUpKw-QuwBxB7TEpK6QCAPEqvCo6VS45kH6nFfXfMC-gnKhg">
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="px-gutter md:px-margin-desktop py-xl max-w-[1440px] mx-auto text-center">
+<div class="bg-primary text-on-primary rounded-3xl p-xl shadow-lg relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+<h2 class="font-headline-lg text-headline-lg mb-4 relative z-10">오늘 당신이 건널 다리는 어떤가요?</h2>
+<p class="font-body-lg text-body-lg text-inverse-primary max-w-2xl mx-auto mb-8 relative z-10">지금 바로 우리 동네 교량의 실시간 안전 상태를 확인해보세요.</p>
+<button class="relative z-10 bg-surface-container-lowest text-primary px-8 py-4 rounded-full font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm font-bold">
+                    대시보드로 바로가기
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-lg px-gutter md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-sm bg-primary dark:bg-surface-container-lowest border-t border-outline-variant/20 mt-auto">
+<div class="flex flex-col gap-2">
+<span class="font-headline-md text-headline-md text-on-primary dark:text-primary">BRIDGE SAFE</span>
+<span class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant">© 2024 BRIDGE SAFE. 시민 인프라 안전 이니셔티브.</span>
+</div>
+<div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-4 md:mt-0">
+<a class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant hover:text-on-primary dark:hover:text-primary hover:underline decoration-secondary-fixed dark:decoration-secondary transition-all focus:ring-2 ring-secondary-fixed dark:ring-secondary outline-none rounded px-1" href="#">개인정보처리방침</a>
+<a class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant hover:text-on-primary dark:hover:text-primary hover:underline decoration-secondary-fixed dark:decoration-secondary transition-all focus:ring-2 ring-secondary-fixed dark:ring-secondary outline-none rounded px-1" href="#">이용약관</a>
+<a class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant hover:text-on-primary dark:hover:text-primary hover:underline decoration-secondary-fixed dark:decoration-secondary transition-all focus:ring-2 ring-secondary-fixed dark:ring-secondary outline-none rounded px-1" href="#">접근성</a>
+<a class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant hover:text-on-primary dark:hover:text-primary hover:underline decoration-secondary-fixed dark:decoration-secondary transition-all focus:ring-2 ring-secondary-fixed dark:ring-secondary outline-none rounded px-1" href="#">관계기관 문의</a>
+<a class="font-caption text-caption text-on-primary/80 dark:text-on-surface-variant hover:text-on-primary dark:hover:text-primary hover:underline decoration-secondary-fixed dark:decoration-secondary transition-all focus:ring-2 ring-secondary-fixed dark:ring-secondary outline-none rounded px-1" href="#">데이터 투명성</a>
+</div>
+</footer>
+
+
+</body></html>

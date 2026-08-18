@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIDGE SAFE — 진입</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="assets/tailwind-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<style>body{font-family:'Noto Sans KR',sans-serif;}</style>
+</head>
+<body class="bg-bg text-fg">
+<div class="max-w-app mx-auto min-h-screen flex flex-col">
+
+  <!-- 브랜드 영역 -->
+  <header class="px-4 pt-10 pb-6 flex items-center gap-2">
+    <span class="text-2xl leading-none">🌉</span>
+    <span class="text-[17px] font-semibold text-primary">BRIDGE SAFE</span>
+  </header>
+
+  <!-- 메인: 경로 선택 -->
+  <main class="flex-1 px-4 flex flex-col justify-center gap-8">
+    <div>
+      <h1 class="text-[24px] leading-8 font-extrabold text-primary">
+        내가 건너는 다리,<br>오늘은 괜찮을까?
+      </h1>
+      <p class="mt-3 text-[16px] leading-[26px] text-fg-muted">
+        위치를 알려주시면 근처 교량의 공식 정보와 오늘의 위험요인을 한눈에 보여드려요.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <a href="list.html"
+         class="min-h-[44px] flex items-center justify-center gap-2 rounded-lg bg-primary text-on-primary text-[16px] font-medium px-5 transition-colors duration-150 hover:bg-primary/90">
+        <i class="ph ph-map-pin text-[20px]"></i>
+        내 주변 교량 찾기
+      </a>
+      <a href="list.html"
+         class="min-h-[44px] flex items-center justify-center gap-1.5 text-accent text-[14px] font-medium hover:underline">
+        <i class="ph ph-magnifying-glass text-[16px]"></i>
+        지역명으로 찾기
+      </a>
+    </div>
+  </main>
+
+  <!-- 고지 영역 (모든 화면 공통) -->
+  <footer class="px-4 py-5 border-t border-border">
+    <p class="text-[13px] leading-[18px] text-fg-muted flex items-start gap-1.5">
+      <i class="ph ph-info text-[14px] mt-0.5 shrink-0"></i>
+      AI 분석은 참고용이며 공식 안전진단을 대체하지 않습니다.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIDGE SAFE — 내 주변 교량</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="assets/tailwind-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<style>body{font-family:'Noto Sans KR',sans-serif;}</style>
+</head>
+<body class="bg-bg text-fg">
+<div class="max-w-app mx-auto min-h-screen flex flex-col">
+
+  <!-- 상단 바 -->
+  <header class="sticky top-0 z-10 bg-surface border-b border-border">
+    <div class="h-14 px-2 flex items-center gap-1">
+      <a href="index.html" class="w-11 h-11 flex items-center justify-center text-fg hover:text-primary transition-colors duration-150" aria-label="뒤로가기">
+        <i class="ph ph-arrow-left text-[22px]"></i>
+      </a>
+      <h1 class="text-[17px] font-semibold text-primary">내 주변 교량</h1>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 py-5">
+
+    <!-- 지역명 검색 (위치 거부 시 대체 경로 겸용) -->
+    <label class="block relative mb-5">
+      <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted text-[18px]"></i>
+      <input type="text" placeholder="지역명으로 검색 (예: 마포구, 여의도)"
+             class="w-full h-11 pl-10 pr-3 rounded-lg border border-border bg-surface text-[16px] placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+    </label>
+
+    <p class="text-[13px] text-fg-muted mb-3">현재 위치 기준 · 총 4곳</p>
+
+    <!-- 교량 목록 -->
+    <ul class="flex flex-col gap-3">
+
+      <li>
+        <a href="detail.html" class="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface shadow-sm p-4 hover:border-accent transition-colors duration-150">
+          <div class="min-w-0">
+            <p class="text-[17px] font-semibold truncate">한강대교</p>
+            <p class="text-[13px] text-fg-muted mt-0.5 flex items-center gap-1">
+              <i class="ph ph-map-pin text-[14px]"></i> 620m
+            </p>
+          </div>
+          <span class="shrink-0 inline-flex items-center gap-1 rounded-full bg-safe-bg text-safe-fg text-[14px] font-medium px-3 py-1.5">
+            <i class="ph ph-check-circle text-[16px]"></i> 정보 있음
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a href="detail.html" class="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface shadow-sm p-4 hover:border-accent transition-colors duration-150">
+          <div class="min-w-0">
+            <p class="text-[17px] font-semibold truncate">마포대교</p>
+            <p class="text-[13px] text-fg-muted mt-0.5 flex items-center gap-1">
+              <i class="ph ph-map-pin text-[14px]"></i> 1.2km
+            </p>
+          </div>
+          <span class="shrink-0 inline-flex items-center gap-1 rounded-full bg-safe-bg text-safe-fg text-[14px] font-medium px-3 py-1.5">
+            <i class="ph ph-check-circle text-[16px]"></i> 정보 있음
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a href="detail.html" class="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface shadow-sm p-4 hover:border-accent transition-colors duration-150">
+          <div class="min-w-0">
+            <p class="text-[17px] font-semibold truncate">원효대교</p>
+            <p class="text-[13px] text-fg-muted mt-0.5 flex items-center gap-1">
+              <i class="ph ph-map-pin text-[14px]"></i> 2.1km
+            </p>
+          </div>
+          <span class="shrink-0 inline-flex items-center gap-1 rounded-full bg-caution-bg text-caution-fg text-[14px] font-medium px-3 py-1.5">
+            <i class="ph ph-warning-circle text-[16px]"></i> 정보 오래됨
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a href="empty.html" class="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface shadow-sm p-4 hover:border-accent transition-colors duration-150">
+          <div class="min-w-0">
+            <p class="text-[17px] font-semibold truncate">서강대교</p>
+            <p class="text-[13px] text-fg-muted mt-0.5 flex items-center gap-1">
+              <i class="ph ph-map-pin text-[14px]"></i> 3.4km
+            </p>
+          </div>
+          <span class="shrink-0 inline-flex items-center gap-1 rounded-full bg-unknown-bg text-unknown-fg text-[14px] font-medium px-3 py-1.5">
+            <i class="ph ph-question text-[16px]"></i> 정보 없음
+          </span>
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- 참고용 예시: 검색 결과 없음 상태 (실제 목록과 무관, 화면 요소 확인용) -->
+    <div class="mt-8 pt-6 border-t border-dashed border-border">
+      <p class="text-[13px] font-medium text-fg-muted mb-2">예시 상태 — 검색 결과가 없을 때</p>
+      <div class="rounded-xl border border-border bg-surface-muted p-5 text-center">
+        <i class="ph ph-map-trifold text-[28px] text-fg-muted"></i>
+        <p class="mt-2 text-[16px] text-fg">'신촌동'에서 검색된 교량이 없습니다.</p>
+        <p class="mt-1 text-[13px] text-fg-muted">다른 지역명으로 다시 검색해 보세요.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="px-4 py-5 border-t border-border">
+    <p class="text-[13px] leading-[18px] text-fg-muted flex items-start gap-1.5">
+      <i class="ph ph-info text-[14px] mt-0.5 shrink-0"></i>
+      AI 분석은 참고용이며 공식 안전진단을 대체하지 않습니다.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

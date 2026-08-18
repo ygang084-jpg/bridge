@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BRIDGE SAFE - 로그인</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#eec209",
+                      "surface-bright": "#f8f9fa",
+                      "on-tertiary-container": "#4e3e00",
+                      "secondary-fixed-dim": "#4ae183",
+                      "on-surface": "#191c1d",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#8293b8",
+                      "on-secondary": "#ffffff",
+                      "background": "#f8f9fa",
+                      "primary-fixed-dim": "#b6c6ef",
+                      "surface-variant": "#e1e3e4",
+                      "on-background": "#191c1d",
+                      "inverse-surface": "#2e3132",
+                      "primary-container": "#1a2b4b",
+                      "tertiary-fixed": "#ffe084",
+                      "tertiary": "#735c00",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-secondary-fixed-variant": "#005228",
+                      "surface-tint": "#4e5e81",
+                      "on-primary-fixed": "#081b3a",
+                      "surface": "#f8f9fa",
+                      "on-secondary-fixed": "#00210c",
+                      "secondary-fixed": "#6bfe9c",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-container-high": "#e7e8e9",
+                      "on-primary": "#ffffff",
+                      "outline": "#75777f",
+                      "on-primary-fixed-variant": "#364768",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#cea700",
+                      "on-surface-variant": "#44474e",
+                      "primary": "#031635",
+                      "error-container": "#ffdad6",
+                      "secondary": "#006d37",
+                      "surface-container-highest": "#e1e3e4",
+                      "inverse-primary": "#b6c6ef",
+                      "on-secondary-container": "#00743a",
+                      "on-tertiary-fixed": "#231b00",
+                      "outline-variant": "#c5c6cf",
+                      "secondary-container": "#6bfe9c",
+                      "surface-container": "#edeeef",
+                      "surface-dim": "#d9dadb",
+                      "surface-container-low": "#f3f4f5",
+                      "error": "#ba1a1a",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "xl": "80px",
+                      "margin-desktop": "64px",
+                      "md": "24px",
+                      "gutter": "24px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "margin-mobile": "16px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-md": [
+                              "Noto Sans KR"
+                      ],
+                      "body-lg": [
+                              "Noto Sans KR"
+                      ],
+                      "body-md": [
+                              "Noto Sans KR"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "caption": [
+                              "Noto Sans KR"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20 bg-surface dark:bg-on-background/95 backdrop-blur-md shadow-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-base">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim tracking-tight">BRIDGE SAFE</span>
+</div>
+<!-- Navigation Links (Hidden on transactional page as per rules, but included in DOM for structure if needed) -->
+<nav class="hidden md:flex gap-md">
+<!-- Navigation suppressed due to Transactional Page Intent -->
+</nav>
+<div class="flex items-center gap-sm">
+<button class="font-label-md text-label-md px-4 py-2 rounded-lg text-primary hover:bg-surface-variant transition-colors">고객지원</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop pt-24 pb-xl relative overflow-hidden">
+<!-- Abstract Background Elements -->
+<div class="absolute top-1/4 left-10 w-64 h-64 bg-primary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+<div class="absolute top-1/3 right-10 w-72 h-72 bg-secondary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+<!-- Login Container -->
+<div class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/20 p-8 md:p-10 relative z-10 flex flex-col gap-6 backdrop-blur-sm bg-white/80">
+<!-- Header Section -->
+<div class="text-center flex flex-col gap-2 mb-4">
+<span class="material-symbols-outlined text-4xl text-primary mx-auto mb-2" data-icon="architecture" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">로그인</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">안전한 도시 인프라, BRIDGE SAFE와 함께 시작하세요.</p>
+</div>
+<!-- Form Section -->
+<form class="flex flex-col gap-5">
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="email">이메일/아이디</label>
+<input class="px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md placeholder-on-surface-variant/50" id="email" placeholder="example@bridgesafe.com" type="text">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="password">비밀번호</label>
+<input class="px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md placeholder-on-surface-variant/50" id="password" placeholder="••••••••" type="password">
+</div>
+<!-- Utilities Row -->
+<div class="flex items-center justify-between mt-1">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container-lowest transition-colors group-hover:border-primary" type="checkbox">
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-on-surface transition-colors">로그인 상태 유지</span>
+</label>
+<div class="flex gap-3">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">아이디 찾기</a>
+<span class="text-outline-variant/50">|</span>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">비밀번호 재설정</a>
+</div>
+</div>
+<!-- Submit Action -->
+<button class="w-full bg-primary-container text-on-primary py-3 rounded-lg font-label-md text-label-md font-bold mt-4 hover:bg-primary transition-colors shadow-sm flex items-center justify-center gap-2 group" type="submit">
+<span>로그인</span>
+<span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="flex items-center gap-4 my-2">
+<div class="flex-grow h-px bg-outline-variant/30"></div>
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">간편 로그인</span>
+<div class="flex-grow h-px bg-outline-variant/30"></div>
+</div>
+<!-- Social Logins -->
+<div class="flex gap-3 justify-center">
+<!-- Using placeholders for social icons as per design system constraints on arbitrary images -->
+<button class="w-12 h-12 rounded-full border border-outline-variant bg-surface-container-lowest flex items-center justify-center hover:bg-surface-container-low transition-colors shadow-sm group">
+<span class="font-bold text-[#FEE500] group-hover:scale-110 transition-transform">K</span>
+</button>
+<button class="w-12 h-12 rounded-full border border-outline-variant bg-surface-container-lowest flex items-center justify-center hover:bg-surface-container-low transition-colors shadow-sm group">
+<span class="font-bold text-[#03C75A] group-hover:scale-110 transition-transform">N</span>
+</button>
+<button class="w-12 h-12 rounded-full border border-outline-variant bg-surface-container-lowest flex items-center justify-center hover:bg-surface-container-low transition-colors shadow-sm group">
+<span class="material-symbols-outlined text-on-surface group-hover:scale-110 transition-transform" data-icon="apple">file_download</span>
+</button>
+</div>
+<!-- Footer Link -->
+<div class="text-center mt-4">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    아직 회원이 아니신가요? 
+                    <a class="text-primary font-bold hover:underline ml-1" href="#">회원가입</a>
+</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-lg px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-base bg-surface-container-high dark:bg-inverse-surface border-t border-outline-variant/20 mt-auto">
+<div class="flex flex-col gap-xs text-center md:text-left">
+<span class="font-headline-md text-headline-md text-primary tracking-tight font-bold">BRIDGE SAFE</span>
+<span class="font-caption text-caption text-on-surface-variant">© 2024 BRIDGE SAFE. 모든 권리 보유. 도시 인프라 감시 시스템.</span>
+</div>
+<nav class="flex gap-md flex-wrap justify-center">
+<a class="font-caption text-caption text-on-surface-variant hover:underline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors focus:ring-2 focus:ring-primary rounded" href="#">개인정보 처리방침</a>
+<a class="font-caption text-caption text-on-surface-variant hover:underline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors focus:ring-2 focus:ring-primary rounded" href="#">이용약관</a>
+<a class="font-caption text-caption text-on-surface-variant hover:underline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors focus:ring-2 focus:ring-primary rounded" href="#">접근성</a>
+<a class="font-caption text-caption text-on-surface-variant hover:underline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors focus:ring-2 focus:ring-primary rounded" href="#">문의하기</a>
+</nav>
+</footer>
+<style>
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+    </style>
+</body></html>

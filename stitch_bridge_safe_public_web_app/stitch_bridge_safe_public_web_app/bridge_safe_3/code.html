@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BRIDGE SAFE - 교량 이상징후 제보</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Noto+Sans+KR:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#081b3a",
+                        "secondary": "#006d37",
+                        "surface-container": "#edeeef",
+                        "tertiary": "#735c00",
+                        "primary-fixed-dim": "#b6c6ef",
+                        "on-secondary-fixed": "#00210c",
+                        "on-tertiary-container": "#4e3e00",
+                        "tertiary-fixed": "#ffe084",
+                        "on-error": "#ffffff",
+                        "outline": "#75777f",
+                        "on-background": "#191c1d",
+                        "secondary-container": "#6bfe9c",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#00743a",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005228",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-primary-fixed-variant": "#364768",
+                        "primary": "#031635",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1a2b4b",
+                        "outline-variant": "#c5c6cf",
+                        "surface-tint": "#4e5e81",
+                        "on-surface-variant": "#44474e",
+                        "background": "#f8f9fa",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-container": "#cea700",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "inverse-primary": "#b6c6ef",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-container": "#8293b8",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed": "#231b00",
+                        "secondary-fixed-dim": "#4ae183",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface": "#f8f9fa",
+                        "secondary-fixed": "#6bfe9c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "xl": "80px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Noto Sans KR"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Noto Sans KR"],
+                        "label-md": ["Noto Sans KR"],
+                        "body-lg": ["Noto Sans KR"]
+                    },
+                    "fontSize": {
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .ai-scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #031635, transparent);
+            box-shadow: 0 0 10px #031635;
+            animation: scan 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes scan {
+            0% { top: 0; opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.5; }
+        }
+        .pulse-tag {
+            animation: pulse-soft 2s infinite;
+        }
+        @keyframes pulse-soft {
+            0% { box-shadow: 0 0 0 0 rgba(3, 22, 53, 0.2); }
+            70% { box-shadow: 0 0 0 6px rgba(3, 22, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(3, 22, 53, 0); }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-md text-primary font-headline-md text-headline-md docked full-width top-0 sticky z-50 border-b border-outline-variant/30 shadow-sm transition-all duration-300">
+<div class="flex justify-between items-center px-margin-desktop h-16 w-full max-w-[1440px] mx-auto md:px-margin-desktop px-margin-mobile">
+<div class="flex items-center gap-6">
+<a class="font-headline-md text-headline-md font-bold tracking-tight text-primary" href="#">BRIDGE SAFE</a>
+<nav class="hidden md:flex items-center gap-4 ml-8">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-variant/50 rounded-lg px-3 py-2" href="#">홈</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-variant/50 rounded-lg px-3 py-2" href="#">지도</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-variant/50 rounded-lg px-3 py-2" href="#">내 교량</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-variant/50 rounded-lg px-3 py-2" href="#">기록</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 font-bold" href="#">제보</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant/50 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg">
+<!-- Header Section -->
+<div class="mb-10 text-center max-w-2xl mx-auto">
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary font-bold mb-4">교량 이상징후 제보</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">발견하신 위험 요소를 사진으로 제보해주세요.<br class="hidden md:block"> AI가 분석하여 관련 기관에 신속하게 전달합니다.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter max-w-5xl mx-auto">
+<!-- Left Column: Upload & AI Preview -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Upload Area (Simulating Active State with uploaded image) -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-4 shadow-sm overflow-hidden relative group">
+<div class="absolute inset-0 bg-primary/5 z-0"></div>
+<div class="relative z-10 w-full h-[400px] rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-variant flex items-center justify-center">
+<img alt="Uploaded bridge anomaly photo" class="w-full h-full object-cover opacity-90 transition-opacity duration-300" data-alt="A close-up photograph of a concrete bridge pillar showing a significant, jagged crack running vertically. The lighting is overcast, typical of outdoor infrastructure inspection. The style is realistic and documentary, highlighting the texture of the rough, weathered concrete and the dark crevice of the crack, emphasizing the need for structural assessment within a civil engineering context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBkCMXYYp8qeORilOgA1X0w4YlgwdcZN5pySPR83XdxQtlbVYVSLbAlQEN-bNs1RQMdP8guUmSppyi2hu0UHbieqIHnU4sjZ2wBbd1hm9GSOS4JuvC-5dIcZLzNkBtjNcaanOqZijnpMNLlrWKUscCGotLEbBLuNwAyja3C4xMfAikCeQDaiQUfVXXd5CB3u4NQL1SDcKL9v5Vwct3ZPz-uQd5P8XfhCLaDVfd1iOizFoq7sFr4xM7-w">
+<!-- AI Analysis Overlay -->
+<div class="absolute inset-0 bg-primary-container/20 pointer-events-none"></div>
+<div class="ai-scan-line"></div>
+<!-- AI Bounding Box & Tags -->
+<div class="absolute top-1/4 left-1/4 w-1/2 h-1/2 border-2 border-secondary-container rounded-DEFAULT shadow-[0_0_15px_rgba(107,254,156,0.3)] pulse-tag">
+<div class="absolute -top-3 -right-3">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-surface-container-lowest/90 backdrop-blur-sm border border-outline-variant/30 px-3 py-1.5 rounded-full flex items-center gap-2 whitespace-nowrap shadow-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-md text-label-md text-primary font-bold">콘크리트 균열 의심 (94%)</span>
+</div>
+</div>
+<!-- Secondary Tag -->
+<div class="absolute bottom-1/4 right-1/4 bg-surface-container-lowest/90 backdrop-blur-sm border border-outline-variant/30 px-3 py-1.5 rounded-full flex items-center gap-2 whitespace-nowrap shadow-sm opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-caption text-caption text-on-surface-variant">백화현상 가능성</span>
+</div>
+</div>
+<div class="relative z-10 mt-4 flex justify-between items-center px-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="image">image</span>
+<span class="font-caption text-caption">IMG_20231024_1530.jpg (3.2MB)</span>
+</div>
+<button class="font-label-md text-label-md text-primary hover:text-primary-container hover:underline transition-all">다시 업로드</button>
+</div>
+</div>
+<!-- Info Box -->
+<div class="bg-surface-container rounded-lg p-4 flex items-start gap-3 border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="info">info</span>
+<div>
+<p class="font-label-md text-label-md text-primary font-bold mb-1">AI 분석 중입니다...</p>
+<p class="font-caption text-caption text-on-surface-variant">업로드된 이미지를 기반으로 잠재적 위험 요소를 식별하고 있습니다. 분석 결과는 제출 시 함께 전송됩니다.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Fields -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<div class="glass-card rounded-xl p-6 h-full flex flex-col">
+<form class="flex flex-col gap-5 flex-grow">
+<!-- Location Field -->
+<div>
+<label class="block font-label-md text-label-md text-primary font-bold mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> 발생 위치
+                            </label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow" placeholder="교량 이름을 검색하거나 지도에서 선택하세요" type="text" value="한강대교 (남단 부근)">
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="my_location">my_location</span>
+</button>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-1.5 ml-1">현재 GPS 위치를 기반으로 자동 입력되었습니다.</p>
+</div>
+<!-- Date/Time Field (Auto-filled) -->
+<div>
+<label class="block font-label-md text-label-md text-primary font-bold mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span> 발견 일시
+                            </label>
+<input class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface-variant opacity-70 cursor-not-allowed" disabled="" type="text" value="2023년 10월 24일 15:30">
+</div>
+<!-- Description Field -->
+<div class="flex-grow flex flex-col">
+<label class="block font-label-md text-label-md text-primary font-bold mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span> 상세 설명 (선택)
+                            </label>
+<textarea class="w-full flex-grow min-h-[120px] bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow resize-none" placeholder="발견 당시의 상황이나 추가적인 설명을 자유롭게 적어주세요. (예: 진동이 느껴짐, 파편이 떨어져 있음 등)"></textarea>
+</div>
+<hr class="border-outline-variant/30 my-2">
+<!-- Disclaimer -->
+<div class="flex items-start gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mt-0.5 text-error" data-icon="warning">warning</span>
+<p class="font-caption text-caption leading-relaxed">
+                                본 서비스의 AI 분석은 참고용이며, 실제 안전 진단은 전문가를 통해 이루어집니다. 허위 제보 시 관련 법령에 따라 불이익을 받을 수 있습니다.
+                            </p>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-bold py-4 rounded-lg shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 mt-2" type="button">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+                            제보하기
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant/20 z-50 rounded-t-xl transition-transform">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/30 transition-all p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-caption text-caption">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/30 transition-all p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-caption text-caption">지도</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-secondary-container/50 rounded-xl px-4 py-1.5 transition-all scale-95 shadow-sm" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="add_a_photo" style="font-variation-settings: 'FILL' 1;">add_a_photo</span>
+<span class="font-caption text-caption font-bold">제보</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/30 transition-all p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="history">history</span>
+<span class="font-caption text-caption">기록</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/30 transition-all p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-caption text-caption">내 정보</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant w-full mt-auto mb-16 md:mb-0">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-desktop py-lg w-full max-w-[1440px] mx-auto px-margin-mobile">
+<div class="mb-6 md:mb-0">
+<div class="font-headline-md text-headline-md font-bold text-primary mb-2">BRIDGE SAFE</div>
+<p class="font-caption text-caption text-on-surface-variant">© 2024 국가교량안전처. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap gap-x-6 gap-y-2">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">공공기관 정보</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">문의하기</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">법적 고지</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">개인정보 처리방침</a>
+</div>
+</div>
+</footer>
+</body></html>

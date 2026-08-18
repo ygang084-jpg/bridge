@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIDGE SAFE — 정보 없음</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="assets/tailwind-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<style>body{font-family:'Noto Sans KR',sans-serif;}</style>
+</head>
+<body class="bg-bg text-fg">
+<div class="max-w-app mx-auto min-h-screen flex flex-col">
+
+  <!-- 상단 바 -->
+  <header class="sticky top-0 z-10 bg-surface border-b border-border">
+    <div class="h-14 px-2 flex items-center gap-1">
+      <a href="list.html" class="w-11 h-11 flex items-center justify-center text-fg hover:text-primary transition-colors duration-150" aria-label="뒤로가기">
+        <i class="ph ph-arrow-left text-[22px]"></i>
+      </a>
+      <h1 class="text-[17px] font-semibold text-primary">서강대교</h1>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 py-8 flex flex-col justify-center">
+    <div class="rounded-xl border border-border bg-surface shadow-sm p-6 text-center">
+      <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-unknown-bg text-unknown-fg mb-4">
+        <i class="ph ph-question text-[28px]"></i>
+      </span>
+      <p class="text-[17px] font-semibold text-fg">
+        이 교량은 공개된 점검·보수 이력 정보가 없습니다.
+      </p>
+      <p class="mt-2 text-[16px] leading-[26px] text-fg-muted">
+        공공데이터로 아직 제공되지 않는 항목입니다. 관할 관리기관에 직접 문의하시면
+        확인하실 수 있습니다.
+      </p>
+
+      <div class="mt-5 rounded-lg bg-surface-muted p-4 text-left">
+        <p class="text-[14px] font-medium text-fg-muted flex items-center gap-1.5">
+          <i class="ph ph-buildings text-[16px]"></i> 관할 관리기관
+        </p>
+        <p class="mt-1 text-[16px] font-medium">서울특별시 시설안전본부</p>
+        <p class="mt-2 text-[14px] font-medium text-fg-muted flex items-center gap-1.5">
+          <i class="ph ph-phone text-[16px]"></i> 문의처
+        </p>
+        <p class="mt-1 text-[16px] font-medium">02-000-0000</p>
+      </div>
+
+      <a href="list.html"
+         class="mt-6 min-h-[44px] flex items-center justify-center gap-2 rounded-lg bg-primary text-on-primary text-[16px] font-medium px-5 transition-colors duration-150 hover:bg-primary/90">
+        목록으로
+      </a>
+    </div>
+  </main>
+
+  <footer class="px-4 py-5 border-t border-border">
+    <p class="text-[13px] leading-[18px] text-fg-muted flex items-start gap-1.5">
+      <i class="ph ph-info text-[14px] mt-0.5 shrink-0"></i>
+      AI 분석은 참고용이며 공식 안전진단을 대체하지 않습니다.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

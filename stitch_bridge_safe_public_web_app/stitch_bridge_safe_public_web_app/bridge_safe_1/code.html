@@ -1,0 +1,390 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BRIDGE SAFE - 마이페이지 및 설정</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Noto+Sans+KR:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#eec209",
+                      "on-tertiary-fixed": "#231b00",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#006d37",
+                      "surface": "#f8f9fa",
+                      "surface-container-high": "#e7e8e9",
+                      "primary": "#031635",
+                      "on-tertiary-container": "#4e3e00",
+                      "inverse-surface": "#2e3132",
+                      "secondary-fixed-dim": "#4ae183",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#c5c6cf",
+                      "on-surface": "#191c1d",
+                      "surface-container-low": "#f3f4f5",
+                      "on-error-container": "#93000a",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed-variant": "#005228",
+                      "on-primary-fixed": "#081b3a",
+                      "primary-container": "#1a2b4b",
+                      "primary-fixed": "#d8e2ff",
+                      "inverse-primary": "#b6c6ef",
+                      "tertiary-fixed": "#ffe084",
+                      "secondary-fixed": "#6bfe9c",
+                      "surface-dim": "#d9dadb",
+                      "on-primary-container": "#8293b8",
+                      "surface-tint": "#4e5e81",
+                      "on-secondary-container": "#00743a",
+                      "on-secondary-fixed": "#00210c",
+                      "surface-container": "#edeeef",
+                      "surface-container-highest": "#e1e3e4",
+                      "on-surface-variant": "#44474e",
+                      "primary-fixed-dim": "#b6c6ef",
+                      "tertiary-container": "#cea700",
+                      "outline": "#75777f",
+                      "tertiary": "#735c00",
+                      "surface-variant": "#e1e3e4",
+                      "on-background": "#191c1d",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "inverse-on-surface": "#f0f1f2",
+                      "surface-bright": "#f8f9fa",
+                      "background": "#f8f9fa",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#6bfe9c",
+                      "on-primary-fixed-variant": "#364768"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "sm": "12px",
+                      "xl": "80px",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "16px",
+                      "base": "8px",
+                      "lg": "48px",
+                      "gutter": "24px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "Noto Sans KR"
+                      ],
+                      "body-md": [
+                              "Noto Sans KR"
+                      ],
+                      "caption": [
+                              "Noto Sans KR"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Noto Sans KR"
+                      ],
+                      "headline-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.outline-variant');
+            box-shadow: 0 4px 20px rgba(3, 22, 53, 0.05);
+        }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar (Desktop) -->
+<header class="hidden md:flex bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md docked full-width top-0 sticky z-50 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm flex justify-between items-center px-margin-desktop h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-lg">
+<div class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">
+                BRIDGE SAFE
+            </div>
+<nav class="flex gap-md font-label-md text-label-md">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2 flex items-center justify-center" href="#">홈</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2 flex items-center justify-center" href="#">지도</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2 flex items-center justify-center" href="#">내 교량</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2 flex items-center justify-center" href="#">기록</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-full p-2 transition-colors active:scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</header>
+<main class="flex-1 w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl pb-24 md:pb-lg">
+<!-- Profile Header Section -->
+<section class="flex flex-col md:flex-row gap-lg items-start md:items-center">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-surface-container-lowest shadow-sm flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A professional, modern studio portrait of a civil engineer wearing a safety vest and hard hat, looking confidently off-camera. The lighting is soft and natural, with a clean white background. The overall aesthetic is reliable, corporate, and clean, fitting a light-mode digital twin application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpbSlagNxfN_kRbPE6ELz-iYNQfRATwAmaFdPE5vBjmQeh7Gic8QB9Sw7-uQeyUWLFWnGTzupoRWxQ_2IMSwej1zpa_I2s9uh6nunPxZpUlD3u_u1X7eVqllD45V2rexLTVY8TKvcAleJZA5uZSZ73jL4GvRqfPh8pLwPr5IOHgcZjiJAOawDq5NK4p-m8z6IxC11aS351w4aIjArfExZfegyQFOM-uK5ABb6CrXceW0wJryeA_9AFgg">
+<button class="absolute bottom-0 left-0 right-0 bg-primary-container/80 text-on-primary text-caption font-caption py-1 text-center hover:bg-primary transition-colors backdrop-blur-sm">
+                    편집
+                </button>
+</div>
+<div class="flex-1">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-xs">사라 젠킨스</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mb-sm">수석 검사관 • ID: BS-84920</p>
+<div class="flex gap-2 flex-wrap">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-md font-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">verified_user</span> 인증된 에이전트
+                    </span>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-surface-container text-on-surface text-label-md font-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">location_on</span> 지역: 북서부
+                    </span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Activity Summary (Left Column - 8 cols) -->
+<div class="md:col-span-8 space-y-md">
+<h2 class="font-headline-md text-headline-md text-primary">활동 개요</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<!-- Stat Card 1 -->
+<div class="glass-card rounded-xl p-md flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs">assignment</span>
+<div class="font-display-lg text-display-lg text-primary">142</div>
+<div class="font-label-md text-label-md text-on-surface-variant">전체 보고서</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-card rounded-xl p-md flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary text-[32px] mb-xs">check_circle</span>
+<div class="font-display-lg text-display-lg text-secondary">138</div>
+<div class="font-label-md text-label-md text-on-surface-variant">해결됨</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-card rounded-xl p-md flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-tertiary text-[32px] mb-xs">pending_actions</span>
+<div class="font-display-lg text-display-lg text-tertiary">4</div>
+<div class="font-label-md text-label-md text-on-surface-variant">대기 중</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-card rounded-xl p-md flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary-container text-[32px] mb-xs">jules</span>
+<div class="font-display-lg text-display-lg text-primary-container">12</div>
+<div class="font-label-md text-label-md text-on-surface-variant">모니터링 중인 교량</div>
+</div>
+</div>
+<!-- Recent Reports List -->
+<div class="glass-card rounded-xl p-md md:p-lg mt-md">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-headline-md text-headline-md text-primary">최근 보고서</h3>
+<a class="text-primary hover:underline font-label-md text-label-md flex items-center" href="#">모두 보기 <span class="material-symbols-outlined text-[18px]">chevron_right</span></a>
+</div>
+<div class="space-y-sm">
+<!-- Report Item 1 -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center p-sm rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-start gap-sm mb-2 md:mb-0">
+<div class="bg-surface-container p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">report</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-bold">표면 균열 - 교각 4</div>
+<div class="font-caption text-caption text-on-surface-variant">골든게이트 교 • 2023년 10월 24일</div>
+</div>
+</div>
+<div class="inline-flex items-center px-2 py-1 rounded-md bg-tertiary-fixed text-on-tertiary-fixed font-caption text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span> 검토 중
+                            </div>
+</div>
+<!-- Report Item 2 -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center p-sm rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-start gap-sm mb-2 md:mb-0">
+<div class="bg-surface-container p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-bold">케이블 장력 이상</div>
+<div class="font-caption text-caption text-on-surface-variant">브루클린 교 • 2023년 10월 20일</div>
+</div>
+</div>
+<div class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1">check</span> 해결됨
+                            </div>
+</div>
+<!-- Report Item 3 -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center p-sm rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-start gap-sm mb-2 md:mb-0">
+<div class="bg-surface-container p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-bold">배수구 막힘 - B구역</div>
+<div class="font-caption text-caption text-on-surface-variant">조지 워싱턴 교 • 2023년 10월 15일</div>
+</div>
+</div>
+<div class="inline-flex items-center px-2 py-1 rounded-md bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1">check</span> 해결됨
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Settings (Right Column - 4 cols) -->
+<div class="md:col-span-4 space-y-md">
+<h2 class="font-headline-md text-headline-md text-primary">설정</h2>
+<div class="glass-card rounded-xl p-md">
+<h3 class="font-label-md text-label-md text-on-surface font-bold mb-md border-b border-outline-variant/30 pb-2">알림</h3>
+<div class="space-y-md">
+<!-- Toggle 1 -->
+<div class="flex justify-between items-center">
+<div>
+<div class="font-body-md text-body-md text-on-surface">푸시 알림</div>
+<div class="font-caption text-caption text-on-surface-variant">중요한 교량 상태 변경에 대한 알림</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value="">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Toggle 2 -->
+<div class="flex justify-between items-center">
+<div>
+<div class="font-body-md text-body-md text-on-surface">SMS 알림</div>
+<div class="font-caption text-caption text-on-surface-variant">문자 메시지로 긴급 알림 수신</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value="">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Toggle 3 -->
+<div class="flex justify-between items-center">
+<div>
+<div class="font-body-md text-body-md text-on-surface">주간 요약 보고서</div>
+<div class="font-caption text-caption text-on-surface-variant">모니터링 중인 교량의 이메일 다이제스트</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value="">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl p-md mt-md">
+<h3 class="font-label-md text-label-md text-on-surface font-bold mb-md border-b border-outline-variant/30 pb-2">계정 작업</h3>
+<div class="space-y-2 flex flex-col">
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container transition-colors font-body-md text-body-md text-on-surface flex items-center justify-between">
+                             비밀번호 변경 <span class="material-symbols-outlined text-[18px] text-on-surface-variant">chevron_right</span>
+</button>
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container transition-colors font-body-md text-body-md text-on-surface flex items-center justify-between">
+                             연락처 정보 업데이트 <span class="material-symbols-outlined text-[18px] text-on-surface-variant">chevron_right</span>
+</button>
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-error-container transition-colors font-body-md text-body-md text-error flex items-center justify-between mt-4">
+                             로그아웃 <span class="material-symbols-outlined text-[18px]">logout</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-surface-container-highest z-50 rounded-t-xl shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant/20 shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-caption text-caption">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-caption text-caption">지도</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">jules</span>
+<span class="font-caption text-caption">내 교량</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-caption text-caption">기록</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-secondary-container/50 dark:bg-secondary-container/20 rounded-xl px-3 py-1 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-caption text-caption font-bold">내 정보</span>
+</a>
+</nav>
+</body></html>

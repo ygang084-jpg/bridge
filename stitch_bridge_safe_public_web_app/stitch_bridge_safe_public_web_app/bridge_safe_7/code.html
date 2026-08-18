@@ -1,0 +1,294 @@
+<!DOCTYPE html><html class="light" lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BRIDGE SAFE - 안전 분석</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-tertiary-fixed": "#231b00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#006d37",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "primary": "#031635",
+                        "on-tertiary-container": "#4e3e00",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#4ae183",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c5c6cf",
+                        "on-surface": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005228",
+                        "on-primary-fixed": "#081b3a",
+                        "primary-container": "#1a2b4b",
+                        "primary-fixed": "#d8e2ff",
+                        "inverse-primary": "#b6c6ef",
+                        "tertiary-fixed": "#ffe084",
+                        "secondary-fixed": "#6bfe9c",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#8293b8",
+                        "surface-tint": "#4e5e81",
+                        "on-secondary-container": "#00743a",
+                        "on-secondary-fixed": "#00210c",
+                        "surface-container": "#edeeef",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#44474e",
+                        "primary-fixed-dim": "#b6c6ef",
+                        "tertiary-container": "#cea700",
+                        "outline": "#75777f",
+                        "tertiary": "#735c00",
+                        "surface-variant": "#e1e3e4",
+                        "on-background": "#191c1d",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-bright": "#f8f9fa",
+                        "background": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#6bfe9c",
+                        "on-primary-fixed-variant": "#364768"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Noto Sans KR"],
+                        "body-md": ["Noto Sans KR"],
+                        "caption": ["Noto Sans KR"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Noto Sans KR"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Noto+Sans+KR:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--tw-colors-outline-variant);
+            box-shadow: 0 4px 20px rgba(3, 22, 53, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md docked full-width top-0 sticky z-50 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm flex justify-between items-center px-margin-desktop h-16 w-full max-w-[1440px] mx-auto hidden md:flex">
+<div class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">BRIDGE SAFE</div>
+<div class="flex gap-gutter">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-md text-label-md hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2" href="#">홈</a>
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2 Active: scale-95 duration-150 ease-in-out" href="#">지도</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-md text-label-md hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2" href="#">내 교량</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-label-md text-label-md hover:bg-surface-variant/50 dark:hover:bg-surface-container-high/50 rounded-lg px-3 py-2" href="#">기록</a>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">search</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:text-primary-container transition-colors">account_circle</span>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg grid grid-cols-1 md:grid-cols-12 gap-gutter relative">
+<!-- Background Map (Visual Context) -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none" data-alt="A highly detailed, modern topographical map of a metropolitan area viewed from above. The map uses a minimalist, light-mode corporate aesthetic with subtle shades of silver, light blue, and crisp white. Clean, sharp lines denote roads and waterways, avoiding heavy textures. The mood is calm, structural, and professional, characteristic of a digital twin interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGn5TiyiNEww4HpTa71m-l7pRK127ugKmdA8HRgu6h5Ki5AfI0oDv2udboQp7j_Qnar1tqQiyYTgdPKaQTts4RWcPmqQCH8r7ll0hT6JZeqn8fVQcEVNi2HCuTmIklU97cG9-27DocwdcC64mArFsHApMEb_StHKWbJbfh4C392pSMxVfHVTrK0lBLaT_KsO4_fgD4JPUp-qeXfmnHvsQnDoyKXIXo3yOy96dL4nAzHBWfOC0FidhfrQ')"></div>
+<!-- Left Column: Metrics & Charts (Bento Grid) -->
+<div class="md:col-span-8 z-10 flex flex-col gap-gutter">
+<header class="mb-sm">
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">안전 분석 대시보드</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">실시간 인프라 상태 및 시민 신고 지표입니다.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Maintenance Progress Chart -->
+<div class="glass-card rounded-xl p-md flex flex-col justify-between h-64">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs"><span class="material-symbols-outlined text-sm">build</span> 유지보수 진행률</h3>
+<div class="font-headline-md text-headline-md text-primary mt-xs">78% 해결됨</div>
+</div>
+<div class="w-full h-32 flex items-end gap-xs">
+<div class="w-1/4 bg-primary-fixed rounded-t-sm h-[40%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute bottom-full mb-2 hidden group-hover:block bg-inverse-surface text-inverse-on-surface text-caption font-caption px-2 py-1 rounded">1분기: 40%</div>
+</div>
+<div class="w-1/4 bg-primary-fixed rounded-t-sm h-[60%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute bottom-full mb-2 hidden group-hover:block bg-inverse-surface text-inverse-on-surface text-caption font-caption px-2 py-1 rounded">2분기: 60%</div>
+</div>
+<div class="w-1/4 bg-primary-container rounded-t-sm h-[78%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute bottom-full mb-2 hidden group-hover:block bg-inverse-surface text-inverse-on-surface text-caption font-caption px-2 py-1 rounded">3분기: 78%</div>
+</div>
+<div class="w-1/4 bg-surface-variant rounded-t-sm h-[20%] border border-dashed border-outline-variant relative">
+<div class="absolute inset-0 flex items-center justify-center text-caption font-caption text-on-surface-variant">예상</div>
+</div>
+</div>
+</div>
+<!-- Citizen Participation Stats -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs"><span class="material-symbols-outlined text-sm">groups</span> 시민 참여</h3>
+<div class="flex justify-between items-end border-b border-outline-variant/30 pb-xs">
+<span class="font-body-md text-body-md text-on-surface">총 신고 수</span>
+<span class="font-headline-md text-headline-md text-primary">1,245</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant/30 pb-xs">
+<span class="font-body-md text-body-md text-on-surface">해결된 건수</span>
+<span class="font-headline-md text-headline-md text-secondary">982</span>
+</div>
+<div class="flex justify-between items-end pb-xs">
+<span class="font-body-md text-body-md text-on-surface">검증 대기 중</span>
+<span class="font-headline-md text-headline-md text-tertiary-container">263</span>
+</div>
+</div>
+</div>
+<!-- National Map Visual (Placeholder for complex vis) -->
+<div class="glass-card rounded-xl p-md h-96 relative overflow-hidden group">
+<h3 class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs absolute top-md left-md z-20 bg-surface/90 px-2 py-1 rounded-md backdrop-blur"><span class="material-symbols-outlined text-sm">map</span> 전국 안전 등급</h3>
+<!-- Simulated Map Data Points -->
+<div class="absolute inset-0 z-10 p-lg" data-location="United States">
+<!-- Map placeholder image -->
+<img class="w-full h-full object-contain opacity-50" data-alt="A stylized, light-mode minimalist map of the United States used as a background for a digital twin data visualization. The map uses soft silver and light gray tones on a pristine white background. It lacks complex geographical details, focusing instead on clean, smooth vector outlines suitable for overlaying bright data points. The aesthetic is modern, corporate, and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ2u5fTbJl2iWmDigkUMocl2Oa7cYHd2nAOCK1GkeYshq7_UUOiOijkvFmKIV5h4Tg0HjFe50lB2WffQ-ZcMA5PF69_KUiB3dqoytpQ2iANUnw46O4pM18Ie2Q4B-CfCD9zGZKYp-kPifb4-m1ZYGaAX7V21zOS-Km1AgID7REnA-gQu039vXUqagTRtIgDwlrCi5UbKO4U38Ie0Al-2Rv9YwfEkvUyOvLpFyrmlwNCEeAqTeAfprmBA">
+<!-- Interactive Pins -->
+<div class="absolute top-[30%] left-[20%] flex flex-col items-center group/pin cursor-pointer">
+<span class="material-symbols-outlined text-secondary hover:scale-125 transition-transform" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover/pin:block absolute top-full mt-1 bg-surface-container-highest px-2 py-1 rounded text-caption font-caption whitespace-nowrap shadow-sm">A등급 - 안정</div>
+</div>
+<div class="absolute top-[50%] left-[70%] flex flex-col items-center group/pin cursor-pointer">
+<span class="material-symbols-outlined text-tertiary-container hover:scale-125 transition-transform" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover/pin:block absolute top-full mt-1 bg-surface-container-highest px-2 py-1 rounded text-caption font-caption whitespace-nowrap shadow-sm">B등급 - 관찰 요망</div>
+</div>
+<div class="absolute top-[70%] left-[40%] flex flex-col items-center group/pin cursor-pointer">
+<span class="material-symbols-outlined text-error hover:scale-125 transition-transform" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover/pin:block absolute top-full mt-1 bg-surface-container-highest px-2 py-1 rounded text-caption font-caption whitespace-nowrap shadow-sm">D등급 - 위험</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Context & Alerts -->
+<div class="md:col-span-4 z-10 flex flex-col gap-gutter">
+<!-- Quick Alert Card -->
+<div class="bg-error-container border border-error/20 rounded-xl p-md flex gap-sm items-start shadow-sm">
+<span class="material-symbols-outlined text-error mt-1">warning</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-error-container">위험 경고</h4>
+<p class="font-caption text-caption text-on-error-container/80 mt-xs">금문교 4번 경간에서 구조적 이상 감지됨. 즉각적인 점검 필요.</p>
+<button class="mt-sm bg-error text-on-error px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-error/90 transition-colors">상세 보기</button>
+</div>
+</div>
+<!-- Bridge Info List (Glassmorphism) -->
+<div class="glass-card rounded-xl p-md flex-1">
+<h3 class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs border-b border-outline-variant/30 pb-sm mb-sm"><span class="material-symbols-outlined text-sm">view_list</span> 모니터링 대상 구조물</h3>
+<div class="flex flex-col gap-sm">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-sm hover:bg-surface-variant/30 rounded-lg transition-colors cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm">check</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">베이 브리지</div>
+<div class="font-caption text-caption text-on-surface-variant">A등급</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-sm hover:bg-surface-variant/30 rounded-lg transition-colors cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-sm">remove</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">브루클린 브리지</div>
+<div class="font-caption text-caption text-on-surface-variant">B등급</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-sm hover:bg-surface-variant/30 rounded-lg transition-colors cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-error-container text-sm">priority_high</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">금문교</div>
+<div class="font-caption text-caption text-on-surface-variant">D등급</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface dark:bg-surface-container-highest fixed bottom-0 w-full z-50 rounded-t-xl shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant/20 md:hidden flex justify-around items-center px-4 py-2 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-caption text-caption">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-secondary-container/50 dark:bg-secondary-container/20 rounded-xl px-3 py-1 Active: scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-caption text-caption">지도</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined mb-1">jules</span>
+<span class="font-caption text-caption">내 교량</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined mb-1">history</span>
+<span class="font-caption text-caption">기록</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/30 transition-all rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-caption text-caption">내 정보</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-lowest full-width border-t border-outline-variant dark:border-outline flex flex-col md:flex-row justify-between items-start md:items-center px-margin-desktop py-lg w-full max-w-[1440px] mx-auto mt-xl pb-32 md:pb-lg">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed mb-sm md:mb-0">
+            BRIDGE SAFE
+            <div class="font-caption text-caption text-on-surface-variant mt-xs">© 2024 국가교량안전처. All rights reserved.</div>
+</div>
+<div class="flex flex-col md:flex-row gap-sm md:gap-gutter font-body-md text-body-md text-on-surface-variant">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:underline transition-all" href="#">공공기관 안내</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:underline transition-all" href="#">문의하기</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:underline transition-all" href="#">법적 고지</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:underline transition-all" href="#">개인정보처리방침</a>
+</div>
+</footer>
+</body></html>

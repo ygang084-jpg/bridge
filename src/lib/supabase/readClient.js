@@ -89,7 +89,9 @@ export async function fetchBridgeNews(limit = 24) {
   const { data, error } = await client
     .from('bridge_news')
     // description 은 화면의 '요약' 두 줄에 쓴다 — 우리가 쓴 문장이 아니라 원문 발췌다.
-    .select('id, title, url, publisher, description, published_at, source')
+    // query 는 '이 목록을 만든 검색어'를 화면에 밝히는 데 쓴다 — 목록이 왜 이렇게
+    // 구성됐는지 설명할 수 없으면 무엇이 빠졌는지도 말할 수 없다.
+    .select('id, title, url, publisher, description, published_at, source, query')
     .order('published_at', { ascending: false, nullsFirst: false })
     .limit(limit)
 

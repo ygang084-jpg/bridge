@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Icon from './Icon'
 import { arrangeNews, classifyNews, excerptSentences } from '@/lib/news/classify.js'
+import { toneFor, formatDate } from '@/lib/news/tagTone.js'
 
 /**
  * 교량 뉴스 — 공지사항 게시판 형식.
@@ -29,16 +30,6 @@ import { arrangeNews, classifyNews, excerptSentences } from '@/lib/news/classify
  * 가장 위험하다 ('뉴스에 났다 = 위험하다'로 읽히는 것을 막는 문장이다).
  * ---------------------------------------------------------------------------
  */
-
-/** 말머리 색. 태그마다 다르지만 색만으로 뜻을 전하지 않는다 — 글자가 태그 이름이다. */
-const TAG_TONE = {
-  긴급: 'bg-danger-bg text-danger-fg',
-  공지: 'bg-caution-bg text-caution-fg',
-  정책: 'bg-summary-bg text-summary-fg',
-  기술: 'bg-summary-bg text-summary-fg',
-  해외: 'bg-surface-variant text-on-surface-variant',
-  안내: 'bg-surface-variant text-on-surface-variant',
-}
 
 export default function NewsBoard({
   items = [],
@@ -98,7 +89,7 @@ export default function NewsBoard({
                   <div className="flex items-start gap-2">
                     <span
                       className={`shrink-0 rounded px-2 py-0.5 text-caption font-bold ${
-                        TAG_TONE[row.tag] ?? TAG_TONE.안내
+                        toneFor(row.tag)
                       }`}
                       title={row.tagHint}
                     >
@@ -114,7 +105,7 @@ export default function NewsBoard({
                     <span aria-hidden="true">·</span>
                     <span>{row.region ?? '지역 미표기'}</span>
                     <span aria-hidden="true">·</span>
-                    <span>{row.published_at ? formatFetchedAt(row.published_at) : '발표일 미표기'}</span>
+                    <span>{row.published_at ? formatDate(row.published_at) : '발표일 미표기'}</span>
                   </p>
 
                   {row.description && (
@@ -133,26 +124,31 @@ export default function NewsBoard({
           </ol>
         )}
 
-        <p className="mt-md border-t border-outline-variant/30 pt-3 text-xs leading-[18px] text-on-surface-variant">
-          기사는 <strong className="font-semibold">언론 보도이며 공식 기록이 아닙니다.</strong>{' '}
-          네이버 뉴스 검색 결과를 옮긴 것이고, 요약은 기사 원문 발췌입니다. 말머리와 카테고리는
-          제목·요약에 있던 낱말로 붙인 것이며 저희가 사안의 심각성을 판정한 것이 아닙니다.
-          {sources && (
-            <>
-              <br />
-              화면의 관리 기록 출처: {sources.length > 0 ? sources.join(' · ') : '출처 미표기'}
-              {fetchedAt ? ` · ${formatFetchedAt(fetchedAt)} 수집` : ''}
-            </>
-          )}
-        </p>
+        <NewsDisclaimer sources={sources} fetchedAt={fetchedAt} className="mt-md border-t border-outline-variant/30 pt-3" />
       </div>
     </div>
   )
 }
 
-/* ── 공통 조각 ───────────────────────────────────────────────────────── */
-
-function formatFetchedAt(value) {
-  const matched = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value))
-  return matched ? `${matched[1]}.${matched[2]}.${matched[3]}` : String(value)
+/**
+ * 목록 아래 고지. 대시보드 발췌와 교량뉴스 화면이 같은 문장을 쓴다.
+ *
+ * 이 문장이 목록에서 빠지는 것이 '뉴스에 났다 = 그 다리가 위험하다'로 읽히는
+ * 가장 빠른 길이다. 그래서 문구를 두 곳에 적지 않고 여기 한 번만 둔다.
+ */
+export function NewsDisclaimer({ sources = null, fetchedAt = null, className = '' }) {
+  return (
+    <p className={`text-xs leading-[18px] text-on-surface-variant ${className}`}>
+      기사는 <strong className="font-semibold">언론 보도이며 공식 기록이 아닙니다.</strong> 네이버
+      뉴스 검색 결과를 옮긴 것이고, 요약은 기사 원문 발췌입니다. 말머리와 카테고리는 제목·요약에
+      있던 낱말로 붙인 것이며 저희가 사안의 심각성을 판정한 것이 아닙니다.
+      {sources && (
+        <>
+          <br />
+          화면의 관리 기록 출처: {sources.length > 0 ? sources.join(' · ') : '출처 미표기'}
+          {fetchedAt ? ` · ${formatDate(fetchedAt)} 수집` : ''}
+        </>
+      )}
+    </p>
+  )
 }

@@ -52,8 +52,3 @@ function latestGrade(history) {
   return graded.length > 0 ? String(graded[0].safety_grade).trim().toUpperCase() : null
 }
 
-/** 이력이 있는 교량 중 첫 번째의 관리 이력 경로. 없으면 null. */
-export function firstHistoryHref(bridges) {
-  const withRecords = bridges.find((bridge) => bridge.recordCount > 0)
-  return withRecords ? `/bridges/${withRecords.id}/history` : null
-}

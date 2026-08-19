@@ -11,31 +11,30 @@ import Icon from './Icon'
  *   홈       /dashboard   메인 대시보드 (랜딩은 /)
  *   지도     /map         지도 화면 (지도 렌더링 자체는 v1, 배경은 격자)
  *   내 교량  /my-bridges  교량 카드 목록
- *   기록     대표 교량의 관리 이력. 이력이 있는 교량이 없으면 비활성
+ *   교량뉴스 /news        언론 보도 목록
  *   안내     /info        출처·갱신 주기·하지 않는 일. 판정하지 않는다는 원칙이
  *                         화면의 빈자리로 나타나므로, 그 설명을 '더보기'에 묻지 않는다
  *   내 정보  없음 — 로그인을 만들지 않는다 (v0 비목표)
  *
  * href 가 없는 항목은 링크로 두지 않는다. 눌러도 아무 일이 없는 링크는
  * 고장으로 읽힌다.
+ *
+ * '기록' 항목이 있던 자리다. 대표 교량 하나의 관리 이력으로 가는 지름길이었는데,
+ * 어느 교량을 대표로 삼을지를 우리가 골라야 했고 교량 데이터가 없으면 늘
+ * 비활성이었다. 관리 이력의 제자리는 교량 상세 안이다 (요약 카드에서 들어간다).
+ * 그래서 항목마다 목적지를 넘겨받던 historyHref 도 함께 없앴다.
  */
 /* export 하지 않는다 — 컴포넌트 외의 것을 함께 내보내면 fast refresh 가 깨진다. */
 const NAV_ITEMS = [
   { key: 'home', label: '홈', icon: 'home', href: '/dashboard' },
   { key: 'map', label: '지도', icon: 'map', href: '/map' },
   { key: 'bridges', label: '내 교량', icon: 'building', href: '/my-bridges' },
-  { key: 'history', label: '기록', icon: 'clock', href: null },
+  { key: 'news', label: '교량뉴스', icon: 'file-text', href: '/news' },
   { key: 'info', label: '안내', icon: 'info', href: '/info' },
   { key: 'me', label: '내 정보', icon: 'user', href: null },
 ]
 
-/** href 가 null 인 항목과, 대표 교량이 없어 기록으로 갈 수 없는 경우를 함께 처리한다. */
-function resolveHref(item, historyHref) {
-  if (item.key === 'history') return historyHref ?? null
-  return item.href
-}
-
-export function TopNav({ active, historyHref = null }) {
+export function TopNav({ active }) {
   return (
     <nav className="sticky top-0 z-50 hidden border-b border-outline-variant/30 bg-surface/80 shadow-sm backdrop-blur-md md:block">
       <div className="flex h-16 w-full items-center justify-between px-margin-desktop">
@@ -53,7 +52,7 @@ export function TopNav({ active, historyHref = null }) {
 
         <div className="flex items-center space-x-6">
           {NAV_ITEMS.filter((item) => item.key !== 'me').map((item) => {
-            const href = resolveHref(item, historyHref)
+            const href = item.href
             if (!href) {
               return (
                 <span
@@ -99,11 +98,11 @@ export function TopNav({ active, historyHref = null }) {
   )
 }
 
-export function BottomNav({ active, historyHref = null }) {
+export function BottomNav({ active }) {
   return (
     <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl border-t border-outline-variant/20 bg-surface-container-lowest px-4 py-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] md:hidden">
       {NAV_ITEMS.map((item) => {
-        const href = resolveHref(item, historyHref)
+        const href = item.href
         const isActive = item.key === active
         const inner = (
           <>

@@ -2,7 +2,7 @@ import BridgeCardGrid from '@/components/BridgeCardGrid'
 import { HealthCard, TimeMachineCard } from '@/components/BridgeHealth'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
-import { firstHistoryHref, loadBridgeCards } from '@/lib/bridges/cards.js'
+import { loadBridgeCards } from '@/lib/bridges/cards.js'
 import { fetchBridgeDetail } from '@/lib/supabase/readClient'
 import { buildTimeline, summarizeManagement } from '@/lib/history'
 
@@ -24,12 +24,11 @@ export const metadata = { title: '내 교량 — BRIDGE SAFE' }
  */
 export default async function MyBridgesPage() {
   const { bridges, loadFailed } = await loadBridgeCards()
-  const historyHref = firstHistoryHref(bridges)
   const featured = await loadFeatured(bridges)
 
   return (
     <>
-      <TopNav active="bridges" historyHref={historyHref} />
+      <TopNav active="bridges" />
 
       <main className="screen-wide relative z-10 flex w-full flex-1 flex-col gap-xl px-margin-mobile py-xl md:px-margin-desktop">
         <div className="w-full text-center md:text-left">
@@ -54,7 +53,7 @@ export default async function MyBridgesPage() {
         )}
       </main>
 
-      <BottomNav active="bridges" historyHref={historyHref} />
+      <BottomNav active="bridges" />
       <AppFooter />
     </>
   )

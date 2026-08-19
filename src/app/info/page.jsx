@@ -3,7 +3,6 @@ import Icon from '@/components/Icon'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
 import { DISCLOSURE_TEXT } from '@/components/Disclosure'
-import { firstHistoryHref, loadBridgeCards } from '@/lib/bridges/cards.js'
 import { cronTextFor } from '@/lib/cron.js'
 import vercelConfig from '../../../vercel.json'
 
@@ -53,19 +52,14 @@ export const metadata = {
  * 조용히 어긋나고, '언제 갱신되는지'는 곧 '얼마나 믿어도 되는지'다.
  * ---------------------------------------------------------------------------
  */
-export default async function InfoPage() {
-  // 내비의 '기록' 목적지를 다른 화면과 같게 두려고 읽는다. 이 화면 자체는
-  // 교량 데이터를 쓰지 않는다.
-  const { bridges } = await loadBridgeCards()
-  const historyHref = firstHistoryHref(bridges)
-
+export default function InfoPage() {
   const crons = vercelConfig?.crons
   const newsCron = cronTextFor(crons, '/api/cron/refresh-news')
   const summaryCron = cronTextFor(crons, '/api/cron/refresh-summaries')
 
   return (
     <>
-      <TopNav active="info" historyHref={historyHref} />
+      <TopNav active="info" />
 
       <main className="screen-wide relative z-10 flex w-full flex-1 flex-col px-margin-mobile py-xl md:px-margin-desktop">
         <div className="mx-auto flex w-full max-w-[1024px] flex-col gap-xl">
@@ -78,7 +72,7 @@ export default async function InfoPage() {
       </main>
 
       <AppFooter />
-      <BottomNav active="info" historyHref={historyHref} />
+      <BottomNav active="info" />
     </>
   )
 }

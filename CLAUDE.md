@@ -10,6 +10,7 @@
 | `/dashboard` | 메인 대시보드 — 내비의 '홈'이 여기다 | Stitch `bridge_safe_9` |
 | `/map` | **지도 화면** — 대시보드의 지도 영역을 누르면 여기로 온다 | Stitch `bridge_safe_5` |
 | `/my-bridges` | 내 교량 (카드 목록) | Stitch `bridge_safe_5` |
+| `/news` | **교량뉴스** — 언론 보도 목록. 대시보드의 발췌와 같은 컴포넌트(`NewsBoard`) | |
 | `/info` | **정보 안내** — 출처·갱신 주기·하지 않는 일·FAQ | Stitch `정보 안내` |
 | `/bridges` | F-01 내 주변 교량 목록 (위치·지역명 검색) | |
 | `/bridges/[id]` | F-02 교량 상세 | |
@@ -26,8 +27,13 @@
 
 ### 내비게이션 (`src/components/AppNav.jsx`)
 
-홈 `/dashboard` · 지도 `/map` · 내 교량 `/my-bridges` · 기록(대표 교량의 이력) ·
+홈 `/dashboard` · 지도 `/map` · 내 교량 `/my-bridges` · 교량뉴스 `/news` ·
 안내 `/info` · 내 정보(없음).
+
+'기록'(대표 교량의 이력) 항목이 있던 자리가 `/news`다. 어느 교량을 대표로 삼을지
+우리가 골라야 했고 교량 데이터가 없으면 늘 비활성이었다 — 관리 이력의 제자리는
+교량 상세 안(`SummaryCard`의 링크)이다. 그래서 내비에 목적지를 넘기던
+`historyHref` 배선도 함께 없앴다.
 목적지가 없는 항목은 링크로 두지 않고 비활성으로 표시한다 — 눌러도 아무 일이 없는
 링크는 고장으로 읽힌다. `/bridges`는 내비에 없고 홈의 CTA와 검색 카드에서 들어간다.
 

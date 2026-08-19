@@ -25,11 +25,11 @@ export const metadata = { title: '교량 지도 — BRIDGE SAFE' }
  * ---------------------------------------------------------------------------
  */
 export default async function MapPage() {
-  const { bridges, historyHref } = await loadBridgesForMap()
+  const { bridges } = await loadBridgesForMap()
 
   return (
     <>
-      <TopNav active="map" historyHref={historyHref} />
+      <TopNav active="map" />
 
       <main className="screen-wide relative z-10 flex w-full flex-1 flex-col px-margin-mobile py-lg md:px-margin-desktop">
         <div className="mb-md w-full">
@@ -49,7 +49,7 @@ export default async function MapPage() {
         <MapExplorer bridges={bridges} />
       </main>
 
-      <BottomNav active="map" historyHref={historyHref} />
+      <BottomNav active="map" />
       <AppFooter />
     </>
   )
@@ -67,9 +67,9 @@ async function loadBridgesForMap() {
   try {
     list = await fetchBridgesForList()
   } catch {
-    return { bridges: [], historyHref: null }
+    return { bridges: [] }
   }
-  if (!list.available) return { bridges: [], historyHref: null }
+  if (!list.available) return { bridges: [] }
 
   const bridges = await Promise.all(
     list.bridges.map(async (bridge) => {
@@ -104,12 +104,7 @@ async function loadBridgesForMap() {
     }),
   )
 
-  const withRecords = bridges.find((bridge) => bridge.recordCount > 0)
-
-  return {
-    bridges,
-    historyHref: withRecords ? `/bridges/${withRecords.id}/history` : null,
-  }
+  return { bridges }
 }
 
 /** 'YYYY-MM-DD' → '2025.11.28'. 형식을 못 읽으면 원문 그대로 둔다. */

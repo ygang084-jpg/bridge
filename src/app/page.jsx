@@ -119,10 +119,18 @@ function Hero() {
             muted 는 자동재생의 필수 조건이고, preload="metadata" 로 첫 화면에서
             2.8MB 를 한꺼번에 받지 않게 한다 (PRD §11 3초 요구).
             움직임을 줄이도록 설정한 사용자에게는 globals.css 가 이 영상을 숨겨
-            위 그라디언트만 남긴다. */}
+            위 그라디언트만 남긴다.
+
+            파일명이 한글일 때(차도_다니게_해줘.mp4) 배포에서 404 가 났다 — 태그는
+            들어가는데 영상만 오지 않아 그라디언트만 보였고, 화면상으로는 '영상을
+            안 넣은 것'과 구별되지 않았다. public/ 안의 파일명은 ASCII 로만 둔다.
+
+            이 영상은 특정 교량의 현재 모습이 아니다. 배경 장식이므로 위에 얹은
+            그라디언트로 형체를 눌러 두고, 옆에 관측값·촬영 시각 같은 문구를 붙이지
+            않는다 — 붙이면 지금 그 다리를 비추는 화면으로 읽힌다. */}
         <video
           className="hero-video absolute inset-0 z-0 h-full w-full object-cover"
-          src="/차도_다니게_해줘.mp4"
+          src="/hero-traffic.mp4"
           autoPlay
           muted
           loop

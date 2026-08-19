@@ -6,7 +6,8 @@
 
 | 경로 | 화면 | 근거 디자인 |
 | --- | --- | --- |
-| `/` | 메인 대시보드 | Stitch `bridge_safe_9` |
+| `/` | **랜딩** — 서비스 소개·핵심 기능·차별점·CTA. 초록 버튼이 `/dashboard` 로 보낸다 | Stitch `일상의 안전을 잇다` |
+| `/dashboard` | 메인 대시보드 — 내비의 '홈'이 여기다 | Stitch `bridge_safe_9` |
 | `/map` | **지도 화면** — 대시보드의 지도 영역을 누르면 여기로 온다 | Stitch `bridge_safe_5` |
 | `/my-bridges` | 내 교량 (카드 목록) | Stitch `bridge_safe_5` |
 | `/bridges` | F-01 내 주변 교량 목록 (위치·지역명 검색) | |
@@ -24,7 +25,7 @@
 
 ### 내비게이션 (`src/components/AppNav.jsx`)
 
-홈 `/` · 지도 `/map` · 내 교량 `/my-bridges` · 기록(대표 교량의 이력) · 내 정보(없음).
+홈 `/dashboard` · 지도 `/map` · 내 교량 `/my-bridges` · 기록(대표 교량의 이력) · 내 정보(없음).
 목적지가 없는 항목은 링크로 두지 않고 비활성으로 표시한다 — 눌러도 아무 일이 없는
 링크는 고장으로 읽힌다. `/bridges`는 내비에 없고 홈의 CTA와 검색 카드에서 들어간다.
 

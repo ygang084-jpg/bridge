@@ -8,6 +8,9 @@ import { buildTimeline, summarizeManagement } from '@/lib/history'
 
 export const metadata = { title: '내 교량 — BRIDGE SAFE' }
 
+/** 한 시간마다 다시 만든다 — 이유는 dashboard/page.jsx 의 같은 상수에 적었다. */
+export const revalidate = 3600
+
 /**
  * '내 교량' 화면 — Stitch `bridge_safe_5` 구성을 옮긴 것.
  * ---------------------------------------------------------------------------

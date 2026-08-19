@@ -8,6 +8,10 @@ import { buildTimeline } from '@/lib/history'
 
 export const metadata = { title: '교량 지도 — BRIDGE SAFE' }
 
+/** 한 시간마다 다시 만든다 — 이유는 dashboard/page.jsx 의 같은 상수에 적었다.
+    마커는 교량 좌표에서 나오므로, 굳어 있으면 새로 등록된 교량이 지도에 안 찍힌다. */
+export const revalidate = 3600
+
 /**
  * 교량 지도 — Stitch '교량 지도' + '교량 상세 정보' 구성을 옮긴 것.
  * 대시보드의 지도 영역이나 내비의 '지도'를 누르면 이 화면으로 온다.

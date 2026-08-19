@@ -27,3 +27,7 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 *.swp
+
+# 저장소 루트에 떨어지는 스크린샷. 확인용으로 찍어 붙인 것이 그대로 쌓인다.
+# 루트만 걸러낸다 — public/features/*.png 는 앱이 쓰는 이미지라 계속 추적해야 한다.
+/*.png

@@ -1,9 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Icon from './Icon'
 import InfoStateBadge from './InfoStateBadge'
+import KakaoMap from './KakaoMap'
 
 /**
  * 교량 지도 화면 — Stitch '교량 지도' + '교량 상세 정보' 구성을 옮긴 것.
@@ -34,6 +35,16 @@ export default function MapExplorer({ bridges = [] }) {
   const [query, setQuery] = useState('')
   const [region, setRegion] = useState(ALL_REGIONS)
   const [selectedId, setSelectedId] = useState(null)
+
+  // 카카오 JS 키가 없으면 지도를 부를 수 없다. 그때는 아래 격자 배경 + 상대
+  // 위치 마커로 되돌린다 (이 화면이 원래 쓰던 방식).
+  const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''
+  const [mapError, setMapError] = useState(apiKey ? null : '지도 키가 설정되지 않았습니다')
+  const useFallback = !apiKey || Boolean(mapError)
+
+  const handleMapUnavailable = useCallback((reason) => {
+    setMapError(reason ?? '지도를 불러오지 못했습니다')
+  }, [])
 
   const regions = useMemo(() => {
     const found = new Set()
@@ -78,54 +89,71 @@ export default function MapExplorer({ bridges = [] }) {
         }}
       />
 
-      <div className="map-canvas relative min-h-[420px] flex-1 overflow-hidden">
-        <p className="absolute top-3 left-3 z-10 flex items-start gap-1.5 rounded-lg bg-surface-container-lowest/90 px-3 py-2 text-caption leading-[18px] text-on-surface-variant shadow-sm backdrop-blur-sm">
-          <Icon name="info" size={14} className="mt-0.5" />
-          <span>
-            지도가 아닙니다. 마커는 실제 위경도의 <strong className="font-semibold">상대 위치</strong>
-            만 나타내며 축척·도로는 표시하지 않습니다.
-          </span>
-        </p>
+      <div
+        className={`relative min-h-[420px] flex-1 overflow-hidden ${useFallback ? 'map-canvas' : ''}`}
+      >
+        {useFallback ? (
+          <>
+            <p className="absolute top-3 left-3 z-10 flex max-w-[22rem] items-start gap-1.5 rounded-lg bg-surface-container-lowest/90 px-3 py-2 text-caption leading-[18px] text-on-surface-variant shadow-sm backdrop-blur-sm">
+              <Icon name="info" size={14} className="mt-0.5" />
+              <span>
+                {mapError
+                  ? `지도를 불러오지 못해 상대 위치만 표시합니다 (${mapError}).`
+                  : '지도가 아닙니다. 마커는 실제 위경도의 상대 위치만 나타내며 축척·도로는 표시하지 않습니다.'}
+              </span>
+            </p>
 
-        {visible.length === 0 ? (
-          <p className="flex h-full items-center justify-center text-body-md text-on-surface-variant">
-            조건에 맞는 교량이 없습니다.
-          </p>
+            {visible.length === 0 ? (
+              <p className="flex h-full items-center justify-center text-body-md text-on-surface-variant">
+                조건에 맞는 교량이 없습니다.
+              </p>
+            ) : (
+              visible.map((bridge) => {
+                const spot = positions.get(bridge.id)
+                const isSelected = bridge.id === selectedId
+                return (
+                  <button
+                    key={bridge.id}
+                    type="button"
+                    onClick={() => setSelectedId(isSelected ? null : bridge.id)}
+                    aria-pressed={isSelected}
+                    className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
+                    style={{
+                      top: `${spot.top}%`,
+                      left: `${spot.left}%`,
+                      zIndex: isSelected ? 30 : 20,
+                    }}
+                  >
+                    <span
+                      className={`mb-1 rounded border border-outline-variant bg-surface-container-lowest px-2 py-1 text-caption font-bold whitespace-nowrap text-primary shadow-sm transition-opacity ${
+                        isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      }`}
+                    >
+                      {bridge.name}
+                    </span>
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary shadow-md transition-transform group-hover:scale-110 ${
+                        isSelected ? 'ring-4 ring-primary/20' : ''
+                      }`}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-on-primary" />
+                    </span>
+                  </button>
+                )
+              })
+            )}
+          </>
         ) : (
-          visible.map((bridge) => {
-            const spot = positions.get(bridge.id)
-            const isSelected = bridge.id === selectedId
-            return (
-              <button
-                key={bridge.id}
-                type="button"
-                onClick={() => setSelectedId(isSelected ? null : bridge.id)}
-                aria-pressed={isSelected}
-                className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
-                style={{ top: `${spot.top}%`, left: `${spot.left}%`, zIndex: isSelected ? 30 : 20 }}
-              >
-                <span
-                  className={`mb-1 rounded border border-outline-variant bg-surface-container-lowest px-2 py-1 text-caption font-bold whitespace-nowrap text-primary shadow-sm transition-opacity ${
-                    isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                  }`}
-                >
-                  {bridge.name}
-                </span>
-                <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary shadow-md transition-transform group-hover:scale-110 ${
-                    isSelected ? 'ring-4 ring-primary/20' : ''
-                  }`}
-                >
-                  <span className="h-2 w-2 rounded-full bg-on-primary" />
-                </span>
-              </button>
-            )
-          })
+          <KakaoMap
+            apiKey={apiKey}
+            bridges={visible}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onUnavailable={handleMapUnavailable}
+          />
         )}
 
-        {selected && (
-          <DetailPanel bridge={selected} onClose={() => setSelectedId(null)} />
-        )}
+        {selected && <DetailPanel bridge={selected} onClose={() => setSelectedId(null)} />}
       </div>
     </div>
   )

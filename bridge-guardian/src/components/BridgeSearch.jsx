@@ -49,26 +49,43 @@ export default function BridgeSearch({ bridges = [], className = '' }) {
         교량 검색
       </h2>
 
-      <label className="relative block">
-        <span className="sr-only">교량 이름 또는 지역명으로 검색</span>
-        <Icon
-          name="search"
-          size={18}
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-on-surface-variant"
-        />
-        <input
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="교량 이름 또는 지역명"
-          className="min-h-[44px] w-full rounded-lg border border-outline bg-surface-container-lowest pr-4 pl-10 text-[16px] text-on-surface placeholder:text-on-surface-variant"
-        />
-      </label>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <label className="relative block flex-1">
+          <span className="sr-only">교량 이름 또는 지역명으로 검색</span>
+          <Icon
+            name="search"
+            size={18}
+            className="absolute top-1/2 left-3 -translate-y-1/2 text-on-surface-variant"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="교량 이름 또는 지역명"
+            className="min-h-[44px] w-full rounded-lg border border-outline bg-surface-container-lowest pr-4 pl-10 text-[16px] text-on-surface placeholder:text-on-surface-variant"
+          />
+        </label>
+
+        {/* 이름을 모를 때의 경로. /bridges 가 위치 권한을 물어 가까운 순서로
+            정렬해 주는 화면이다 (F-01). 좌표는 브라우저에서만 쓰고 서버로
+            보내지 않는다. 권한을 거부하면 그 화면이 지역명 검색으로 넘어간다. */}
+        <Link
+          href="/bridges"
+          className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90"
+        >
+          <Icon name="map-pin" size={18} />
+          현재 위치
+        </Link>
+      </div>
 
       <p className="mt-2 text-caption text-on-surface-variant" aria-live="polite">
         {keyword
           ? `등록된 교량 ${bridges.length}곳 중 ${matchedAll}곳이 맞았습니다.`
           : `등록된 교량 ${bridges.length}곳에서 찾습니다. 아직 공공데이터 연동 전이라 전국 교량이 다 들어 있지는 않습니다.`}
+      </p>
+      <p className="mt-1 text-caption text-on-surface-variant">
+        ‘현재 위치’를 누르면 위치 권한을 물어보고 가까운 교량부터 보여줍니다. 좌표는 브라우저 밖으로
+        나가지 않습니다.
       </p>
 
       {keyword && (

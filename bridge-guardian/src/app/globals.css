@@ -133,6 +133,14 @@ body {
   overflow-wrap: break-word;
 }
 
+/* 움직임을 줄이도록 설정한 사용자에게는 히어로 배경 영상을 재생하지 않는다.
+   뒤에 깔린 그라디언트가 그대로 남으므로 글자 대비는 그대로다. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
+  }
+}
+
 /* 키보드 포커스가 보이지 않으면 접근성 요구를 지킬 수 없다. */
 :focus-visible {
   outline: 2px solid var(--color-accent);

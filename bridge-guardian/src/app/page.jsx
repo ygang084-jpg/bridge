@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import Icon from '@/components/Icon'
 
 export const metadata = {
@@ -51,7 +52,9 @@ export default function LandingPage() {
 const SECTIONS = [
   { href: '#why', label: '서비스 소개' },
   { href: '#features', label: '핵심 기능' },
-  { href: '#principle', label: '차별점' },
+  // 차별점 = '데이터는 있지만, 당신과는 연결되지 않았습니다' 절.
+  // 정적 행정 데이터와 이용자 맥락을 나란히 놓은 곳이 이 서비스의 차별점이다.
+  { href: '#difference', label: '차별점' },
 ]
 
 function LandingNav() {
@@ -101,7 +104,8 @@ function Hero() {
   return (
     <section className="mt-lg mb-xl">
       <div className="relative flex min-h-[600px] items-center overflow-hidden rounded-[24px] shadow-lg">
-        {/* 디자인의 사진 자리. 외부 이미지 대신 primary 그라디언트로 채웠다. */}
+        {/* 그라디언트는 영상이 아직 안 떴거나 재생하지 않을 때의 바탕이다.
+            영상 로딩 중에 흰 사각형이 보이지 않게 항상 깔아 둔다. */}
         <div
           className="absolute inset-0 z-0 bg-primary"
           style={{
@@ -110,22 +114,52 @@ function Hero() {
           }}
           aria-hidden="true"
         />
+
+        {/* 배경 영상. 소리가 없고 장식이므로 aria-hidden 으로 숨긴다.
+            muted 는 자동재생의 필수 조건이고, preload="metadata" 로 첫 화면에서
+            2.8MB 를 한꺼번에 받지 않게 한다 (PRD §11 3초 요구).
+            움직임을 줄이도록 설정한 사용자에게는 globals.css 가 이 영상을 숨겨
+            위 그라디언트만 남긴다. */}
+        <video
+          className="hero-video absolute inset-0 z-0 h-full w-full object-cover"
+          src="/차도_다니게_해줘.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+
         <div
           className="absolute inset-0 z-10 bg-gradient-to-r from-primary/90 to-primary/20"
           aria-hidden="true"
         />
 
-        <div className="relative z-20 p-lg text-on-primary md:max-w-3xl md:p-xl">
+        {/* 폭 제한(md:max-w-3xl)을 걷어낸 이유 — 제목을 md 이상에서 한 줄로 두려면
+            48px × 15자가 들어갈 폭이 필요하다. 본문 가독성은 아래 문단이 스스로
+            max-w-2xl 로 제한한다. */}
+        <div className="relative z-20 p-lg text-on-primary md:p-xl">
           <span className="mb-md inline-block rounded-full border border-secondary-container/30 bg-secondary/20 px-sm py-xs text-label-md text-secondary-container">
             Bridge Safety Information Service
           </span>
 
-          <h1 className="mb-md text-[40px] leading-tight font-bold md:text-display-lg">
+          {/* md 이상에서만 한 줄로 고정한다. 모바일에서 nowrap 을 걸면 화면을
+              넘어가 가로 스크롤이 생긴다. */}
+          <h1 className="mb-md text-[32px] leading-tight font-bold sm:text-[40px] md:text-display-lg md:whitespace-nowrap">
             매일 건너는 다리, 정말 안전할까?
           </h1>
 
-          <div className="mb-lg max-w-2xl rounded-xl bg-primary/20 p-lg text-body-lg backdrop-blur-md">
-            <p>우리는 매일 다리를 건너지만, 그 안전에 대해서는 막연한 믿음에 기대고만 있습니다.</p>
+          {/* 폭만 줄이고 높이는 그대로 둔다.
+              w-fit 으로 상자를 가장 긴 줄에 딱 맞춰 오른쪽 빈 공간을 없애고,
+              좌우 여백만 24px→16px 로 줄였다. 세로 여백과 줄 수는 그대로여서
+              높이는 변하지 않는다. 글씨를 더 줄이거나 폭을 더 좁히면 줄이
+              늘어나 오히려 높아진다.
+              max-w-full 은 모바일에서 상자가 화면을 넘지 않게 하는 상한이다. */}
+          <div className="mb-lg w-fit max-w-full rounded-xl bg-primary/20 px-4 py-md text-body-md backdrop-blur-md">
+            <p>우리는 매일 다리를 건너지만,</p>
+            <p>그 안전에 대해서는 막연한 믿음에 기대고만 있습니다.</p>
             <p>흩어져 있는 공공 데이터를 당신의 일상 속으로 가져와 연결합니다.</p>
           </div>
 
@@ -187,7 +221,11 @@ function WhyBridges() {
             className="group flex gap-lg rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-lg shadow-sm transition-all duration-300 hover:shadow-md"
           >
             <div className="flex flex-col items-center gap-md">
-              <div className="text-display-lg leading-none font-bold text-primary opacity-20 transition-opacity duration-300 group-hover:opacity-100">
+              {/* 밝은 초록(secondary-fixed-dim #4ae183). 흰 카드 위에서 대비가
+                  낮은 색이라 기본 투명도를 20%→70% 로 올렸다 — 20% 로 두면 거의
+                  보이지 않는다. 순서를 나타내는 장식 숫자이고 같은 정보가 카드
+                  순서로도 전달되므로 본문 대비 기준을 적용하지 않는다. */}
+              <div className="text-display-lg leading-none font-bold text-secondary-fixed-dim opacity-70 transition-opacity duration-300 group-hover:opacity-100">
                 {reason.no}
               </div>
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/5 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary">
@@ -209,7 +247,7 @@ function WhyBridges() {
 
 const STATIC_POINTS = [
   '엑셀 파일 속 방대한 숫자',
-  '1년에 한 번 업데이트 되는 점검표',
+  '담당 관리자만 볼 수 있는 점검표',
   '전문가만 이해할 수 있는 전문 용어',
 ]
 
@@ -221,7 +259,9 @@ const LIVE_POINTS = [
 
 function ProblemAndShift() {
   return (
-    <section className="mb-xl">
+    // scroll-mt-24 는 sticky 상단 내비 높이만큼 띄우는 것이다. 없으면 내비가
+    // 제목을 덮어 눌러도 아무 데도 안 간 것처럼 보인다.
+    <section id="difference" className="mb-xl scroll-mt-24">
       <div className="mb-lg text-center">
         <h2 className="mb-sm text-headline-lg text-primary">
           데이터는 있지만, 당신과는 연결되지 않았습니다.
@@ -308,11 +348,20 @@ function CoreFeatures() {
       <div className="grid grid-cols-1 gap-md md:grid-cols-3">
         {/* 큰 카드 — 관리 타임라인 */}
         <div className="group relative flex min-h-[400px] flex-col overflow-hidden rounded-2xl border border-outline-variant/30 shadow-sm transition-all duration-300 hover:shadow-lg md:col-span-2">
+          {/* 배경 사진. next/image 가 WebP 로 변환·리사이즈한다 — 원본 PNG 는
+              1.7MB 라 그대로 내보내면 첫 화면 3초 요구(PRD §11)를 넘긴다. */}
+          <Image
+            src="/features/screen.png"
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="(min-width: 768px) 66vw, 100vw"
+            className="z-0 object-cover"
+          />
+          {/* 사진 위 글자가 읽히도록 남색을 덮는다. 사진이 아직 안 떴을 때의
+              바탕도 이 층이 맡는다. */}
           <div
-            className="absolute inset-0 z-0 bg-primary"
-            style={{
-              backgroundImage: 'linear-gradient(160deg, #1a2b4b 0%, #031635 70%)',
-            }}
+            className="absolute inset-0 z-0 bg-gradient-to-t from-primary via-primary/70 to-primary/30"
             aria-hidden="true"
           />
           {/* ⚠ max-w-xl 을 쓰면 안 된다. Stitch 간격 토큰 --spacing-xl: 80px 가
@@ -340,7 +389,7 @@ function CoreFeatures() {
         </div>
 
         {/* 오늘의 상태 */}
-        <FeatureCard icon="cloud-sun" title="오늘의 상태">
+        <FeatureCard icon="cloud-sun" title="오늘의 상태" image="/features/f.png">
           <p className="mb-lg text-body-md leading-relaxed text-on-surface-variant">
             다리 위치에 해당하는 기상 관측값과 특보를 연결해 보여줍니다.
           </p>
@@ -360,7 +409,7 @@ function CoreFeatures() {
         </FeatureCard>
 
         {/* 내 주변 다리 */}
-        <FeatureCard icon="map" title="내 주변 다리">
+        <FeatureCard icon="map" title="내 주변 다리" image="/features/n.png">
           <p className="text-body-md leading-relaxed text-on-surface-variant">
             위치를 기준으로 가까운 다리를 골라 목록으로 보여줍니다. 위치는 브라우저 밖으로 나가지
             않습니다.
@@ -369,10 +418,17 @@ function CoreFeatures() {
 
         {/* 넓은 카드 — 정보의 투명성 */}
         <div className="group flex flex-col overflow-hidden rounded-2xl border border-outline-variant/30 shadow-sm transition-all duration-300 hover:shadow-lg md:col-span-2 md:flex-row">
-          <div
-            className="bg-grid-pattern h-40 bg-surface-container md:h-auto md:w-1/2"
-            aria-hidden="true"
-          />
+          {/* 'DATA MISSING' 사진 — 기록이 비어 있다는 이 카드의 내용과 맞는다. */}
+          <div className="bg-grid-pattern relative h-48 shrink-0 bg-surface-container md:h-auto md:w-1/2">
+            <Image
+              src="/features/unnamed.jpg"
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
           <div className="flex flex-col justify-center bg-surface-container-lowest p-lg md:w-1/2 md:p-xl">
             <div className="mb-md flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-container-low transition-colors duration-300 group-hover:bg-primary/5">
               <Icon
@@ -393,10 +449,25 @@ function CoreFeatures() {
   )
 }
 
-function FeatureCard({ icon, title, children }) {
+function FeatureCard({ icon, title, image, children }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-outline-variant/30 shadow-sm transition-all duration-300 hover:shadow-lg">
-      <div className="bg-grid-pattern h-40 bg-surface-container" aria-hidden="true" />
+      {/* 사진 자리. 높이를 고정(h-40)하지 않고 카드 폭에 대한 비율(4:3)로 둔다 —
+          카드가 넓어질수록 사진도 같이 커져서 잘리는 부분이 줄어든다.
+          원본이 1024×1024 정사각이라 160px 띠로 두면 위아래가 많이 잘렸다.
+          사진이 없으면 격자 바탕을 그대로 둔다. */}
+      <div className="bg-grid-pattern relative aspect-[4/3] shrink-0 bg-surface-container">
+        {image && (
+          <Image
+            src={image}
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+      </div>
       <div className="flex grow flex-col bg-surface-container-lowest p-lg">
         <div className="mb-md flex h-12 w-12 items-center justify-center rounded-xl bg-primary/5 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary">
           <Icon name={icon} size={26} />

@@ -18,3 +18,8 @@ design-system/
 *.docx
 *.md
 *.mp4
+
+# 단 하나 예외 — 랜딩 히어로 배경으로 쓰는 영상.
+# 위 *.mp4 규칙은 저장소 루트의 녹화 파일을 막기 위한 것이고, public/ 에 둔
+# 이 파일은 화면에 필요하다. 규칙 뒤에 와야 부정이 적용된다.
+!bridge-guardian/public/*.mp4

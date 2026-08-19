@@ -43,7 +43,7 @@ export default async function BridgeListPage({ searchParams }) {
 
   return (
     <>
-      <ScreenHeader title="내 주변 교량" backHref="/" />
+      <ScreenHeader title="내 주변 교량" backHref="/dashboard" />
       <main className="flex-1 px-4 py-5">
         {available ? (
           <BridgeList bridges={bridges} initialMode={mode} />
@@ -55,8 +55,8 @@ export default async function BridgeListPage({ searchParams }) {
                 ? '잠시 후 다시 시도해 주세요. 목록이 비어 있는 것은 교량이 없다는 뜻이 아니라, 지금 데이터를 읽지 못했다는 뜻입니다.'
                 : '데이터베이스 연결이 아직 설정되지 않았습니다. .env.local 에 SUPABASE_URL 과 SUPABASE_ANON_KEY 를 채워 주세요.'
             }
-            backHref="/"
-            backLabel="처음으로"
+            backHref="/dashboard"
+            backLabel="대시보드로"
           />
         )}
       </main>

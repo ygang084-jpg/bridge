@@ -161,6 +161,27 @@ const PATHS = {
     <path d="m12 4.5 2.4 5 5.4.7-3.9 3.7 1 5.4-4.9-2.7-4.9 2.7 1-5.4-3.9-3.7 5.4-.7z" />
   ),
   'chevron-right': <path d="m9.5 6 6 6-6 6" />,
+
+  /* 랜딩 화면용. */
+  'arrow-right': <path d="M5 12h14m0 0-6-6m6 6-6 6" />,
+  'arrow-down': <path d="M12 5v14m0 0 6-6m-6 6-6-6" />,
+  x: <path d="M6 6l12 12M18 6 6 18" />,
+  'eye-off': (
+    <>
+      <path d="M4 4l16 16" />
+      <path d="M9.9 5.1A9.6 9.6 0 0 1 12 4.9c6 0 9.5 7.1 9.5 7.1a17 17 0 0 1-2.6 3.6" />
+      <path d="M6.5 7.4A17 17 0 0 0 2.5 12s3.5 7.1 9.5 7.1c1.5 0 2.8-.4 4-1" />
+      <path d="M10.2 10.3a2.8 2.8 0 0 0 3.6 3.9" />
+    </>
+  ),
+  scale: (
+    <>
+      <path d="M12 4.5v15M7 19.5h10" />
+      <path d="M5 8.5h14" />
+      <path d="M5 8.5 2.5 14h5z" />
+      <path d="M19 8.5 16.5 14h5z" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 20, className = '' }) {

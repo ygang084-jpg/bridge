@@ -47,7 +47,7 @@
 }
 
 /* 화면 폭 — 기본은 MASTER.md §3 의 '모바일 웹 단일 컬럼, 최대폭 480px'.
-   메인 대시보드(.dashboard-wide)만 벤토 그리드를 펼치려고 넓힌다.
+   메인 대시보드(.screen-wide)만 벤토 그리드를 펼치려고 넓힌다.
    :has() 를 쓰는 이유 — 폭 컨테이너는 layout.jsx(부모)에 있고 어느 화면인지는
    자식만 안다. 미지원 브라우저에서는 480px 로 남아 레이아웃이 깨지지 않는다. */
 .app-shell {
@@ -55,31 +55,44 @@
   max-width: 480px;
 }
 
-/* Stitch 대시보드의 max-w-[1440px]. */
-.app-shell:has(.dashboard-wide) {
-  max-width: 1440px;
+/* 데스크톱 컨테이너 폭 1280px. 좌우 여백 64px(px-margin-desktop)를 빼면
+   본문이 1152px 가 되어 1080~1280px 범위에 들어온다.
+   디자인 파일은 1440px 였는데, 그 폭에 여백 128px 씩을 주면 본문이 1024px 로
+   범위 아래로 떨어져서 폭을 줄이고 여백 단계를 하나로 되돌렸다. */
+.app-shell:has(.screen-wide) {
+  max-width: 1280px;
 }
 
 /* 상시 고지의 좌우 여백을 대시보드 본문(px-margin-desktop)과 맞춘다.
    좁은 화면 5개는 뷰포트가 넓어도 본문이 480px 이므로 16px 를 그대로 쓴다. */
 @media (min-width: 768px) {
-  .app-shell:has(.dashboard-wide) .app-disclosure {
+  .app-shell:has(.screen-wide) .app-disclosure {
     padding-inline: 4rem;
-  }
-}
-
-/* 본문의 xl:px-32 와 같은 값. 여기가 빠지면 고지문만 왼쪽으로 튀어나온다. */
-@media (min-width: 1280px) {
-  .app-shell:has(.dashboard-wide) .app-disclosure {
-    padding-inline: 8rem;
   }
 }
 
 /* 모바일 하단 탭바(fixed)가 상시 고지를 덮지 않게 자리를 비운다. */
 @media (max-width: 767px) {
-  .app-shell:has(.dashboard-wide) .app-disclosure {
+  .app-shell:has(.screen-wide) .app-disclosure {
     padding-bottom: 6rem;
   }
+}
+
+/* 랜딩 화면의 배경 격자와 유리 카드.
+   붙여주신 랜딩 디자인의 <style> 블록 값을 그대로 옮겼다. 토큰이 아니라
+   컴포넌트 스타일이라 theme.css 가 아니라 여기에 둔다. */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(197, 198, 207, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(197, 198, 207, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(225, 227, 228, 0.5);
 }
 
 /* 지도 화면(/map)의 고정 배경.

@@ -109,7 +109,7 @@ function BridgeCard({ bridge }) {
 function FindMoreCard() {
   return (
     <Link
-      href="/bridges?mode=search"
+      href="/bridges"
       className="group flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed border-outline-variant bg-surface-container-low/80 p-6 text-center backdrop-blur-md transition-all duration-300 hover:border-primary-fixed-dim hover:bg-surface-container/90"
     >
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-fixed text-on-primary-fixed transition-transform duration-300 group-hover:scale-110">
@@ -117,13 +117,15 @@ function FindMoreCard() {
       </div>
       <h2 className="mb-2 text-headline-md text-primary">다른 교량 찾아보기</h2>
       <p className="mb-6 text-body-md text-on-surface-variant">
-        지역명이나 교량 이름으로 찾을 수 있습니다.
+        위치나 지역명으로 찾을 수 있습니다.
         <br />
         목록에 담아 두는 기능은 v1 에서 제공합니다.
       </p>
-      <span className="flex w-full max-w-[240px] items-center gap-2 rounded-lg border border-outline-variant/50 bg-surface px-3 py-2 text-body-md text-on-surface-variant">
-        <Icon name="search" size={18} />
-        교량 이름 검색…
+      {/* 검색창 모양으로 두지 않는다 — 타이핑되지 않는 입력창은 고장으로 읽힌다.
+          실제로 입력을 받는 검색창은 이 화면 위쪽(BridgeSearch)에 있다. */}
+      <span className="flex min-h-[44px] items-center gap-2 rounded-lg bg-primary-container px-4 text-label-md text-on-primary">
+        <Icon name="map-pin" size={18} />
+        내 주변 교량 목록 열기
       </span>
     </Link>
   )

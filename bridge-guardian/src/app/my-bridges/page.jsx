@@ -23,7 +23,7 @@ export default async function MyBridgesPage() {
     <>
       <TopNav active="bridges" historyHref={historyHref} />
 
-      <main className="dashboard-wide relative z-10 flex w-full flex-1 flex-col px-margin-mobile py-xl md:px-margin-desktop xl:px-32">
+      <main className="screen-wide relative z-10 flex w-full flex-1 flex-col px-margin-mobile py-xl md:px-margin-desktop">
         <div className="mb-xl w-full text-center md:text-left">
           <h1 className="mb-4 text-[24px] leading-8 font-semibold text-primary md:text-headline-lg">
             내가 건너는 다리들이 어떻게 관리되어 왔는지 확인하세요.

@@ -13,7 +13,7 @@ const LINKS = ['공공기관 정보', '문의하기', '법적 고지', '개인�
 export default function AppFooter() {
   return (
     <footer className="mt-auto w-full border-t border-outline-variant bg-surface-container-low pb-24 md:pb-0">
-      <div className="flex w-full flex-col items-start justify-between gap-md px-margin-mobile py-lg md:flex-row md:items-center md:px-margin-desktop xl:px-32">
+      <div className="flex w-full flex-col items-start justify-between gap-md px-margin-mobile py-lg md:flex-row md:items-center md:px-margin-desktop">
         <div className="flex flex-col gap-2">
           <span className="text-headline-md font-bold text-primary">BRIDGE SAFE</span>
           <span className="text-caption text-on-surface-variant">

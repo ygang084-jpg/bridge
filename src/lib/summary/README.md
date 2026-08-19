@@ -105,7 +105,7 @@ node scripts/check-summaries.mjs --db               # Supabase 원본 3곳
 
 ## 환경변수
 
-`bridge-guardian/.env.local` (git 에 올라가지 않음). `.env.example` 참고.
+`.env.local` (git 에 올라가지 않음). `.env.example` 참고.
 
 ```
 SUPABASE_URL=...

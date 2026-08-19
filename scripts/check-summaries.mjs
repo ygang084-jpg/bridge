@@ -209,7 +209,7 @@ async function loadItems(useDb) {
   if (!hasServerSupabaseEnv()) {
     throw new Error(
       '--db 를 쓰려면 SUPABASE_URL 과 SUPABASE_SERVICE_ROLE_KEY 가 필요합니다. ' +
-        '(bridge-guardian/.env.local 은 git 에 올라가지 않습니다)',
+        '(.env.local 은 git 에 올라가지 않습니다)',
     )
   }
   const { loadSummaryInputs } = await import('../src/lib/summary/summariesRepo.js')

@@ -19,7 +19,7 @@ function readEnv(name) {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
-/** 예: https://bridge-guardian.vercel.app — 뒤에 슬래시를 붙이지 않는다. */
+/** 예: https://bridge-pi-sable.vercel.app — 뒤에 슬래시를 붙이지 않는다. */
 export function getSiteUrl() {
   const explicit = readEnv('SITE_URL')
   if (explicit) return explicit.replace(/\/+$/, '')

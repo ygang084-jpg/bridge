@@ -37,6 +37,10 @@ export default async function BridgeListPage({ searchParams }) {
     })
   } catch (error) {
     // PRD §11 장애 대응 — 화면을 비우지 않는다.
+    // 이유는 서버 로그에도 남긴다. 화면 문구는 '읽지 못했다'까지만 말하므로,
+    // 프로덕션에서 접속 설정이 틀렸을 때 무엇이 틀렸는지 알 방법이 없었다
+    // (sitemap.js 가 같은 이유로 console.warn 을 남긴다).
+    console.error(`[bridges] 목록 조회 실패: ${error.message}`)
     loadError = error.message
     available = false
   }

@@ -29,7 +29,11 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko" className={notoSansKR.className}>
-      <body className="bg-background text-on-surface">
+      {/* 배경색을 body 에 두지 않는다. globals.css 가 이미 html 에 같은 토큰으로
+          지정하고 있어서 색은 그대로이고, body 에 한 번 더 칠하면 body 안의
+          음수 z-index 레이어가 그 배경 뒤로 들어가 보이지 않게 된다
+          (대시보드 시간대 바탕이 이 때문에 안 보였다 — TimeOfDayBackdrop). */}
+      <body className="text-on-surface">
         {/* 폭은 globals.css 의 .app-shell 이 정한다. 기본 480px(MASTER.md §3),
             메인 대시보드만 넓어진다 — 어느 화면인지는 자식만 알기 때문에
             여기서 분기하지 않고 :has() 로 뒤집는다. */}

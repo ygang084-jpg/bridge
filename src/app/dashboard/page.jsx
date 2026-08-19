@@ -8,6 +8,7 @@ import AppFooter from '@/components/AppFooter'
 import { fetchBridgeNews, fetchBridgesForList } from '@/lib/supabase/readClient'
 import { resolveInfoState } from '@/lib/infoState'
 import NewsBoard from '@/components/NewsBoard'
+import TimeOfDayBackdrop from '@/components/TimeOfDayBackdrop'
 
 export const metadata = { title: '대시보드 — BRIDGE SAFE' }
 
@@ -58,11 +59,12 @@ export const revalidate = 3600
 export default async function DashboardPage() {
   // 뉴스는 교량 데이터와 서로 기다릴 필요가 없다.
   const [data, news] = await Promise.all([loadDashboard(), fetchBridgeNews()])
-  // 대표 교량이 없으면 '기록'으로 갈 곳이 없다. 억지로 목록을 가리키면
-  // 내비의 '기록' 항목이 실제와 다른 곳으로 데려간다.
 
   return (
     <>
+      {/* 시각에 따라 바뀌는 바탕. 본문보다 뒤(-z-10)에 깔린다. */}
+      <TimeOfDayBackdrop />
+
       <TopNav active="home" />
 
       {/* 좌우 여백: 16px(모바일) → 64px(md 이상). 컨테이너 1280px 에서 본문은

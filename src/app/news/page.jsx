@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Icon from '@/components/Icon'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
-import { NewsDisclaimer } from '@/components/NewsBoard'
+import NewsDisclaimer from '@/components/news/NewsDisclaimer'
 import NewsExplorer from '@/components/news/NewsExplorer'
 import { fetchBridgeNews } from '@/lib/supabase/readClient'
 import { arrangeNews, classifyNews, excerptSentences } from '@/lib/news/classify.js'
@@ -16,7 +16,7 @@ export const metadata = {
     '교량에 대한 언론 보도를 모아 둔 목록입니다. 공식 기록이 아니며, 기사를 특정 교량에 붙이지 않습니다.',
 }
 
-/** 대시보드는 6건만 발췌하므로 전체 목록은 fetchBridgeNews 의 기본값(24)을 그대로 쓴다. */
+/** fetchBridgeNews 의 기본값과 같다. 뉴스 목록은 이 화면에만 있다. */
 const NEWS_LIMIT = 24
 
 /**

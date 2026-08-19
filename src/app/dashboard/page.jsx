@@ -5,10 +5,8 @@ import BridgeSearch from '@/components/BridgeSearch'
 import MapPreview from '@/components/MapPreview'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
-import { fetchBridgeNews, fetchBridgesForList } from '@/lib/supabase/readClient'
+import { fetchBridgesForList } from '@/lib/supabase/readClient'
 import { resolveInfoState } from '@/lib/infoState'
-import NewsBoard from '@/components/NewsBoard'
-import TimeOfDayBackdrop from '@/components/TimeOfDayBackdrop'
 
 export const metadata = { title: '대시보드 — BRIDGE SAFE' }
 
@@ -32,14 +30,15 @@ export const revalidate = 3600
  * ---------------------------------------------------------------------------
  * 지금 화면 순서 :
  *   TopNav(md 이상) / Hero / 벤토 8:4 (지도 + 교량 검색 | 오늘의 상태) /
- *   내 주변 교량 현황 3열 / 건강검진·타임머신 2열 / BottomNav(md 이하) /
- *   교량 뉴스 / Footer
+ *   내 주변 교량 현황 3열 / BottomNav(md 이하) / Footer
  *
  * 디자인에 있었으나 지금 없는 것 :
  *   · 비상대피경로 카드 — 오안내가 곧 인명 피해다 (PRD §2.2 비목표)
  *   · 이상징후 제보 밴드 — 접수 후 처리 경로가 없다 (같은 비목표)
  *   · 지도 위 '내 주변 교량' 유리 패널 — 지도 영역이 /map 으로 가는 링크가 되었다
  *   · 교량 제원 카드 — 구조 형식·재료를 담을 컬럼이 없어 검토 끝에 뺐다
+ *   · 교량 뉴스 목록 — 내비에 '교량뉴스'(/news) 탭이 생겨 그 화면이 제자리다.
+ *     대시보드에 발췌를 겹쳐 두면 같은 목록을 두 곳에서 관리하게 된다
  *
  * 화면에 나가는 값은 전부 DB 에서 읽는다. 디자인 파일의 값(준공 2005년,
  * 최근 점검 2026년 3월, 강풍 주의, 갱신 소식 4건 …)은 예시 텍스트라 옮기지 않았다.
@@ -57,14 +56,10 @@ export const revalidate = 3600
  * ---------------------------------------------------------------------------
  */
 export default async function DashboardPage() {
-  // 뉴스는 교량 데이터와 서로 기다릴 필요가 없다.
-  const [data, news] = await Promise.all([loadDashboard(), fetchBridgeNews()])
+  const data = await loadDashboard()
 
   return (
     <>
-      {/* 시각에 따라 바뀌는 바탕. 본문보다 뒤(-z-10)에 깔린다. */}
-      <TimeOfDayBackdrop />
-
       <TopNav active="home" />
 
       {/* 좌우 여백: 16px(모바일) → 64px(md 이상). 컨테이너 1280px 에서 본문은
@@ -93,8 +88,6 @@ export default async function DashboardPage() {
 
       <BottomNav active="home" />
 
-      <NewsBoard items={news.items} fetchedAt={data.fetchedAt} sources={data.sources} moreHref="/news" />
-
       <AppFooter />
     </>
   )
@@ -112,8 +105,6 @@ async function loadDashboard() {
     return {
       loadFailed: true,
       cards: [],
-      sources: [],
-      fetchedAt: null,
       featured: null,
       searchIndex: [],
       mapPoints: [],
@@ -123,8 +114,6 @@ async function loadDashboard() {
     return {
       loadFailed: true,
       cards: [],
-      sources: [],
-      fetchedAt: null,
       featured: null,
       searchIndex: [],
       mapPoints: [],
@@ -159,8 +148,6 @@ async function loadDashboard() {
   return {
     loadFailed: false,
     cards,
-    sources: [...new Set(list.bridges.map((bridge) => bridge.source).filter(Boolean))],
-    fetchedAt: list.fetchedAt,
     featured,
     // 검색은 카드 3장이 아니라 등록된 교량 전체에서 찾는다.
     // 이름·소재지만 내려보낸다 — 검색에 쓰지 않는 값을 브라우저로 보낼 이유가 없다.
@@ -185,23 +172,26 @@ async function loadDashboard() {
 /* ── 섹션 ────────────────────────────────────────────────────────────── */
 
 /**
- * 시각에 따라 바뀌는 바탕(TimeOfDayBackdrop) 위에 카드 없이 얹혀 있던 글자다.
- * 네 장의 밝기가 서로 달라 어떤 시간대에서는 읽기 어려웠다. 막을 더 진하게 하면
- * 바탕이 보이지 않게 되므로, 글자 쪽에 반투명 판을 깔아 대비를 고정한다.
- * globals.css 의 .glass-panel(흰 배경 85% + 블러)을 쓴다 — Stitch 대시보드가
- * 지도 위 패널에 쓰던 값이고, 그 패널이 사라져 지금은 쓰이지 않고 있었다.
+ * 제목을 한 줄로 둔다. 줄바꿈을 막는 폭은 화면 크기별로 계산해서 정했다 —
+ * 이 문장은 한글 14자 + 공백·부호로 약 16.2em 이라, 글자 크기에 그대로 비례해
+ * 폭이 정해진다. 본문 폭은 컨테이너에서 좌우 여백을 뺀 값이다.
+ *
+ *   lg (1024px) : 본문 896px, 48px 글자 → 약 778px  ✓
+ *   xl (1280px) : 본문 1152px, 56px 글자 → 약 907px ✓
+ *
+ * 그보다 좁은 화면에서는 nowrap 을 걸지 않는다. 걸면 문장이 화면을 넘어가
+ * 가로 스크롤이 생기고, 그건 한 줄로 보이는 것보다 나쁘다 (랜딩 히어로도 같은
+ * 이유로 md 이상에서만 한 줄로 고정한다).
  */
 function Hero() {
   return (
-    <section className="flex justify-center">
-      <div className="glass-panel w-full max-w-3xl space-y-sm rounded-xl px-md py-lg text-center">
-        <h1 className="text-[32px] leading-10 font-bold text-primary md:text-display-lg lg:text-[56px] lg:leading-[64px]">
-          내가 건너는 다리, 오늘은 괜찮을까?
-        </h1>
-        <p className="text-body-lg text-on-surface-variant">
-          공개된 관리 기록과 오늘의 조건을 한곳에서 확인하세요.
-        </p>
-      </div>
+    <section className="space-y-sm text-center">
+      <h1 className="text-[32px] leading-10 font-bold text-primary md:text-[40px] md:leading-[48px] lg:text-display-lg lg:whitespace-nowrap xl:text-[56px] xl:leading-[64px]">
+        내가 건너는 다리, 오늘은 괜찮을까?
+      </h1>
+      <p className="text-body-lg text-on-surface-variant">
+        공개된 관리 기록과 오늘의 조건을 한곳에서 확인하세요.
+      </p>
     </section>
   )
 }
@@ -270,9 +260,7 @@ function TodayCard({ todayHref }) {
 function NearbySection({ bridges, loadFailed }) {
   return (
     <section>
-      {/* 이 제목도 바탕 위에 바로 얹힌다. 제목 폭만큼만 판을 깔아, 바탕은 옆에서
-          계속 보이게 하고 글자 대비만 지킨다. */}
-      <h2 className="glass-panel mb-md inline-flex items-center gap-xs rounded-lg px-3 py-1.5 text-headline-md text-primary">
+      <h2 className="mb-md flex items-center gap-xs text-headline-md text-primary">
         <Icon name="eye" size={20} />
         내 주변 교량 현황
       </h2>

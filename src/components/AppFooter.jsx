@@ -7,7 +7,12 @@
  *
  * 링크 4개는 아직 대상 문서가 없어 비활성으로 둔다. href="#" 로 두면
  * 눌렀을 때 같은 화면이 다시 뜨는 것처럼 보여 더 혼란스럽다.
+ *
+ * '정보 안내'만 실제 목적지가 있다. 출처·갱신 주기·하지 않는 일을 적어 둔
+ * 화면이므로, 비활성 문구들 사이에 섞여 안 보이지 않게 맨 앞에 둔다.
  */
+import Link from 'next/link'
+
 const LINKS = ['공공기관 정보', '문의하기', '법적 고지', '개인정보 처리방침']
 
 export default function AppFooter() {
@@ -21,6 +26,12 @@ export default function AppFooter() {
           </span>
         </div>
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <Link
+            href="/info"
+            className="text-body-md font-semibold text-primary underline hover:no-underline"
+          >
+            정보 안내
+          </Link>
           {LINKS.map((label) => (
             <span
               key={label}

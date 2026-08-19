@@ -12,6 +12,8 @@ import Icon from './Icon'
  *   지도     /map         지도 화면 (지도 렌더링 자체는 v1, 배경은 격자)
  *   내 교량  /my-bridges  교량 카드 목록
  *   기록     대표 교량의 관리 이력. 이력이 있는 교량이 없으면 비활성
+ *   안내     /info        출처·갱신 주기·하지 않는 일. 판정하지 않는다는 원칙이
+ *                         화면의 빈자리로 나타나므로, 그 설명을 '더보기'에 묻지 않는다
  *   내 정보  없음 — 로그인을 만들지 않는다 (v0 비목표)
  *
  * href 가 없는 항목은 링크로 두지 않는다. 눌러도 아무 일이 없는 링크는
@@ -23,6 +25,7 @@ const NAV_ITEMS = [
   { key: 'map', label: '지도', icon: 'map', href: '/map' },
   { key: 'bridges', label: '내 교량', icon: 'building', href: '/my-bridges' },
   { key: 'history', label: '기록', icon: 'clock', href: null },
+  { key: 'info', label: '안내', icon: 'info', href: '/info' },
   { key: 'me', label: '내 정보', icon: 'user', href: null },
 ]
 

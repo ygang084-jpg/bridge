@@ -16,11 +16,12 @@ import { getSiteUrl } from '@/lib/siteUrl'
  * ---------------------------------------------------------------------------
  */
 
-// 하루 한 번 다시 만든다. 교량 이력은 스케줄러(19:10 KST)가 채우므로 재배포를
+// 하루 한 번 다시 만든다. 교량 이력은 스케줄러(매일 04:10 KST — vercel.json 의
+// `10 19 * * *` 는 UTC 다)가 채우므로 재배포를
 // 기다릴 이유가 없고, 그렇다고 요청마다 Supabase 를 읽을 이유도 없다.
 export const revalidate = 86400
 
-const STATIC_PATHS = ['/', '/dashboard', '/map', '/bridges']
+const STATIC_PATHS = ['/', '/dashboard', '/map', '/bridges', '/info']
 
 export default async function sitemap() {
   const base = getSiteUrl()

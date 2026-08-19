@@ -7,13 +7,13 @@ import { cronTextFor } from '@/lib/cron.js'
 import vercelConfig from '../../../vercel.json'
 
 export const metadata = {
-  title: '정보 안내 — BRIDGE SAFE',
+  title: '앱안내 — BRIDGE SAFE',
   description:
     '어떤 기관의 데이터를 쓰는지, 언제 갱신되는지, 그리고 이 서비스가 무엇을 하지 않는지 적어 둔 화면입니다.',
 }
 
 /**
- * '정보 안내' 화면 — Stitch `정보 안내` 구성을 옮긴 것.
+ * '앱안내' 화면 — Stitch `정보 안내` 구성을 옮긴 것.
  * ---------------------------------------------------------------------------
  * 이 화면이 다른 서비스의 '더보기'와 다른 자리에 있는 이유는 하나다. 판정하지
  * 않는다는 원칙은 화면 곳곳의 빈자리로 나타나는데, 설명이 없으면 그 빈자리가
@@ -83,7 +83,7 @@ function Intro() {
   return (
     <header className="text-center md:text-left">
       <h1 className="mb-4 text-[24px] leading-8 font-semibold text-primary md:text-headline-lg">
-        정보 안내
+        앱안내
       </h1>
       <p className="mx-auto max-w-2xl text-body-lg text-on-surface-variant md:mx-0">
         BRIDGE SAFE 는 매일 건너는 교량에 대해 <strong className="font-semibold">공개된 기록</strong>

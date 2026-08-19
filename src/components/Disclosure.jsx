@@ -15,14 +15,14 @@ export const DISCLOSURE_TEXT =
 export default function Disclosure() {
   return (
     <footer className="app-disclosure border-t border-outline-variant px-4 py-5">
-      {/* 고지 옆에 '정보 안내' 링크를 둔다. 고지는 무엇을 하지 않는지 한 문장으로만
+      {/* 고지 옆에 '앱안내' 링크를 둔다. 고지는 무엇을 하지 않는지 한 문장으로만
           말할 수 있어서, 왜 그런지와 데이터가 어디서 오는지를 읽을 곳이 필요하다.
           이 고지는 모든 화면에 있으므로 여기 링크가 가장 확실한 경로가 된다. */}
       <p className="flex flex-wrap items-start gap-1.5 text-[13px] leading-[18px] text-on-surface-variant">
         <Icon name="info" size={14} className="mt-0.5" />
         {DISCLOSURE_TEXT}
         <Link href="/info" className="font-semibold text-primary underline hover:no-underline">
-          정보 안내
+          앱안내
         </Link>
       </p>
     </footer>

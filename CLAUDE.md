@@ -11,7 +11,7 @@
 | `/map` | **지도 화면** — 대시보드의 지도 영역을 누르면 여기로 온다 | Stitch `bridge_safe_5` |
 | `/my-bridges` | 내 교량 (카드 목록) | Stitch `bridge_safe_5` |
 | `/news` | **교량뉴스** — 언론 보도 목록. 대시보드의 발췌와 같은 컴포넌트(`NewsBoard`) | |
-| `/info` | **정보 안내** — 출처·갱신 주기·하지 않는 일·FAQ | Stitch `정보 안내` |
+| `/info` | **앱안내** — 출처·갱신 주기·하지 않는 일·FAQ | Stitch `정보 안내` |
 | `/bridges` | F-01 내 주변 교량 목록 (위치·지역명 검색) | |
 | `/bridges/[id]` | F-02 교량 상세 | |
 | `/bridges/[id]/history` | F-03 관리 이력 타임라인 — 제품의 중심 | |

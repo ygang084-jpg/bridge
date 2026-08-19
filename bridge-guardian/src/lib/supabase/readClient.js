@@ -131,3 +131,36 @@ export async function fetchBridgeDetail(bridgeId) {
 
   return { bridge, history: history ?? [], summary: summary ?? null }
 }
+
+/**
+ * 사이트맵에 넣을 교량 id 목록.
+ *
+ * 목록 화면과 달리 id 와 fetched_at 만 읽는다 — 사이트맵이 쓰는 건 주소와 최종
+ * 수정 시각뿐이고, 나머지 컬럼과 이력까지 끌고 오면 빌드만 느려진다.
+ *
+ * limit 을 인자로 명시해 두는 이유 : PostgREST 는 프로젝트 설정의 max-rows 까지만
+ * 돌려주고 조용히 잘라낸다. 상한을 코드에 적어 두면 나중에 교량이 늘어 사이트맵이
+ * 잘렸을 때 어디를 봐야 하는지 알 수 있다. 사이트맵 하나의 규격 상한은 URL
+ * 50,000 개이고 교량 1건이 3개(상세·이력·오늘)를 만들므로, 5,000 건까지는
+ * 나눠 담을 필요가 없다.
+ *
+ * ⚠ sample- 로 시작하는 표본 교량은 제외한다 (supabase/seed/sample.sql).
+ *   표본은 '한강대교 (표본)' 처럼 실제 교량명에 지어낸 점검 기록을 붙인 값이다.
+ *   화면에서는 이름으로 표본임을 알 수 있지만, 검색엔진에 색인되면 그 문장만
+ *   떨어져 나가 실제 점검 기록으로 읽힌다. 사이트맵은 '이 주소를 색인해 달라'는
+ *   요청이므로, 표본을 넣는 것은 오정보를 유포하는 것이 된다.
+ */
+export async function fetchBridgeIdsForSitemap(limit = 5000) {
+  const client = getReadClient()
+  if (!client) return []
+
+  const { data, error } = await client
+    .from('bridges')
+    .select('id, fetched_at')
+    .not('id', 'like', 'sample-%')
+    .order('id', { ascending: true })
+    .limit(limit)
+
+  if (error) throw new Error(`bridges 조회 실패 (사이트맵): ${error.message}`)
+  return data ?? []
+}

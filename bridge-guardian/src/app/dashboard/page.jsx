@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Icon from '@/components/Icon'
 import InfoStateBadge from '@/components/InfoStateBadge'
 import BridgeSearch from '@/components/BridgeSearch'
+import MapPreview from '@/components/MapPreview'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
 import { fetchBridgeNews, fetchBridgesForList } from '@/lib/supabase/readClient'
@@ -62,7 +63,9 @@ export default async function DashboardPage() {
           {/* 지도와 검색창을 한 칼럼에 둔다 — 검색창이 지도 폭에 맞고, 지도에서
               못 찾을 때 바로 아래에서 이름으로 찾게 된다. */}
           <div className="flex flex-col gap-gutter md:col-span-8">
-            <MapArea />
+            {/* 지도 자리. 영역 전체가 /map 으로 가는 링크이고, 조작은 그 화면에서
+                한다 (MapPreview 주석 참고). 칼럼 폭은 이 부모가 정한다. */}
+            <MapPreview bridges={data.mapPoints} />
             <BridgeSearch bridges={data.searchIndex} />
           </div>
           <div className="md:col-span-4">
@@ -91,10 +94,26 @@ async function loadDashboard() {
   try {
     list = await fetchBridgesForList()
   } catch {
-    return { loadFailed: true, cards: [], sources: [], fetchedAt: null, featured: null, searchIndex: [] }
+    return {
+      loadFailed: true,
+      cards: [],
+      sources: [],
+      fetchedAt: null,
+      featured: null,
+      searchIndex: [],
+      mapPoints: [],
+    }
   }
   if (!list.available) {
-    return { loadFailed: true, cards: [], sources: [], fetchedAt: null, featured: null, searchIndex: [] }
+    return {
+      loadFailed: true,
+      cards: [],
+      sources: [],
+      fetchedAt: null,
+      featured: null,
+      searchIndex: [],
+      mapPoints: [],
+    }
   }
 
   // 대표 교량을 고르는 기준은 공개 기록 건수뿐이다. 좋다/나쁘다를 판정하는
@@ -135,6 +154,16 @@ async function loadDashboard() {
       name: bridge.name,
       address: bridge.address ?? null,
     })),
+    // 지도 미리보기도 카드 3장이 아니라 등록된 교량 전체를 찍는다. 마커에 필요한
+    // 값만 내려보낸다 — 이름은 마커의 title(마우스를 올렸을 때)에 쓴다.
+    mapPoints: list.bridges
+      .filter((bridge) => typeof bridge.lat === 'number' && typeof bridge.lng === 'number')
+      .map((bridge) => ({
+        id: bridge.id,
+        name: bridge.name,
+        lat: bridge.lat,
+        lng: bridge.lng,
+      })),
   }
 }
 
@@ -150,26 +179,6 @@ function Hero() {
         공개된 관리 기록과 오늘의 조건을 한곳에서 확인하세요.
       </p>
     </section>
-  )
-}
-
-/** 지도 자리. 영역 전체가 지도 화면으로 가는 링크다. 칼럼 폭은 부모가 정한다. */
-function MapArea() {
-  return (
-    <div className="relative h-[420px] overflow-hidden rounded-xl border border-outline-variant shadow-sm">
-      <Link
-        href="/map"
-        aria-label="지도 화면으로 이동"
-        className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-variant text-on-surface-variant transition-colors hover:bg-surface-dim"
-      >
-        <Icon name="map" size={28} />
-        <span className="flex items-center gap-1.5">
-          지도 화면으로 이동
-          <Icon name="chevron-right" size={16} />
-        </span>
-        <span className="text-sm">지도 렌더링은 v1 에서 도입합니다</span>
-      </Link>
-    </div>
   )
 }
 

@@ -17,7 +17,9 @@ import Script from 'next/script'
  *
  * 지도 타일은 카카오 서버에서 온다. 이 저장소는 그동안 방문자 요청이 제3자로
  * 나가지 않게 해 왔지만(폰트 자체 서빙·아이콘 인라인), 지도는 그 예외로 두기로
- * 했다. 이 화면 밖으로는 번지지 않는다 — SDK 를 이 컴포넌트에서만 불러온다.
+ * 했다. SDK 를 불러오는 곳은 이 컴포넌트 하나뿐이고, 이것을 쓰는 화면은 지도
+ * (`MapExplorer`)와 대시보드의 지도 자리(`MapPreview`) 둘이다 — 대시보드에
+ * 붙이면서 요청이 나가는 화면이 하나 늘었다. 그 밖으로는 번지지 않는다.
  *
  * 키가 없거나 SDK 가 뜨지 않을 때
  *
@@ -29,7 +31,14 @@ import Script from 'next/script'
 
 const SDK_TIMEOUT_MS = 6000
 
-export default function KakaoMap({ apiKey, bridges = [], selectedId = null, onSelect, onUnavailable }) {
+export default function KakaoMap({
+  apiKey,
+  bridges = [],
+  selectedId = null,
+  onSelect,
+  onUnavailable,
+  interactive = true,
+}) {
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const markersRef = useRef([])
@@ -52,8 +61,16 @@ export default function KakaoMap({ apiKey, bridges = [], selectedId = null, onSe
       center: new kakao.maps.LatLng(37.5665, 126.978),
       level: 8,
     })
+
+    // 미리보기(대시보드)는 끌거나 확대하지 못하게 둔다. 영역 전체가 /map 으로
+    // 가는 링크이므로, 끌린 지도는 링크를 누르려다 실패한 것으로 읽힌다.
+    if (!interactive) {
+      mapRef.current.setDraggable(false)
+      mapRef.current.setZoomable(false)
+    }
+
     setReady(true)
-  }, [])
+  }, [interactive])
 
   /** 스크립트가 이미 로드된 상태로 다시 마운트되는 경우(뒤로가기 등)를 처리한다. */
   useEffect(() => {
@@ -140,7 +157,11 @@ export default function KakaoMap({ apiKey, bridges = [], selectedId = null, onSe
         onLoad={() => window.kakao?.maps?.load(initMap)}
         onError={() => onUnavailable?.('SDK 를 불러오지 못했습니다')}
       />
-      <div ref={containerRef} className="h-full w-full" />
+      {/* 부모를 꽉 채운다. `h-full`(height:100%)로 두면 부모 높이가 `min-height`
+          로만 정해진 화면에서 0 으로 풀려 지도가 보이지 않는다 — 좁은 폭의
+          `/map` 이 실제로 그랬다. 이 컴포넌트를 쓰는 자리는 position 이 잡힌
+          부모여야 한다. */}
+      <div ref={containerRef} className="absolute inset-0" />
     </>
   )
 }

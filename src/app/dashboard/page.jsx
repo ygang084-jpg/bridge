@@ -184,15 +184,24 @@ async function loadDashboard() {
 
 /* ── 섹션 ────────────────────────────────────────────────────────────── */
 
+/**
+ * 시각에 따라 바뀌는 바탕(TimeOfDayBackdrop) 위에 카드 없이 얹혀 있던 글자다.
+ * 네 장의 밝기가 서로 달라 어떤 시간대에서는 읽기 어려웠다. 막을 더 진하게 하면
+ * 바탕이 보이지 않게 되므로, 글자 쪽에 반투명 판을 깔아 대비를 고정한다.
+ * globals.css 의 .glass-panel(흰 배경 85% + 블러)을 쓴다 — Stitch 대시보드가
+ * 지도 위 패널에 쓰던 값이고, 그 패널이 사라져 지금은 쓰이지 않고 있었다.
+ */
 function Hero() {
   return (
-    <section className="space-y-sm text-center">
-      <h1 className="text-[32px] leading-10 font-bold text-primary md:text-display-lg lg:text-[56px] lg:leading-[64px]">
-        내가 건너는 다리, 오늘은 괜찮을까?
-      </h1>
-      <p className="text-body-lg text-on-surface-variant">
-        공개된 관리 기록과 오늘의 조건을 한곳에서 확인하세요.
-      </p>
+    <section className="flex justify-center">
+      <div className="glass-panel w-full max-w-3xl space-y-sm rounded-xl px-md py-lg text-center">
+        <h1 className="text-[32px] leading-10 font-bold text-primary md:text-display-lg lg:text-[56px] lg:leading-[64px]">
+          내가 건너는 다리, 오늘은 괜찮을까?
+        </h1>
+        <p className="text-body-lg text-on-surface-variant">
+          공개된 관리 기록과 오늘의 조건을 한곳에서 확인하세요.
+        </p>
+      </div>
     </section>
   )
 }
@@ -261,7 +270,9 @@ function TodayCard({ todayHref }) {
 function NearbySection({ bridges, loadFailed }) {
   return (
     <section>
-      <h2 className="mb-md flex items-center gap-xs text-headline-md text-primary">
+      {/* 이 제목도 바탕 위에 바로 얹힌다. 제목 폭만큼만 판을 깔아, 바탕은 옆에서
+          계속 보이게 하고 글자 대비만 지킨다. */}
+      <h2 className="glass-panel mb-md inline-flex items-center gap-xs rounded-lg px-3 py-1.5 text-headline-md text-primary">
         <Icon name="eye" size={20} />
         내 주변 교량 현황
       </h2>

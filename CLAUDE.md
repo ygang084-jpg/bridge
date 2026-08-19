@@ -16,6 +16,12 @@
 | `/api/cron/refresh-summaries` | 자동 요약 갱신 (Vercel Cron) | |
 | `/api/cron/refresh-news` | 교량 뉴스 수집 (네이버 검색 API, Vercel Cron) | |
 
+크론은 **하루 1회**만 둔다. Hobby 플랜은 하루 한 번을 넘는 스케줄을 거부하는데, 그
+거부가 빌드 전 **배포 생성 단계**에서 일어나 Deployments 목록에 실패 항목조차 남지
+않는다 — 푸시해도 아무 일이 없는 것처럼 보이고 대시보드에는 단서가 없다. 2026-08-20 에
+뉴스 수집을 6시간 주기(`0 */6 * * *`)로 두어 배포가 막혔고, 이유는 `vercel --prod`
+출력에서만 보였다.
+
 ### 내비게이션 (`src/components/AppNav.jsx`)
 
 홈 `/` · 지도 `/map` · 내 교량 `/my-bridges` · 기록(대표 교량의 이력) · 내 정보(없음).

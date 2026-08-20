@@ -147,21 +147,38 @@ function report(items) {
     )
   }
 
-  console.log('\n── §13 Q2 : 교량당 이력 건수 ──')
-  let totalEvents = 0
+  console.log('\n── 이력 관련 필드 채움률 ──')
   for (const field of HISTORY_FIELDS) {
     const filled = items.filter((item) => present(item[field])).length
-    totalEvents += filled
     console.log(`  ${field.padEnd(14)} ${filled}/${items.length}건`)
   }
-  const perBridge = (totalEvents / items.length).toFixed(2)
-  console.log(`\n  교량당 이력으로 쓸 값 평균 ${perBridge}건`)
+
+  // §13 Q2 가 묻는 것은 필드 수가 아니라 **타임라인에 찍히는 점의 수**다.
+  // checkDate·grade·checkType 은 같은 점검 1건의 속성이므로 하나로 센다.
+  // 필드마다 세면 교량당 3건처럼 보이고, 그러면 F-03 이 성립한다고 잘못 읽는다.
+  console.log('\n── §13 Q2 : 교량당 타임라인 점 개수 ──')
+  const counts = items.map((item) => {
+    let events = 0
+    if (present(item.openYear)) events += 1 // 준공
+    if (present(item.checkDate)) events += 1 // 최종 점검 1건
+    if (present(item.consRecord)) events += 1 // 보수보강 (자유 텍스트)
+    return events
+  })
+  const total = counts.reduce((sum, value) => sum + value, 0)
+  const histogram = new Map()
+  for (const value of counts) histogram.set(value, (histogram.get(value) ?? 0) + 1)
+
+  for (const [events, bridges] of [...histogram.entries()].sort((a, b) => a[0] - b[0])) {
+    console.log(`  ${events}점 — ${bridges}곳`)
+  }
+  console.log(`\n  교량당 평균 ${(total / items.length).toFixed(2)}점`)
   console.log(
-    '  이 API 는 최종 점검 1건만 주므로 값이 1~2건에 머물면 예상과 같다.',
+    '  점검은 최종 1회만 오므로, 이 출처만으로는 "얼마나 자주 관리되었는가"(F-03',
   )
   console.log(
-    '  F-03 타임라인은 점검 1회당 1행을 주는 별도 출처(건설CALS 점검진단이력)가 필요하다.',
+    '  수용기준 ②)를 보여줄 수 없다. 점검 1회당 1행을 주는 출처가 따로 필요하다',
   )
+  console.log('  — 건설CALS 점검진단이력(data.go.kr 15061062, LINK 형식).')
 
   console.log('\n── 시설물 관리번호 후보 ──')
   const idLike = Object.keys(first).filter((field) => /id$|no$|num|code|cd$/i.test(field))

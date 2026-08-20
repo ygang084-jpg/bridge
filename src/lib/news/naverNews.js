@@ -32,6 +32,13 @@ const ENDPOINT = 'https://openapi.naver.com/v1/search/news.json'
  * 이 목록은 화면에 밝힌다 — /news 사이드바가 bridge_news.query 를 세어 보여준다.
  * 목록이 왜 이렇게 구성됐는지 말할 수 없으면 무엇이 빠졌는지도 말할 수 없다.
  */
+// ⚠ 2026-08 현재 이 검색어들은 호출되지 않는다. 네이버 검색 API 의 신규 발급이
+// NAVER API HUB(네이버클라우드 플랫폼)로 옮겨가, 개발자센터에서 새로 만든 앱의 키는
+// 401 {errorCode:'024', Scope Status Invalid} 로 거부된다. 기존 사용자는 2027-06-30
+// 까지 유지된다. 옮기려면 주소와 인증 헤더가 함께 바뀐다 —
+//   주소  https://naverapihub.apigw.ntruss.com/search/v1/news
+//   헤더  X-NCP-APIGW-API-KEY-ID / X-NCP-APIGW-API-KEY
+// HUB 는 종량제라 결제수단이 필요해서, 지금은 연결하지 않기로 했다 (2026-08-20).
 export const DEFAULT_QUERIES = [
   '교량',
   '교량 점검',

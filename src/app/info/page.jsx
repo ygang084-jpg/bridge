@@ -184,14 +184,11 @@ function WhatWeDoNot() {
 /* ── 데이터 출처 ──────────────────────────────────────────────────────── */
 
 function DataSources({ newsCron, summaryCron }) {
+  // '지금 쓰는 것'에는 실제로 값이 들어오는 출처만 적는다. 뉴스 검색은 코드가
+  // 준비돼 있고 스케줄러도 매일 돌지만 발급이 막혀 값이 오지 않으므로, 여기가
+  // 아니라 아래 '연결되지 않은 것'으로 내렸다. 쓰지 않는 출처를 쓰는 것처럼
+  // 적으면 이 화면이 하려는 일(어디서 오는지 밝히기)이 무너진다.
   const inUse = [
-    {
-      icon: 'file-text',
-      org: '네이버',
-      name: '뉴스 검색 API',
-      role: '교량 관련 언론 기사 목록. 제목·링크·요약은 기사 원문에서 그대로 옮기고, 저희가 새로 쓰지 않습니다.',
-      cycle: newsCron,
-    },
     {
       icon: 'map',
       org: '카카오',
@@ -202,6 +199,13 @@ function DataSources({ newsCron, summaryCron }) {
   ]
 
   const pending = [
+    {
+      icon: 'file-text',
+      label: '교량 관련 언론 보도',
+      detail:
+        `네이버 뉴스 검색 API 로 만들었고 스케줄러도 ${newsCron ?? '매일'} 돌지만, ` +
+        '이 API 의 신규 발급 창구가 바뀌어(NAVER API HUB) 지금 키로는 거부됩니다',
+    },
     { icon: 'building', label: '교량 기본정보', detail: '준공년도 · 연장 · 시설물 종별 · 관리기관' },
     { icon: 'clock', label: '관리 이력', detail: '점검 · 보수 · 보강 기록과 그 시점' },
     { icon: 'cloud-sun', label: '기상 관측·특보', detail: '바람 · 기온 · 강수 · 특보 발효 여부' },

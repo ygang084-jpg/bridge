@@ -127,6 +127,19 @@ function Intro({ refreshedAt, count }) {
           출처와 분류 방식
         </Link>
       </p>
+      {/* 목록이 왜 계속 비어 있는지 적는다. '수집 전'만 두면 곧 채워질 것으로
+          읽히는데, 지금은 출처가 연결되지 않아 스케줄러가 돌아도 채워지지 않는다. */}
+      {count === 0 && (
+        <p className="mt-2 max-w-3xl text-body-md text-on-surface-variant">
+          지금은 기사 출처가 연결되지 않아 목록이 비어 있습니다. 네이버 뉴스 검색 API 의 신규 발급
+          창구가 바뀌어(NAVER API HUB) 기존 키로는 호출이 거부됩니다. 연결되면 이 자리에 기사가
+          채워지고, 출처와 갱신 주기는{' '}
+          <Link href="/info" className="font-semibold text-primary underline hover:no-underline">
+            앱안내
+          </Link>
+          에 적습니다.
+        </p>
+      )}
     </header>
   )
 }

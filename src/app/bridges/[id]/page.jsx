@@ -4,7 +4,6 @@ import ScreenHeader from '@/components/ScreenHeader'
 import SummaryCard from '@/components/SummaryCard'
 import SourceNote from '@/components/SourceNote'
 import InfoStateBadge from '@/components/InfoStateBadge'
-import GradeChip from '@/components/GradeChip'
 import EmptyNotice from '@/components/EmptyNotice'
 import Icon from '@/components/Icon'
 import { fetchBridgeDetail, hasReadEnv } from '@/lib/supabase/readClient'
@@ -243,7 +242,6 @@ function HistoryTimeline({ history, id, described, info }) {
                   {formatDate(row.occurred_on)}
                 </span>
               </div>
-              {row.safety_grade && <GradeChip grade={row.safety_grade} className="mb-2" />}
               {row.description && (
                 <p className="text-body-md text-on-surface-variant">{row.description}</p>
               )}

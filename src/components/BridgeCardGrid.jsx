@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Icon from './Icon'
-import GradeChip from './GradeChip'
 import InfoStateBadge from './InfoStateBadge'
 
 /**
@@ -49,11 +48,8 @@ function BridgeCard({ bridge }) {
   return (
     <div className="relative flex flex-col rounded-xl border border-outline-variant/50 bg-surface/90 p-6 shadow-[0_4px_20px_rgba(3,22,53,0.05)] backdrop-blur-md transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(3,22,53,0.1)]">
       <div className="absolute top-6 right-6">
-        {bridge.grade ? (
-          <GradeChip grade={bridge.grade} />
-        ) : (
-          <InfoStateBadge state={bridge.infoState} label={bridge.infoLabel} size="sm" />
-        )}
+        {/* 이력이 있는지 없는지만 보여준다. 점검 결과 값은 화면에 내지 않는다. */}
+        <InfoStateBadge state={bridge.infoState} label={bridge.infoLabel} size="sm" />
       </div>
 
       <div className="mb-6 pr-24">

@@ -1,6 +1,5 @@
 import Icon from './Icon'
 import SourceNote from './SourceNote'
-import { getSafetyGradeDefinition, normalizeSafetyGrade } from '@/lib/summary'
 
 /**
  * F-03 관리 이력 타임라인 — 제품의 중심.
@@ -18,12 +17,6 @@ import { getSafetyGradeDefinition, normalizeSafetyGrade } from '@/lib/summary'
  */
 export default function Timeline({ items, sinceLatestText }) {
   if (!items || items.length === 0) return null
-
-  // 등급 정의를 아직 표시할 수 없다는 설명은 항목마다 되풀이하지 않고 아래에 한 번만 적는다.
-  // 항목마다 세 줄씩 붙으면 정작 읽어야 할 기록이 설명에 묻힌다.
-  const hasUnexplainedGrade = items.some(
-    (item) => normalizeSafetyGrade(item.safety_grade) && !getSafetyGradeDefinition(item.safety_grade),
-  )
 
   return (
     <>
@@ -46,21 +39,11 @@ export default function Timeline({ items, sinceLatestText }) {
         ))}
       </ol>
 
-      {hasUnexplainedGrade && (
-        <p className="mt-1 border-t border-outline-variant pt-3 text-[13px] leading-[18px] text-on-surface-variant">
-          안전등급의 법정 정의 원문을 아직 확인하지 못해 뜻을 함께 적지 못했습니다. 등급은 그
-          시점 점검의 판정 결과이며, 교량의 항상적 속성도 아니고 통행 제한 여부와도 별개
-          정보입니다.
-        </p>
-      )}
     </>
   )
 }
 
 function EventRow({ item }) {
-  const grade = normalizeSafetyGrade(item.safety_grade)
-  const definition = getSafetyGradeDefinition(item.safety_grade)
-
   return (
     <div className="flex gap-3">
       <div className="flex w-4 shrink-0 flex-col items-center pt-1.5">
@@ -81,24 +64,6 @@ function EventRow({ item }) {
 
         {item.description && (
           <p className="mt-1 text-[15px] leading-[24px] text-on-surface">{item.description}</p>
-        )}
-
-        {/* F-02.1 — 등급은 이 시점에 놓고, 법정 정의를 같은 줄에 펼친다.
-            툴팁·아코디언으로 숨기지 않는다.
-            정의를 아직 표시할 수 없는 이유는 Timeline 하단에 한 번만 적는다. */}
-        {grade && (
-          <p className="mt-1 text-[14px] leading-[22px] text-on-surface-variant">
-            안전등급 {grade}
-            {definition && (
-              <>
-                {' — '}
-                {definition.legalDefinition}
-                <span className="block text-[13px]">
-                  {definition.source.name} {definition.source.article}
-                </span>
-              </>
-            )}
-          </p>
         )}
 
         <SourceNote source={item.source} asOf={item.data_as_of} align="left" />

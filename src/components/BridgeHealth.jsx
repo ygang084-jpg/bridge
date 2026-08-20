@@ -18,7 +18,7 @@ export function HealthCard({ featured }) {
   const tiles = [
     { label: '최근 점검', has: Boolean(featured.lastInspectionYearMonth), icon: 'check-circle' },
     { label: '보수이력', has: Boolean(featured.lastRepairYearMonth), icon: 'wrench' },
-    { label: '안전등급', has: Boolean(featured.grade), icon: 'file-text' },
+    { label: '보강이력', has: false, icon: 'scale' },
     { label: '통행정보', has: false, icon: 'car' },
   ]
 

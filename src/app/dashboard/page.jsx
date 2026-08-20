@@ -47,7 +47,7 @@ export const revalidate = 3600
  *   ① 오늘의 상태 4타일 '낮음/주의/정상'
  *      → 기준치가 없으면 우리가 위험을 판정하는 것이 된다 (PRD §13 Q2·Q3 미해소).
  *        risk_thresholds 에 출처 있는 기준치가 들어오면 그대로 켜진다
- *   ② 교량 카드의 A/B 등급 칩 → 이력이 있는지 없는지만 보여준다 (F-05)
+ *   ② 교량 카드의 A/B 판정 칩 → 이력이 있는지 없는지만 보여준다 (F-05)
  *   ③ 건강검진의 '사용연수 28년' → 준공·최근 점검·마지막 보수를 나란히 둔다
  *
  * 그 밖에 '© 2024 국가교량안전기관'은 실재하지 않는 기관이라 쓰지 않았고,
@@ -286,10 +286,10 @@ function NearbySection({ bridges, loadFailed }) {
                 <span className="min-w-0 truncate text-base font-bold text-primary">
                   {bridge.name}
                 </span>
-                {/* 등급이 아니라 이력이 있는지 없는지만 보여준다. 등급은 그 시점
-                    점검의 판정 결과라 카드에서 교량의 속성처럼 읽히고, 법정 정의도
-                    아직 확인하지 못했다. 여기서 알아야 할 것은 '들어가면 볼 기록이
-                    있는가'다. */}
+                {/* 이력이 있는지 없는지만 보여준다. 점검 결과 값(A~E)은 화면에서
+                    빼기로 했다 — 그 시점 점검의 판정인데 카드에서는 교량의 속성처럼
+                    읽히고, 법정 정의 원문도 확인하지 못했다. 여기서 알아야 할 것은
+                    '들어가면 볼 기록이 있는가'다. */}
                 <InfoStateBadge state={bridge.infoState} label={bridge.infoLabel} size="sm" />
               </div>
             </Link>

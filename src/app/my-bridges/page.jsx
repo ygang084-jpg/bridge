@@ -81,7 +81,6 @@ async function loadFeatured(bridges) {
     id: detail.bridge.id,
     name: detail.bridge.name,
     completedYear: detail.bridge.completed_year ?? null,
-    grade: top.grade,
     lastInspectionYearMonth: management.lastInspectionYearMonth,
     lastRepairYearMonth: management.lastRepairYearMonth,
     timeline: buildTimeline(detail.history),

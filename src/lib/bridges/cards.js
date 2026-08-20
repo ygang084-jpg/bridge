@@ -35,7 +35,6 @@ export async function loadBridgeCards() {
         infoState: info.state,
         infoLabel: info.label,
         recordCount: info.recordCount,
-        grade: latestGrade(history),
         lastInspectionOn: lastInspection?.occurred_on ?? null,
       }
     }),
@@ -44,11 +43,4 @@ export async function loadBridgeCards() {
   return { bridges, loadFailed: false }
 }
 
-/** 가장 최근 기록의 안전등급. 등급이 붙은 기록이 없으면 null. */
-function latestGrade(history) {
-  const graded = history
-    .filter((row) => row.safety_grade)
-    .sort((a, b) => String(b.occurred_on).localeCompare(String(a.occurred_on)))
-  return graded.length > 0 ? String(graded[0].safety_grade).trim().toUpperCase() : null
-}
 

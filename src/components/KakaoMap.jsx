@@ -75,7 +75,16 @@ export default function KakaoMap({
   // 좌표가 없는 교량은 지도에 찍을 수 없다. memo 로 두어 아래 effect 의
   // 의존성이 정적으로 검사되게 한다 (매 렌더 새 배열이면 마커를 계속 다시 그린다).
   const points = useMemo(
-    () => bridges.filter((bridge) => Number.isFinite(bridge.lat) && Number.isFinite(bridge.lng)),
+    () =>
+      bridges.filter(
+        (bridge) =>
+          Number.isFinite(bridge.lat) &&
+          Number.isFinite(bridge.lng) &&
+          // 정확히 0,0 은 버린다. 수집 단계에서 이미 걸러내지만, 한 점이 새어 들어오면
+          // 경계가 지구 반대편까지 벌어져 지도 전체가 빈 화면이 된다 — 마커 하나를
+          // 잃는 것보다 지도를 잃는 쪽이 훨씬 나쁘다.
+          !(bridge.lat === 0 && bridge.lng === 0),
+      ),
     [bridges],
   )
 

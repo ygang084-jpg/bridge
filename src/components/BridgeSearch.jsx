@@ -70,7 +70,7 @@ export default function BridgeSearch({ bridges = [], className = '' }) {
             정렬해 주는 화면이다 (F-01). 좌표는 브라우저에서만 쓰고 서버로
             보내지 않는다. 권한을 거부하면 그 화면이 지역명 검색으로 넘어간다. */}
         <Link
-          href="/bridges"
+          href="/map"
           className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90"
         >
           <Icon name="map-pin" size={18} />

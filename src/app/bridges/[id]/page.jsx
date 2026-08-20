@@ -69,7 +69,7 @@ export default async function BridgeDetailPage({ params }) {
   if (loadError || !hasReadEnv()) {
     return (
       <>
-        <ScreenHeader title="교량 상세" backHref="/bridges" />
+        <ScreenHeader title="교량 상세" backHref="/map" />
         <main className="flex-1 px-4 py-5">
           <EmptyNotice
             headline="교량 정보를 불러오지 못했습니다."
@@ -78,7 +78,7 @@ export default async function BridgeDetailPage({ params }) {
                 ? '화면이 비어 있는 것은 정보가 없다는 뜻이 아니라, 지금 데이터를 읽지 못했다는 뜻입니다.'
                 : '데이터베이스 연결이 아직 설정되지 않았습니다. .env.local 에 SUPABASE_URL 과 SUPABASE_ANON_KEY 를 채워 주세요.'
             }
-            backHref="/bridges"
+            backHref="/map"
           />
         </main>
       </>
@@ -94,7 +94,7 @@ export default async function BridgeDetailPage({ params }) {
 
   return (
     <>
-      <ScreenHeader title={bridge.name} backHref="/bridges" />
+      <ScreenHeader title={bridge.name} backHref="/map" />
 
       <main className="screen-wide flex w-full flex-1 flex-col gap-xl px-margin-mobile py-lg md:px-margin-desktop">
         <PageHeader bridge={bridge} id={id} info={info} asOf={asOf} />

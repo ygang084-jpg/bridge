@@ -48,6 +48,25 @@ export default async function MapPage() {
               위치만 표시하고 그 사실을 화면에 적습니다.
             </span>
           </p>
+          {/* 담아 둔 범위. 없앤 목록 화면(`/bridges`)이 지고 있던 안내를 여기로 옮겼다 —
+              이 화면이 교량을 찾는 자리가 되었기 때문이다. 범위를 적지 않으면 서울 밖에
+              계신 분에게는 '내 주변에 교량이 없다'로 읽힌다 (F-05).
+              좌표가 없는 교량은 마커가 없어 여기 나타나지 않는다. 그 수를 함께 적는다 —
+              지도에 607개가 보이는데 등록이 781곳이면 174곳이 사라진 것으로 읽힌다. */}
+          <p className="mt-2 rounded-lg bg-surface-container-low px-3 py-2 text-[13px] leading-[18px] text-on-surface-variant">
+            지금 담아 둔 범위는 <strong className="font-semibold">서울특별시</strong> 입니다. 다른
+            지역 교량은 공개 데이터에 있지만 아직 옮겨 오지 않았습니다.
+            {bridges.length > 0 && (
+              <>
+                {' '}
+                등록된 {bridges.length}곳 가운데 좌표가 있는{' '}
+                <strong className="font-semibold">
+                  {bridges.filter((bridge) => Number.isFinite(bridge.lat) && Number.isFinite(bridge.lng)).length}곳
+                </strong>
+                만 지도에 찍힙니다 — 공개 데이터에 좌표가 없는 교량은 마커가 없습니다.
+              </>
+            )}
+          </p>
         </div>
 
         <MapExplorer bridges={bridges} />

@@ -21,7 +21,7 @@ import { getSiteUrl } from '@/lib/siteUrl'
 // 기다릴 이유가 없고, 그렇다고 요청마다 Supabase 를 읽을 이유도 없다.
 export const revalidate = 86400
 
-const STATIC_PATHS = ['/', '/dashboard', '/map', '/bridges', '/news', '/info']
+const STATIC_PATHS = ['/', '/dashboard', '/map', '/news', '/info']
 
 export default async function sitemap() {
   const base = getSiteUrl()

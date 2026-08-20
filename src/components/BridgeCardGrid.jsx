@@ -109,7 +109,7 @@ function BridgeCard({ bridge }) {
 function FindMoreCard() {
   return (
     <Link
-      href="/bridges"
+      href="/map"
       className="group flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed border-outline-variant bg-surface-container-low/80 p-6 text-center backdrop-blur-md transition-all duration-300 hover:border-primary-fixed-dim hover:bg-surface-container/90"
     >
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-fixed text-on-primary-fixed transition-transform duration-300 group-hover:scale-110">

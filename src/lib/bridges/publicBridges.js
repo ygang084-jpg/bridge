@@ -90,8 +90,7 @@ export function normalizeBridge(item, { fetchedAt = new Date().toISOString() } =
   const name = text(item?.facilName)
   if (!id || !name) return null
 
-  const lat = number(item?.sLatitude)
-  const lng = number(item?.sLongitude)
+  const [lat, lng] = coordinates(item?.sLatitude, item?.sLongitude)
 
   return {
     id,
@@ -101,8 +100,8 @@ export function normalizeBridge(item, { fetchedAt = new Date().toISOString() } =
     name,
     // 도로명 주소(newJuso)는 응답에서 비어 있었다. 지번 주소를 쓴다.
     address: text(item?.juso) ?? text(item?.newJuso),
-    lat: lat !== null && lat >= -90 && lat <= 90 ? lat : null,
-    lng: lng !== null && lng >= -180 && lng <= 180 ? lng : null,
+    lat,
+    lng,
     completed_year: validYear(item?.openYear),
     length_m: number(item?.length),
     // 상부구조는 시설물 종류가 아니다. 각자 자기 컬럼에 들어간다 (0004 마이그레이션).
@@ -123,6 +122,38 @@ function validYear(value) {
   const parsed = number(value)
   if (parsed === null) return null
   return parsed >= 1000 && parsed <= 9999 ? Math.trunc(parsed) : null
+}
+
+/**
+ * 좌표. 국내 범위를 벗어나면 **둘 다 버린다.**
+ *
+ * 이 출처는 좌표를 모르는 교량에 `0` 을 넣어 보낸다 — 781곳 중 174곳이 `0, 0`
+ * 이었다(양화대교·잠실대교·한남교 …). 위도 −90~90 만 검사하면 `0` 이 정상으로
+ * 통과하고, 그 한 점 때문에 지도가 서울과 기니만을 같이 담으려 최대로 축소된다.
+ * 화면에는 마커도 타일도 없는 흰 사각형만 남고, 원인이 좌표라는 것은 어디에도
+ * 적혀 있지 않다. 실제로 그 상태를 한참 헤맸다.
+ *
+ * 그래서 국내 경계로 자른다 — 위도 33~39, 경도 124~132. 제주(33.1)와
+ * 울릉·독도(37.2, 131.9)까지 들어가고, 그 밖의 값은 이 자료에서 나올 수 없다.
+ * 하나만 이상하면 둘 다 버린다 — 위도만 맞는 좌표는 지도에 찍을 수 없다.
+ *
+ * 좌표가 없는 교량은 목록에는 남고 지도에만 안 나온다. 그래서 대시보드가
+ * '교량 N곳'으로 몇 곳을 찍었는지 함께 적는다 (CLAUDE.md '지도').
+ */
+const KOREA_BOUNDS = { minLat: 33, maxLat: 39, minLng: 124, maxLng: 132 }
+
+function coordinates(rawLat, rawLng) {
+  const lat = number(rawLat)
+  const lng = number(rawLng)
+  if (lat === null || lng === null) return [null, null]
+
+  const inside =
+    lat >= KOREA_BOUNDS.minLat &&
+    lat <= KOREA_BOUNDS.maxLat &&
+    lng >= KOREA_BOUNDS.minLng &&
+    lng <= KOREA_BOUNDS.maxLng
+
+  return inside ? [lat, lng] : [null, null]
 }
 
 /** 0 이나 음수는 담지 않는다 — DB 제약과 같은 판단을 여기서도 한다. */

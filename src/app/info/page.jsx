@@ -379,8 +379,8 @@ function Faq() {
 
       <p className="mt-6 text-body-md text-on-surface-variant">
         더 보실 곳 —{' '}
-        <Link href="/bridges" className="font-semibold text-primary underline">
-          내 주변 교량 목록
+        <Link href="/dashboard" className="font-semibold text-primary underline">
+          대시보드
         </Link>{' '}
         ·{' '}
         <Link href="/map" className="font-semibold text-primary underline">

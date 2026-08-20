@@ -96,9 +96,19 @@ export default function KakaoMap({
       return
     }
 
-    if (!containerRef.current) {
+    // 자리가 아직 없거나 크기가 0이면 **지도를 만들지 않고 기다린다.**
+    //
+    // 0×0 상태에서 만들면 카카오는 자기 크기를 0으로 잡고 타일을 한 장도
+    // 요청하지 않는다. 나중에 relayout() 을 불러도 이미 잘못 잡힌 축척이 남아
+    // (축척 바가 128km 로 표시됐다) 화면은 흰 상자 그대로다. 그래서 크기가
+    // 생긴 뒤에 만든다 — 고치는 것보다 잘못 만들지 않는 것이 확실하다.
+    const box = containerRef.current?.getBoundingClientRect()
+    if (!box || box.width < 1 || box.height < 1) {
       if (initTriesRef.current >= INIT_MAX_TRIES) {
-        onUnavailable?.('지도를 놓을 자리를 찾지 못했습니다')
+        console.warn(
+          `[map] 자리를 얻지 못했습니다 — ${box ? `${Math.round(box.width)}×${Math.round(box.height)}` : '컨테이너 없음'}`,
+        )
+        onUnavailable?.('지도를 놓을 자리를 얻지 못했습니다')
         return
       }
       initTriesRef.current += 1
@@ -106,8 +116,7 @@ export default function KakaoMap({
       return
     }
 
-    const box = containerRef.current.getBoundingClientRect()
-    console.info(`[map] 지도 생성 — 컨테이너 ${Math.round(box.width)}×${Math.round(box.height)}`)
+    console.warn(`[map] 지도 생성 — 컨테이너 ${Math.round(box.width)}×${Math.round(box.height)}`)
 
     mapRef.current = new kakao.maps.Map(containerRef.current, {
       // 첫 중심은 아래 fitBounds 가 곧 덮어쓴다. 좌표가 하나도 없을 때를 위한 값.

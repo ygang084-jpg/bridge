@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import Icon from '@/components/Icon'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
@@ -37,21 +38,21 @@ export const revalidate = 3600
  *
  * 디자인 파일과 다르게 옮긴 것 — 전부 '가진 값만 적는다' 하나에서 나온다 :
  *
- *   · 히어로 배경 사진 → 외부(Google) 이미지였고, 무엇보다 특정 기사 위에 교량
- *     사진을 깔면 그 사진이 그 기사의 교량으로 읽힌다. 랜딩이 같은 문제를 푼
- *     방식(그라디언트 + 격자)을 따랐다.
+ *   · 히어로 배경 사진 → 디자인의 사진은 외부(Google) 주소여서 쓸 수 없다.
+ *     저장소의 사진(public/backgrounds/evening.png)을 같은 방식(짙은 남색
+ *     그라디언트를 덮는 것)으로 깔고, **이 기사와 무관한 이미지**라고 캡션에
+ *     적었다. 적지 않으면 그 사진이 기사의 교량으로 읽힌다.
  *   · 조회수 '2,451' → 조회수를 세지 않는다. 없는 숫자는 적지 않는다.
- *   · 기사 썸네일 → 네이버 뉴스 검색 API 는 이미지를 주지 않는다.
- *   · '2시간 전' 상대 시각 → 이 화면은 한 시간 단위로 캐시되므로 서버에서 만든
- *     상대 시각이 굳어 실제와 어긋난다. 발표일을 그대로 적는다.
+ *   · 기사 썸네일 → 네이버 뉴스 검색 API 는 이미지를 주지 않는다. 자리는 두되
+ *     사진이 아니라 도형이라는 게 보이게 두었다 (NewsExplorer 의 RowTile).
+ *   · 사이드바 '많이 읽은 뉴스' 5위 → 조회수가 없으므로 인기 순위를 만들 수 없다.
+ *     같은 번호 목록 모양에 **발표일 최신 5건**을 넣고 제목도 그렇게 적었다.
+ *   · 사이드바 '실시간 주요 키워드' → 인기를 측정하지 않는다. 같은 해시태그 칩
+ *     모양에 말머리·카테고리를 붙일 때 **실제로 걸린 낱말**을 넣었다. 우리 분류의
+ *     근거 공개다.
  *   · 항목의 기관명(국토교통부 · 안전관리공단 · 행정안전부) → 우리가 가진 값은
  *     링크 호스트명에서 뽑은 **언론사**다. 기관명으로 적으면 기사가 정부 발표로
  *     읽히고, 그 순간 언론 보도가 공식 기록으로 격상된다.
- *   · 사이드바 '많이 읽은 뉴스' 5위 → 조회수가 없으므로 순위를 만들 수 없다.
- *     대신 **이 목록을 만든 검색어**를 적는다. 목록이 왜 이렇게 구성됐는지
- *     밝히지 못하면 무엇이 빠졌는지도 말할 수 없다.
- *   · 사이드바 '실시간 주요 키워드' → 인기를 측정하지 않는다. 대신 말머리·카테고리를
- *     붙일 때 **실제로 걸린 낱말**과 그 건수를 적는다. 우리 분류의 근거 공개다.
  *   · 상단 내비의 Public Reports · Technology · About Us · **Emergency Portal**
  *     → 제보도 기술 페이지도 없고, 비상 포털은 특히 위험하다(누르면 아무 일도
  *     없는 비상 창구는 그 자체로 위해다). 앱 공통 내비를 쓴다.
@@ -89,8 +90,9 @@ export default async function NewsPage() {
             {rows.length === 0 ? <NotCollectedYet /> : <NewsExplorer rows={rest} />}
           </div>
           <aside className="flex w-full flex-col gap-md lg:w-1/4">
-            <Queries rows={rows} />
+            <RecentList rows={rows} />
             <MatchedWords rows={rows} />
+            <Queries rows={rows} />
           </aside>
         </div>
 
@@ -131,6 +133,32 @@ function Intro({ refreshedAt, count }) {
 
 /* ── 머리기사 ────────────────────────────────────────────────────────── */
 
+/**
+ * 히어로 배경. 디자인은 석양의 교량 사진 위에 아래에서 위로 짙어지는 남색
+ * 그라디언트를 덮었다. 그 사진은 외부(Google) 주소라 쓸 수 없어, 저장소에 있는
+ * 사진(public/backgrounds/evening.png)을 같은 방식으로 깐다.
+ *
+ * 사진이 기사와 무관하다는 것을 화면에 적는다(아래 캡션). 적지 않으면 머리기사
+ * 위의 사진이 그 기사의 교량으로 읽히고, 이 제품에서 그건 오정보다.
+ */
+function HeroBackdrop() {
+  return (
+    <div className="absolute inset-0" aria-hidden="true">
+      <Image
+        src="/backgrounds/evening.png"
+        alt=""
+        fill
+        sizes="100vw"
+        priority={false}
+        className="object-cover"
+      />
+      {/* 디자인의 from-primary/90 via-primary/50 to-transparent 를 그대로 쓴다.
+          글자가 얹히는 아래쪽이 가장 짙어야 대비가 확보된다. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/60 to-primary/20" />
+    </div>
+  )
+}
+
 function Featured({ row }) {
   if (!row) return null
 
@@ -140,18 +168,9 @@ function Featured({ row }) {
         href={row.url}
         target="_blank"
         rel="noreferrer"
-        className="relative flex min-h-[280px] items-end overflow-hidden rounded-xl shadow-sm md:min-h-[360px]"
+        className="relative flex h-[400px] items-end overflow-hidden rounded-xl shadow-sm md:h-[500px]"
       >
-        {/* 사진 대신 그라디언트 + 격자. 특정 기사 위에 교량 사진을 깔면 그 사진이
-            그 기사의 교량으로 읽힌다 (랜딩 히어로와 같은 판단). */}
-        <div
-          className="bg-grid-pattern absolute inset-0"
-          style={{
-            backgroundColor: '#031635',
-            backgroundImage: 'linear-gradient(115deg, #031635 0%, #1a2b4b 55%, #364768 100%)',
-          }}
-          aria-hidden="true"
-        />
+        <HeroBackdrop />
         <div className="relative z-10 flex w-full flex-col gap-sm p-lg md:w-3/4">
           <span className={`w-max rounded-full px-3 py-1 text-label-md font-bold ${toneFor(row.tag)}`}>
             [{row.tag}] {row.tagHint}
@@ -173,10 +192,11 @@ function Featured({ row }) {
           </p>
         </div>
       </a>
-      {/* 왜 이 기사가 맨 위인지 밝힌다. 우리가 중요도를 판정한 것이 아니다. */}
+      {/* 왜 이 기사가 맨 위인지, 그리고 배경 사진이 무엇인지 밝힌다. 둘 다 적지
+          않으면 '우리가 고른 중요한 소식'과 '그 기사의 교량 사진'으로 읽힌다. */}
       <p className="mt-2 text-caption text-on-surface-variant">
         말머리가 [긴급]·[공지]인 기사를 먼저, 그다음 발표일 최신순으로 둡니다. 저희가 중요도를 매긴
-        것이 아닙니다.
+        것이 아닙니다. 배경 사진은 이 기사와 무관한 이미지입니다.
       </p>
     </section>
   )
@@ -188,7 +208,7 @@ function Featured({ row }) {
  */
 function FeaturedEmpty() {
   return (
-    <section className="relative flex min-h-[280px] items-end overflow-hidden rounded-xl shadow-sm md:min-h-[360px]">
+    <section className="relative flex h-[400px] items-end overflow-hidden rounded-xl shadow-sm md:h-[500px]">
       <div
         className="bg-grid-pattern absolute inset-0"
         style={{
@@ -212,6 +232,46 @@ function FeaturedEmpty() {
 }
 
 /* ── 사이드바 ────────────────────────────────────────────────────────── */
+
+/**
+ * 디자인의 '많이 읽은 뉴스' 자리 — 번호 + 제목 5줄.
+ *
+ * 조회수를 세지 않으므로 인기 순위를 만들 수 없다. 같은 모양에 발표일 최신 5건을
+ * 넣고, 제목도 '최근 기사'로 적었다. 순위처럼 보이는 자리에 순위가 아닌 것을 넣을
+ * 때는 무엇으로 줄 세운 것인지 이름에 드러나야 한다.
+ */
+function RecentList({ rows }) {
+  const recent = [...rows]
+    .sort((a, b) => (Date.parse(b.published_at ?? 0) || 0) - (Date.parse(a.published_at ?? 0) || 0))
+    .slice(0, 5)
+
+  return (
+    <SideCard icon="clock" title="최근 기사">
+      {recent.length === 0 ? (
+        <p className="text-body-md text-on-surface-variant">아직 수집된 기사가 없습니다.</p>
+      ) : (
+        <ol className="flex flex-col gap-sm">
+          {recent.map((row, index) => (
+            <li key={row.id ?? row.url} className="flex items-start gap-sm">
+              <span className="text-body-lg font-bold text-primary">{index + 1}</span>
+              <a
+                href={row.url}
+                target="_blank"
+                rel="noreferrer"
+                className="line-clamp-2 text-body-md text-on-surface transition-colors hover:text-primary"
+              >
+                {row.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+      <p className="mt-sm text-caption text-on-surface-variant">
+        조회수 순위가 아닙니다. 발표일이 최신인 순서입니다.
+      </p>
+    </SideCard>
+  )
+}
 
 /** 이 목록을 만든 검색어. bridge_news.query 에 수집 당시 검색어가 남는다. */
 function Queries({ rows }) {
@@ -256,7 +316,7 @@ function MatchedWords({ rows }) {
   const entries = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12)
 
   return (
-    <SideCard icon="info" title="분류에 걸린 낱말">
+    <SideCard icon="info" title="주요 낱말">
       {entries.length === 0 ? (
         <p className="text-body-md text-on-surface-variant">
           {rows.length === 0
@@ -270,7 +330,7 @@ function MatchedWords({ rows }) {
               key={word}
               className="rounded-full bg-surface-container px-3 py-1 text-caption text-on-surface-variant"
             >
-              {word} {count}
+              #{word} {count}
             </span>
           ))}
         </div>

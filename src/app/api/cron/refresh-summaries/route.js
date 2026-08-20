@@ -62,6 +62,16 @@ export async function GET(request) {
       return acc
     }, {})
 
+    // 보고를 응답으로만 돌려주면 스케줄러가 부를 때는 아무도 읽지 않는다.
+    // 버셀 크론은 응답 본문을 버리므로, 781곳 중 34곳만 생성된 이유를 알 수
+    // 없었다 (refresh-news 도 같은 문제였다).
+    for (const line of lines) console.log(`[summary] ${line}`)
+    console.log(
+      `[summary] 완료 — 대상 ${report.length}곳 · ` +
+        `${Object.entries(tally).map(([key, value]) => `${key} ${value}`).join(' / ')} · ` +
+        `${Date.now() - startedAt}ms`,
+    )
+
     return Response.json({
       ok: true,
       elapsedMs: Date.now() - startedAt,

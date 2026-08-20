@@ -11,6 +11,8 @@
     "check:summaries": "node scripts/check-summaries.mjs",
     "check:logic": "node scripts/check-logic.mjs",
     "check:public-data": "node scripts/check-public-data.mjs",
+    "load:bridges": "node scripts/load-bridges.mjs",
+    "run:summaries": "node scripts/run-summaries.mjs",
     "check": "npm run check:logic && npm run check:summaries"
   },
   "dependencies": {

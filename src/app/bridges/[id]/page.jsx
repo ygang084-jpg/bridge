@@ -155,25 +155,11 @@ function PageHeader({ bridge, id, info, asOf }) {
         </h1>
       </div>
 
-      {/* 디자인의 '리포트 내보내기'·'점검 요청' 자리. 둘 다 만들지 않는다 —
-          만들 리포트가 없고, 점검 요청은 접수 후 처리 경로가 없다. 대신 실제로
-          갈 곳이 있는 두 화면을 둔다. */}
-      <div className="flex flex-wrap gap-sm">
-        <Link
-          href={`/bridges/${id}/history`}
-          className="flex min-h-[44px] items-center gap-2 rounded-lg bg-primary px-5 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90"
-        >
-          <Icon name="clock" size={18} />
-          관리 이력 전체 보기
-        </Link>
-        <Link
-          href={`/bridges/${id}/today`}
-          className="flex min-h-[44px] items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-5 text-label-md font-medium text-on-surface transition-colors hover:bg-surface-container-low"
-        >
-          <Icon name="cloud-sun" size={18} />
-          오늘의 상태
-        </Link>
-      </div>
+      {/* 디자인의 '리포트 내보내기'·'점검 요청' 자리에는 아무것도 두지 않는다 —
+          만들 리포트가 없고, 점검 요청은 접수 후 처리 경로가 없다.
+          '관리 이력 전체 보기'·'오늘의 상태' 버튼도 여기서 뺐다. 이력으로 가는 길은
+          아래 타임라인 카드의 '전체 보기'와 요약 카드의 링크에 이미 두 개 있어서,
+          같은 곳으로 가는 버튼이 한 화면에 세 개였다. */}
     </header>
   )
 }

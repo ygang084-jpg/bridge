@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { normalizeSupabaseUrl } from './normalizeUrl.js'
 
 /**
  * 서버 전용 Supabase 클라이언트.
@@ -38,7 +39,7 @@ function assertServiceKeyNotPublic(env = process.env) {
 export function createServerSupabaseClient() {
   assertServiceKeyNotPublic()
 
-  const url = readEnv('SUPABASE_URL')
+  const url = normalizeSupabaseUrl(readEnv('SUPABASE_URL'))
   const serviceKey = readEnv('SUPABASE_SERVICE_ROLE_KEY')
 
   if (!url || !serviceKey) {

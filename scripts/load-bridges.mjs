@@ -42,7 +42,14 @@ function env(name) {
   } catch {
     return null
   }
-  const line = text.split(/\r?\n/).find((row) => row.trim().startsWith(`${name}=`))
+  // 같은 이름이 여러 줄 있으면 마지막 줄을 쓴다. 셸이 .env 를 읽는 방식과 같고,
+  // 값을 고칠 때 새 줄로 덧붙이는 일이 흔하다. 앞줄을 집으면 남아 있던 자리표시자를
+  // 실제 값으로 착각한다 — 실제로 그렇게 한 번 헤맸다.
+  const lines = text.split(/\r?\n/).filter((row) => row.trim().startsWith(`${name}=`))
+  if (lines.length > 1) {
+    console.log(`⚠ .env.local 에 ${name} 줄이 ${lines.length}개 있습니다. 마지막 것을 씁니다.`)
+  }
+  const line = lines.at(-1)
   return line ? line.slice(line.indexOf('=') + 1).trim() : null
 }
 

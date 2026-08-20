@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { HISTORY_COLUMNS } from '@/lib/summary/summariesRepo'
+import { normalizeSupabaseUrl } from './normalizeUrl.js'
 
 /**
  * 읽기 전용 Supabase 클라이언트 — 서버 컴포넌트에서만 쓴다.
@@ -28,7 +29,7 @@ export function hasReadEnv() {
 
 export function getReadClient() {
   if (cached) return cached
-  const url = readEnv('SUPABASE_URL')
+  const url = normalizeSupabaseUrl(readEnv('SUPABASE_URL'))
   const key = readEnv('SUPABASE_ANON_KEY')
   if (!url || !key) return null
 

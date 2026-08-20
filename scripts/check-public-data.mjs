@@ -44,7 +44,12 @@ function readEnvLocal(name) {
   } catch {
     return null
   }
-  const line = text.split(/\r?\n/).find((row) => row.trim().startsWith(`${name}=`))
+  // 같은 이름이 여러 줄이면 마지막 줄을 쓴다 — load-bridges.mjs 의 같은 함수 참고.
+  const lines = text.split(/\r?\n/).filter((row) => row.trim().startsWith(`${name}=`))
+  if (lines.length > 1) {
+    console.log(`⚠ .env.local 에 ${name} 줄이 ${lines.length}개 있습니다. 마지막 것을 씁니다.`)
+  }
+  const line = lines.at(-1)
   return line ? line.slice(line.indexOf('=') + 1).trim() : null
 }
 

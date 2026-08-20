@@ -105,6 +105,11 @@ export function normalizeBridge(item, { fetchedAt = new Date().toISOString() } =
     lng: lng !== null && lng >= -180 && lng <= 180 ? lng : null,
     completed_year: validYear(item?.openYear),
     length_m: number(item?.length),
+    // 상부구조는 시설물 종류가 아니다. 각자 자기 컬럼에 들어간다 (0004 마이그레이션).
+    superstructure: text(item?.superstNm),
+    total_width_m: positive(item?.totWidth),
+    lane_count: laneCount(item?.lineNum),
+    design_load: text(item?.designNm),
     facility_type: null,
     facility_class: null,
     manager_org: text(item?.orgmNm),
@@ -118,6 +123,20 @@ function validYear(value) {
   const parsed = number(value)
   if (parsed === null) return null
   return parsed >= 1000 && parsed <= 9999 ? Math.trunc(parsed) : null
+}
+
+/** 0 이나 음수는 담지 않는다 — DB 제약과 같은 판단을 여기서도 한다. */
+function positive(value) {
+  const parsed = number(value)
+  return parsed !== null && parsed > 0 ? parsed : null
+}
+
+/** 차로수. 범위를 벗어난 값은 상류 오류로 보고 담지 않는다. */
+function laneCount(value) {
+  const parsed = number(value)
+  if (parsed === null) return null
+  const lanes = Math.trunc(parsed)
+  return lanes >= 1 && lanes <= 40 ? lanes : null
 }
 
 /**

@@ -40,7 +40,9 @@ export function getReadClient() {
 }
 
 const BRIDGE_COLUMNS =
-  'id, name, address, lat, lng, completed_year, length_m, facility_type, facility_class, manager_org, manager_contact, source, fetched_at'
+  'id, name, address, lat, lng, completed_year, length_m, superstructure, total_width_m, ' +
+  'lane_count, design_load, facility_type, facility_class, manager_org, manager_contact, ' +
+  'source, fetched_at'
 
 /**
  * 목록용 교량 전체.

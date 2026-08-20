@@ -188,12 +188,12 @@ function Specs({ bridge, asOf }) {
         </div>
         <div className="grid grid-cols-2 gap-md">
           {/* 디자인의 '교량형식'(게르버 트러스교)·'폭'(27.0m 6차로)·'설계하중'(DB-24)
-              자리다. 공개 데이터가 이 값들을 주는데(상부구조·총폭·차로수·설계하중)
-              담을 컬럼을 아직 만들지 않아 비어 있다. 컬럼을 추가하면 채워진다. */}
-          <Field label="교량형식" value={null} note="담을 컬럼이 아직 없습니다" />
-          <Field label="폭 · 차로" value={null} note="담을 컬럼이 아직 없습니다" />
+              자리. 공개 데이터의 상부구조·총폭·차로수·설계하중을 그대로 옮긴다.
+              '교량형식'에 시설물 종류를 섞지 않는다 — 다른 분류다. */}
+          <Field label="교량형식" value={bridge.superstructure} />
+          <Field label="폭 · 차로" value={formatWidth(bridge)} />
         </div>
-        <Field label="설계하중" value={null} note="담을 컬럼이 아직 없습니다" />
+        <Field label="설계하중" value={bridge.design_load} />
         <div className="grid grid-cols-2 gap-md">
           <Field label="관리기관" value={bridge.manager_org} />
           <Field label="문의처" value={bridge.manager_contact} />
@@ -428,6 +428,17 @@ function Field({ label, value, detail, note, source, asOf, wide = false }) {
       {hasValue && (source || asOf) && <SourceNote source={source} asOf={asOf} align="left" />}
     </div>
   )
+}
+
+/**
+ * '9.8m · 2차로'. 둘 중 하나만 있으면 있는 것만 적는다 —
+ * 없는 쪽을 0 이나 '-' 로 채우면 값이 있는 것처럼 보인다.
+ */
+function formatWidth(bridge) {
+  const parts = []
+  if (bridge.total_width_m) parts.push(`${bridge.total_width_m}m`)
+  if (bridge.lane_count) parts.push(`${bridge.lane_count}차로`)
+  return parts.length > 0 ? parts.join(' · ') : null
 }
 
 /** '2024-10-30' → '2024. 10. 30'. 형식을 못 읽으면 원문 그대로 둔다. */

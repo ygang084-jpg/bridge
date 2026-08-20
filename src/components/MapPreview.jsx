@@ -18,7 +18,13 @@ import KakaoMap from './KakaoMap'
  * 빈 사각형으로 남기면 '주변에 교량이 없다'로 읽힌다 — 지도를 못 띄운 것과
  * 교량이 없는 것은 다른 말이다.
  *
- * 좌표가 없는 교량은 여기 나타나지 않는다. 그래서 아래에 몇 곳을 찍었는지 적는다.
+ * **찍을 교량이 없어도 지도는 띄운다.** 예전에는 좌표가 있는 교량이 0곳이면 회색
+ * 링크로 되돌렸는데, 그러면 '지도를 못 띄웠다'와 '찍을 교량이 없다'가 같은 모양이
+ * 되어 무엇이 없는 것인지 구별할 수 없었다. 지도는 그대로 두고 그 위에 찍을 곳이
+ * 없다는 사실을 적는다 — 이때 '주변에 교량이 없다'로 읽히지 않게, 좌표가 아직
+ * 없다는 뜻임을 함께 밝힌다.
+ *
+ * 좌표가 없는 교량은 여기 나타나지 않는다. 그래서 몇 곳을 찍었는지 적는다.
  * 지도에 3개가 보이는데 목록이 5건이면 두 곳이 사라진 것으로 읽힌다.
  * ---------------------------------------------------------------------------
  */
@@ -34,8 +40,10 @@ export default function MapPreview({ bridges = [] }) {
     (bridge) => Number.isFinite(bridge.lat) && Number.isFinite(bridge.lng),
   )
 
-  if (!apiKey || mapError || plotted.length === 0) {
-    return <MapAreaFallback reason={plotted.length === 0 ? null : mapError} />
+  // 되돌리는 경우는 지도를 띄울 수 없을 때뿐이다. 찍을 교량이 없는 것은
+  // 지도가 고장난 것이 아니므로 지도를 그대로 띄운다.
+  if (!apiKey || mapError) {
+    return <MapAreaFallback reason={mapError} />
   }
 
   return (
@@ -59,6 +67,14 @@ export default function MapPreview({ bridges = [] }) {
           <Icon name="map" size={14} />
           교량 {plotted.length}곳
         </span>
+
+        {/* 마커가 하나도 없을 때. 지도만 덩그러니 두면 '이 지역에 교량이 없다'로
+            읽히므로, 없는 것이 교량이 아니라 좌표라는 점을 적는다. */}
+        {plotted.length === 0 && (
+          <span className="absolute top-1/2 left-1/2 max-w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-surface-container-lowest/90 px-4 py-3 text-center text-caption leading-[18px] text-on-surface-variant shadow-sm backdrop-blur-sm">
+            지도에 찍을 좌표가 아직 없습니다. 이 지역에 교량이 없다는 뜻이 아닙니다.
+          </span>
+        )}
         <span className="absolute right-3 bottom-3 flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-caption font-bold text-on-primary shadow-md transition-transform group-hover:scale-[1.03]">
           지도 화면으로 이동
           <Icon name="chevron-right" size={16} />
@@ -88,7 +104,7 @@ function MapAreaFallback({ reason }) {
         <span className="text-sm">
           {reason
             ? `지금은 지도를 띄우지 못했습니다 — ${reason}.`
-            : '좌표가 있는 교량이 아직 없어 지도에 찍을 곳이 없습니다.'}
+            : '지금은 지도를 띄우지 못했습니다.'}
         </span>
       </Link>
     </div>

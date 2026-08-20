@@ -31,6 +31,25 @@ import Script from 'next/script'
 
 const SDK_TIMEOUT_MS = 6000
 
+/**
+ * 마커 그림. 카카오 기본 마커는 빨간 핀이라 우리 화면과 어울리지 않아 직접 그린다.
+ *
+ * 색은 theme.css 의 secondary(#006d37)다. 흰 테두리를 두르는 이유는 지도 타일 위
+ * 어디에 놓여도 형태가 보여야 하기 때문이다 — 위성 사진처럼 어두운 배경이 오면
+ * 색만으로는 묻힌다.
+ *
+ * ⚠ 마커 색으로 상태를 말하지 않는다. 781곳 전부 같은 색이다. 교량마다 색을
+ *   달리하면 그 순간 우리가 등급을 판정하는 것이 되고, 그건 등급 칩을 중립 색으로
+ *   둔 이유와 정면으로 부딪친다 (CLAUDE.md '등급 표시').
+ */
+const MARKER_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="36" viewBox="0 0 26 36">' +
+  '<path d="M13 1C6.9 1 2 5.9 2 12c0 7.7 9.4 20.2 10.2 21.2a1 1 0 0 0 1.6 0C14.6 32.2 24 19.7 24 12 24 5.9 19.1 1 13 1z" ' +
+  'fill="#006d37" stroke="#ffffff" stroke-width="2"/>' +
+  '<circle cx="13" cy="12" r="4" fill="#ffffff"/></svg>'
+
+const MARKER_IMAGE_SRC = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(MARKER_SVG)}`
+
 export default function KakaoMap({
   apiKey,
   bridges = [],
@@ -42,6 +61,9 @@ export default function KakaoMap({
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const markersRef = useRef([])
+  /** 크기가 처음 잡혔을 때 경계를 다시 맞추기 위해 마커 effect 가 채워 둔다. */
+  const fitRef = useRef(null)
+  const sizedRef = useRef(false)
   const [ready, setReady] = useState(false)
 
   // 좌표가 없는 교량은 지도에 찍을 수 없다. memo 로 두어 아래 effect 의
@@ -69,8 +91,45 @@ export default function KakaoMap({
       mapRef.current.setZoomable(false)
     }
 
+    // 만든 직후 크기를 다시 알려준다. 지도를 만드는 시점에 컨테이너가 아직
+    // 0×0 이면 카카오는 타일을 그리지 않고, 나중에 크기가 잡혀도 스스로 복구하지
+    // 않는다. 그래서 흰 사각형으로 남아 있다가 클릭·확대 같은 이벤트가 다시
+    // 그리기를 유발할 때 비로소 지도가 나타났다 — 첫 화면에서는 지도가 없는
+    // 것과 같다.
+    requestAnimationFrame(() => mapRef.current?.relayout())
+
     setReady(true)
   }, [interactive])
+
+  /**
+   * 컨테이너 크기가 바뀌면 지도에 알린다.
+   *
+   * 크기는 여러 이유로 늦게, 그리고 다시 정해진다 — 폰트가 늦게 오거나, 부모가
+   * globals.css 의 `:has()` 규칙으로 480px↔1280px 를 오가거나, 창을 돌리거나.
+   * relayout() 을 부르지 않으면 그때마다 타일이 어긋난 채 남는다.
+   *
+   * 경계를 다시 맞추는 것은 **크기가 처음 0에서 벗어날 때 한 번만** 한다. 매번
+   * 맞추면 사용자가 옮겨 둔 지도가 창 크기만 바뀌어도 제자리로 튕겨 돌아간다.
+   */
+  useEffect(() => {
+    if (!ready) return
+    const container = containerRef.current
+    if (!container || typeof ResizeObserver === 'undefined') return
+
+    const observer = new ResizeObserver((entries) => {
+      const box = entries[0]?.contentRect
+      if (!box || box.width === 0 || box.height === 0) return
+
+      mapRef.current?.relayout()
+      if (!sizedRef.current) {
+        sizedRef.current = true
+        fitRef.current?.()
+      }
+    })
+
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [ready])
 
   /** 스크립트가 이미 로드된 상태로 다시 마운트되는 경우(뒤로가기 등)를 처리한다. */
   useEffect(() => {
@@ -102,11 +161,25 @@ export default function KakaoMap({
 
     const bounds = new kakao.maps.LatLngBounds()
 
+    // 마커 그림은 한 번만 만들어 전부가 같은 것을 쓴다. 781개를 각각 만들면
+    // 같은 data URI 를 그만큼 다시 파싱한다.
+    const markerImage = new kakao.maps.MarkerImage(
+      MARKER_IMAGE_SRC,
+      new kakao.maps.Size(26, 36),
+      // 핀의 뾰족한 끝이 좌표를 가리키게 맞춘다.
+      { offset: new kakao.maps.Point(13, 35) },
+    )
+
     for (const bridge of points) {
       const position = new kakao.maps.LatLng(bridge.lat, bridge.lng)
       bounds.extend(position)
 
-      const marker = new kakao.maps.Marker({ position, map, title: bridge.name })
+      const marker = new kakao.maps.Marker({
+        position,
+        map,
+        title: bridge.name,
+        image: markerImage,
+      })
 
       // 이름표. 선택된 것만 보이게 두고, 나머지는 마커만 찍는다 —
       // 표본이 늘어나면 이름표가 서로 겹쳐 읽을 수 없게 된다.
@@ -120,12 +193,16 @@ export default function KakaoMap({
       markersRef.current.push({ id: bridge.id, marker, overlay })
     }
 
-    if (points.length === 1) {
-      map.setCenter(new kakao.maps.LatLng(points[0].lat, points[0].lng))
-      map.setLevel(5)
-    } else {
-      map.setBounds(bounds, 40, 40, 40, 40)
+    // 크기가 늦게 잡히는 경우를 위해 남겨 둔다 (위 ResizeObserver 가 한 번 부른다).
+    fitRef.current = () => {
+      if (points.length === 1) {
+        map.setCenter(new kakao.maps.LatLng(points[0].lat, points[0].lng))
+        map.setLevel(5)
+      } else {
+        map.setBounds(bounds, 40, 40, 40, 40)
+      }
     }
+    fitRef.current()
 
     return () => {
       for (const { marker, overlay } of markersRef.current) {

@@ -190,6 +190,15 @@ function DataSources({ newsCron, summaryCron }) {
   // 적으면 이 화면이 하려는 일(어디서 오는지 밝히기)이 무너진다.
   const inUse = [
     {
+      icon: 'building',
+      org: '국토교통부',
+      name: '전국 교량 및 터널 현황정보',
+      role:
+        '교량 이름·소재지·좌표·준공년도·연장·관리기관, 그리고 가장 최근 점검 1건(일자·종류·안전등급). ' +
+        '지금 담아 둔 범위는 서울특별시 781곳이며 2024년 기준연도 자료입니다.',
+      cycle: '기준연도가 새로 열릴 때 (연 1회)',
+    },
+    {
       icon: 'map',
       org: '카카오',
       name: '카카오맵',
@@ -206,8 +215,19 @@ function DataSources({ newsCron, summaryCron }) {
         `네이버 뉴스 검색 API 로 만들었고 스케줄러도 ${newsCron ?? '매일'} 돌지만, ` +
         '이 API 의 신규 발급 창구가 바뀌어(NAVER API HUB) 지금 키로는 거부됩니다',
     },
-    { icon: 'building', label: '교량 기본정보', detail: '준공년도 · 연장 · 시설물 종별 · 관리기관' },
-    { icon: 'clock', label: '관리 이력', detail: '점검 · 보수 · 보강 기록과 그 시점' },
+    {
+      icon: 'clock',
+      label: '이전 점검 기록',
+      detail:
+        '지금 출처는 가장 최근 점검 1건만 줍니다. 그 이전 점검·보수·보강이 언제 있었는지는 ' +
+        '담겨 있지 않아, 타임라인은 준공과 최근 점검 두 점으로만 그려집니다',
+    },
+    {
+      icon: 'building',
+      label: '서울 밖의 교량',
+      detail: '전국 40,006곳이 공개되어 있지만 지금 담아 둔 것은 서울특별시 781곳입니다',
+    },
+    { icon: 'scale', label: '시설물 종별', detail: '1종·2종·3종 구분. 코드 뜻을 확인하지 못해 비워 두었습니다' },
     { icon: 'cloud-sun', label: '기상 관측·특보', detail: '바람 · 기온 · 강수 · 특보 발효 여부' },
     { icon: 'car', label: '통행 제한', detail: '차량 통행 제한 등록 여부' },
     { icon: 'alert-triangle', label: '위험 표시 기준치', detail: '어느 값부터 주의인지에 대한 출처 있는 기준' },

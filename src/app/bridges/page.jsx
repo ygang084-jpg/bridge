@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import ScreenHeader from '@/components/ScreenHeader'
 import EmptyNotice from '@/components/EmptyNotice'
 import { fetchBridgesForList } from '@/lib/supabase/readClient'
@@ -49,6 +50,18 @@ export default async function BridgeListPage({ searchParams }) {
     <>
       <ScreenHeader title="내 주변 교량" backHref="/dashboard" />
       <main className="flex-1 px-4 py-5">
+        {/* 담아 둔 범위를 목록 위에 적는다. '총 781곳'만 보이면 전국 목록으로
+            읽히고, 서울 밖에 계신 분에게는 '내 주변에 교량이 없다'가 된다 —
+            정보가 없는 것을 없는 것으로 바꿔 읽히게 하지 않는다 (F-05). */}
+        {available && bridges.length > 0 && (
+          <p className="mb-4 rounded-lg bg-surface-container-low px-3 py-2 text-[13px] leading-[18px] text-on-surface-variant">
+            지금 담아 둔 범위는 <strong className="font-semibold">서울특별시</strong> 입니다. 다른
+            지역 교량은 공개 데이터에 있지만 아직 옮겨 오지 않았습니다 —{' '}
+            <Link href="/info" className="font-medium text-accent underline">
+              앱안내
+            </Link>
+          </p>
+        )}
         {available ? (
           <BridgeList bridges={bridges} initialMode={mode} />
         ) : (

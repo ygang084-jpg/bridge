@@ -209,14 +209,9 @@ function Featured({ row }) {
 function FeaturedEmpty() {
   return (
     <section className="relative flex h-[400px] items-end overflow-hidden rounded-xl shadow-sm md:h-[500px]">
-      <div
-        className="bg-grid-pattern absolute inset-0"
-        style={{
-          backgroundColor: '#031635',
-          backgroundImage: 'linear-gradient(115deg, #031635 0%, #1a2b4b 55%, #364768 100%)',
-        }}
-        aria-hidden="true"
-      />
+      {/* 기사가 있을 때와 같은 배경을 쓴다. 비어 있을 때만 다르게 보이면
+          '아직 안 만든 화면'으로 읽힌다. */}
+      <HeroBackdrop />
       <div className="relative z-10 flex w-full flex-col gap-sm p-lg md:w-3/4">
         <span className="flex w-max items-center gap-1.5 rounded-full bg-on-primary/15 px-3 py-1 text-label-md font-bold text-on-primary">
           <Icon name="minus-circle" size={16} />
@@ -226,6 +221,7 @@ function FeaturedEmpty() {
           수집된 기사가 없어 비어 있습니다. 기사가 들어오면 말머리가 [긴급]·[공지]인 것을 먼저,
           그다음 발표일 최신순으로 이 자리에 놓입니다. 저희가 중요도를 매기지 않습니다.
         </p>
+        <p className="text-caption text-on-primary/60">배경 사진은 특정 교량이 아닙니다.</p>
       </div>
     </section>
   )

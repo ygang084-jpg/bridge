@@ -14,21 +14,21 @@ import { summarizeManagement } from '@/lib/history'
 /**
  * F-02 교량 상세 — Stitch `실시간 모니터링 대시보드` 구성을 옮긴 것.
  * ---------------------------------------------------------------------------
- * 디자인을 따른 것 : 상단에 ID 배지 + 큰 교량명 / 왼쪽 4칸에 '교량 기본 제원'과
- *   '환경 요인' 카드 / 오른쪽 8칸에 요약 배너와 '유지보수 및 안전 이력' 세로
- *   타임라인 / 맨 아래 계측 카드 2장.
+ * 디자인을 따른 것 : 상단에 ID 배지 + 큰 교량명 / 왼쪽 4칸에 '교량 기본 제원' /
+ *   오른쪽 8칸에 요약 배너와 '유지보수 및 안전 이력' 세로 타임라인.
  *
  * 디자인 파일과 다르게 옮긴 것 — 전부 '없는 것을 있다고 말하지 않기'다.
  * 이 디자인은 센서가 달린 교량을 전제로 그려졌고, 우리에게는 센서가 없다.
  *
  *   · '실시간 데이터 수신 중' → 실시간으로 받는 것이 없다. 공개 데이터를 하루
  *     단위로 옮겨 오고, 이 API 는 1년에 한 번 갱신된다. 대신 데이터 기준일을 적는다.
- *   · 주경간 진동 0.42 gal · 하중 변위 1.2 mm → 센서가 없다. 자리는 두고 왜
- *     비었는지 적는다. 이 숫자를 지어내면 그것이 곧 안전 판정이 된다.
- *   · 기준치 '2.0 gal' · 허용 한계 '8 mm' → 출처 있는 기준치가 없다 (§13 Q3).
- *     기준치를 우리가 정하면 위험을 판정하는 것이 된다.
- *   · 풍속 3.2 m/s · 온도 14°C · 습도 45%, 그리고 '안전 범위 내' → 기상이 아직
- *     연결되지 않았고, '안전 범위 내'는 판정이다.
+ *   · 계측 카드(주경간 진동 0.42 gal · 하중 변위 1.2 mm)와 환경 요인 카드(풍속
+ *     3.2 m/s · 온도 14°C · 습도 45% + '안전 범위 내')는 **자리째 뺐다.** 센서가
+ *     없고 기상도 연결되지 않아 채울 값이 하나도 없었다. 처음에는 자리를 두고
+ *     '표시 준비 중'을 적었지만, 이 화면에서 절반이 빈 자리이면 준비가 덜 된
+ *     화면으로 읽힌다. 기상과 기준치에 대한 설명은 '오늘의 상태'(/today)가 이미
+ *     맡고 있고 상단 버튼으로 이어진다 — 같은 말을 두 화면에서 하지 않는다.
+ *     센서·기준치가 생기면 그때 이 자리를 다시 만든다.
  *   · 타임라인의 '정상 작동' 칩 → 우리가 정상이라고 말할 수 없다. 칩은 공개
  *     데이터의 사건 종류(준공·정기점검·보수 …)를 그대로 적는다.
  *   · 점 색 → 사건 종류로만 나눈다. 등급이나 상태로 색을 나누면 색이 먼저
@@ -95,7 +95,6 @@ export default async function BridgeDetailPage({ params }) {
         <div className="grid grid-cols-1 gap-gutter lg:grid-cols-12">
           <div className="flex flex-col gap-gutter lg:col-span-4">
             <Specs bridge={bridge} asOf={asOf} />
-            <Environment />
           </div>
 
           <div className="flex flex-col gap-gutter lg:col-span-8">
@@ -108,8 +107,6 @@ export default async function BridgeDetailPage({ params }) {
             <HistoryTimeline history={history} id={id} described={described} info={info} />
           </div>
         </div>
-
-        <Measurements />
 
         {info.state === INFO_STATE.ABSENT && (
           <EmptyNotice
@@ -200,44 +197,6 @@ function Specs({ bridge, asOf }) {
         </div>
       </dl>
       <SourceNote source={bridge.source} asOf={asOf} align="left" />
-    </Card>
-  )
-}
-
-/* ── 왼쪽 : 환경 요인 ─────────────────────────────────────────────────── */
-
-/**
- * 디자인은 풍속·온도·습도에 실제 값과 '안전 범위 내' 판정을 함께 뒀다.
- * 기상이 연결되지 않았고, '안전 범위 내'는 우리가 할 수 없는 판정이다.
- * 자리와 항목 이름만 남기고 왜 비었는지 적는다.
- */
-const ENVIRONMENT_ROWS = [
-  { icon: 'wind', label: '풍속' },
-  { icon: 'thermometer', label: '온도' },
-  { icon: 'droplet', label: '습도' },
-]
-
-function Environment() {
-  return (
-    <Card icon="cloud-sun" title="환경 요인">
-      <div className="flex flex-col gap-sm">
-        {ENVIRONMENT_ROWS.map((row) => (
-          <div
-            key={row.label}
-            className="flex items-center justify-between gap-3 rounded-xl bg-surface-container-low px-4 py-3"
-          >
-            <span className="flex items-center gap-2 text-label-md text-on-surface-variant">
-              <Icon name={row.icon} size={18} />
-              {row.label}
-            </span>
-            <span className="text-label-md text-on-surface-variant">표시 준비 중</span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-sm text-caption leading-4 text-on-surface-variant">
-        기상 관측을 아직 연결하지 않아 값이 없습니다. 값이 들어와도 ‘안전 범위 내’ 같은 판정은 적지
-        않습니다 — 어느 값부터 주의인지에 대한 출처 있는 기준을 확인하지 못했습니다.
-      </p>
     </Card>
   )
 }
@@ -335,52 +294,6 @@ function HistoryTimeline({ history, id, described, info }) {
         <p className="mt-md text-caption leading-4 text-on-surface-variant">{described.note}</p>
       )}
     </Card>
-  )
-}
-
-/* ── 아래 : 계측 ──────────────────────────────────────────────────────── */
-
-/**
- * 디자인의 '주경간 진동 수치'·'하중 변위량' 카드 자리.
- *
- * 이 교량에 센서가 없다. 값도 없고 기준치도 없다. 자리를 지우지 않고 남기는
- * 이유는, 지웠다면 '이 화면에 계측이 원래 없다'로 읽히기 때문이다 — 없는 것은
- * 계측 자체가 아니라 우리가 받아 오는 값이다.
- */
-const MEASUREMENTS = [
-  { icon: 'wind', title: '주경간 진동', unit: 'gal' },
-  { icon: 'scale', title: '하중 변위량', unit: 'mm' },
-]
-
-function Measurements() {
-  return (
-    <section>
-      <h2 className="mb-md flex items-center gap-2 text-headline-md font-semibold text-primary">
-        <Icon name="eye" size={20} />
-        계측값
-      </h2>
-      <div className="grid grid-cols-1 gap-gutter md:grid-cols-2">
-        {MEASUREMENTS.map((item) => (
-          <div
-            key={item.title}
-            className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm"
-          >
-            <h3 className="mb-md flex items-center gap-2 border-b border-outline-variant pb-3 text-body-lg font-semibold text-primary">
-              <Icon name={item.icon} size={18} />
-              {item.title}
-            </h3>
-            <p className="flex items-end gap-2">
-              <span className="text-[32px] leading-none font-bold text-on-surface-variant/40">—</span>
-              <span className="pb-1 text-body-md text-on-surface-variant">{item.unit}</span>
-            </p>
-            <p className="mt-md text-caption leading-4 text-on-surface-variant">
-              이 교량에 계측 센서가 없습니다. 값을 지어내면 그것이 곧 안전 판정이 되므로 비워 둡니다.
-              기준치(‘허용 한계’)도 출처를 확인하지 못해 표시하지 않습니다.
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
   )
 }
 

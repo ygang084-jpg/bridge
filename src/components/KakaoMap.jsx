@@ -31,6 +31,9 @@ import Script from 'next/script'
 
 const SDK_TIMEOUT_MS = 6000
 
+/** 컨테이너가 붙기를 기다리는 최대 프레임 수. 약 1초. */
+const INIT_MAX_TRIES = 60
+
 /**
  * 마커 그림. 카카오 기본 마커는 빨간 핀이라 우리 화면과 어울리지 않아 직접 그린다.
  *
@@ -64,6 +67,9 @@ export default function KakaoMap({
   /** 크기가 처음 잡혔을 때 경계를 다시 맞추기 위해 마커 effect 가 채워 둔다. */
   const fitRef = useRef(null)
   const sizedRef = useRef(false)
+  const initTriesRef = useRef(0)
+  /** initMap 이 자기 자신을 다시 부르기 위한 참조. useCallback 은 자기를 못 본다. */
+  const initMapRef = useRef(null)
   const [ready, setReady] = useState(false)
 
   // 좌표가 없는 교량은 지도에 찍을 수 없다. memo 로 두어 아래 effect 의
@@ -73,10 +79,35 @@ export default function KakaoMap({
     [bridges],
   )
 
-  /** SDK 가 실제로 준비됐을 때 지도를 만든다. */
+  /**
+   * SDK 가 실제로 준비됐을 때 지도를 만든다.
+   *
+   * 컨테이너가 아직 없으면 예전에는 그냥 끝냈다. 그런데 그러면 지도도 만들어지지
+   * 않고, 6초 타임아웃은 `kakao.maps.Map` 존재만 보므로 되돌림도 뜨지 않아서,
+   * 화면에 흰 상자만 남았다 — 무엇이 잘못됐는지 알 방법이 없는 상태였다.
+   * 그래서 다음 프레임에 다시 시도하고, 끝내 안 되면 그 사실을 알린다.
+   */
   const initMap = useCallback(() => {
     const kakao = window.kakao
-    if (!kakao?.maps || !containerRef.current || mapRef.current) return
+    if (mapRef.current) return
+
+    if (!kakao?.maps) {
+      console.info('[map] SDK 가 아직 준비되지 않았습니다.')
+      return
+    }
+
+    if (!containerRef.current) {
+      if (initTriesRef.current >= INIT_MAX_TRIES) {
+        onUnavailable?.('지도를 놓을 자리를 찾지 못했습니다')
+        return
+      }
+      initTriesRef.current += 1
+      requestAnimationFrame(() => initMapRef.current?.())
+      return
+    }
+
+    const box = containerRef.current.getBoundingClientRect()
+    console.info(`[map] 지도 생성 — 컨테이너 ${Math.round(box.width)}×${Math.round(box.height)}`)
 
     mapRef.current = new kakao.maps.Map(containerRef.current, {
       // 첫 중심은 아래 fitBounds 가 곧 덮어쓴다. 좌표가 하나도 없을 때를 위한 값.
@@ -99,7 +130,12 @@ export default function KakaoMap({
     requestAnimationFrame(() => mapRef.current?.relayout())
 
     setReady(true)
-  }, [interactive])
+  }, [interactive, onUnavailable])
+
+  // rAF 재시도에서 최신 initMap 을 부를 수 있게 담아 둔다.
+  useEffect(() => {
+    initMapRef.current = initMap
+  }, [initMap])
 
   /**
    * 컨테이너 크기가 바뀌면 지도에 알린다.

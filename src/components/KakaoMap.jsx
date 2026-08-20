@@ -53,9 +53,26 @@ const MARKER_SVG =
 
 const MARKER_IMAGE_SRC = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(MARKER_SVG)}`
 
+/**
+ * '내 위치' 마커. 교량 핀과 **형태부터** 다르게 둔다 — 색만 다르면 '등급이 다른
+ * 교량'으로 읽힌다. 속이 빈 원 + 가운데 점은 지도 앱에서 현재 위치를 뜻하는
+ * 관용 표현이다. 색은 primary(#031635)로 초록 교량 핀과 섞이지 않게 한다.
+ */
+const ORIGIN_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">' +
+  '<circle cx="12" cy="12" r="9" fill="#ffffff" stroke="#031635" stroke-width="2"/>' +
+  '<circle cx="12" cy="12" r="4" fill="#031635"/></svg>'
+
+const ORIGIN_IMAGE_SRC = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(ORIGIN_SVG)}`
+
 export default function KakaoMap({
   apiKey,
   bridges = [],
+  /**
+   * 사용자의 현재 위치. 있으면 별도 마커로 찍고 경계에 함께 넣는다.
+   * 이 값은 브라우저에서만 다룬다 — 서버로 보내지 않는다 (PRD §15.7).
+   */
+  origin = null,
   selectedId = null,
   onSelect,
   onUnavailable,
@@ -211,7 +228,8 @@ export default function KakaoMap({
     }
     markersRef.current = []
 
-    if (points.length === 0) return
+    // 찍을 교량이 없어도 내 위치는 찍는다 — 아래에서 origin 을 다루므로 여기서 끝내지 않는다.
+    if (points.length === 0 && !Number.isFinite(origin?.lat)) return
 
     const bounds = new kakao.maps.LatLngBounds()
 
@@ -247,9 +265,30 @@ export default function KakaoMap({
       markersRef.current.push({ id: bridge.id, marker, overlay })
     }
 
+    // 내 위치. 교량 마커와 함께 경계에 넣어 '나와 가까운 다리들'이 한 화면에 들어오게 한다.
+    const hasOrigin = Number.isFinite(origin?.lat) && Number.isFinite(origin?.lng)
+    if (hasOrigin) {
+      const position = new kakao.maps.LatLng(origin.lat, origin.lng)
+      bounds.extend(position)
+      const marker = new kakao.maps.Marker({
+        position,
+        map,
+        title: '내 위치',
+        image: new kakao.maps.MarkerImage(ORIGIN_IMAGE_SRC, new kakao.maps.Size(24, 24), {
+          offset: new kakao.maps.Point(12, 12),
+        }),
+        // 교량 핀 위에 올려 가려지지 않게 한다.
+        zIndex: 10,
+      })
+      // 교량 마커와 같은 목록에 담아 정리(cleanup)에서 함께 지운다.
+      // overlay 는 없으므로 setMap 만 하는 껍데기를 넣는다.
+      markersRef.current.push({ id: '__origin__', marker, overlay: { setMap: () => {} } })
+    }
+
     // 크기가 늦게 잡히는 경우를 위해 남겨 둔다 (위 ResizeObserver 가 한 번 부른다).
     fitRef.current = () => {
-      if (points.length === 1) {
+      // 내 위치가 있으면 한 곳만 있을 때도 경계로 맞춘다 — 나와 그 교량이 함께 보여야 한다.
+      if (points.length === 1 && !hasOrigin) {
         map.setCenter(new kakao.maps.LatLng(points[0].lat, points[0].lng))
         map.setLevel(5)
       } else {
@@ -265,7 +304,7 @@ export default function KakaoMap({
       }
       markersRef.current = []
     }
-  }, [ready, onSelect, points])
+  }, [ready, onSelect, points, origin])
 
   /** 선택이 바뀌면 그 마커의 이름표만 띄우고 지도를 옮긴다. */
   useEffect(() => {

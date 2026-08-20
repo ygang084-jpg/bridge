@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import Icon from '@/components/Icon'
 import InfoStateBadge from '@/components/InfoStateBadge'
-import BridgeSearch from '@/components/BridgeSearch'
-import MapPreview from '@/components/MapPreview'
+import NearbyPanel from '@/components/NearbyPanel'
 import { TopNav, BottomNav } from '@/components/AppNav'
 import AppFooter from '@/components/AppFooter'
 import { fetchBridgesForList } from '@/lib/supabase/readClient'
@@ -73,10 +72,9 @@ export default async function DashboardPage() {
           {/* 지도와 검색창을 한 칼럼에 둔다 — 검색창이 지도 폭에 맞고, 지도에서
               못 찾을 때 바로 아래에서 이름으로 찾게 된다. */}
           <div className="flex flex-col gap-gutter md:col-span-8">
-            {/* 지도 자리. 영역 전체가 /map 으로 가는 링크이고, 조작은 그 화면에서
-                한다 (MapPreview 주석 참고). 칼럼 폭은 이 부모가 정한다. */}
-            <MapPreview bridges={data.mapPoints} />
-            <BridgeSearch bridges={data.searchIndex} />
+            {/* 지도와 검색창을 한 클라이언트 컴포넌트가 감싼다 — '현재 위치'로 얻은
+                좌표를 지도가 써야 하고, 그 좌표는 브라우저를 벗어나지 않는다. */}
+            <NearbyPanel mapPoints={data.mapPoints} searchIndex={data.searchIndex} />
           </div>
           <div className="md:col-span-4">
             <TodayCard todayHref={data.featured ? `/bridges/${data.featured.id}/today` : null} />

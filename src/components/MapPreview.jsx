@@ -28,7 +28,7 @@ import KakaoMap from './KakaoMap'
  * 지도에 3개가 보이는데 목록이 5건이면 두 곳이 사라진 것으로 읽힌다.
  * ---------------------------------------------------------------------------
  */
-export default function MapPreview({ bridges = [] }) {
+export default function MapPreview({ bridges = [], origin = null, badge = null }) {
   const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''
   const [mapError, setMapError] = useState(apiKey ? null : '지도 키가 설정되지 않았습니다')
 
@@ -51,6 +51,7 @@ export default function MapPreview({ bridges = [] }) {
       <KakaoMap
         apiKey={apiKey}
         bridges={plotted}
+        origin={origin}
         interactive={false}
         onUnavailable={handleUnavailable}
       />
@@ -60,12 +61,12 @@ export default function MapPreview({ bridges = [] }) {
           카카오 로고·축척이 가려지지 않게 한다. */}
       <Link
         href="/map"
-        aria-label={`지도 화면으로 이동 (교량 ${plotted.length}곳 표시)`}
+        aria-label={`지도 화면으로 이동 (${badge ?? `교량 ${plotted.length}곳`} 표시)`}
         className="group absolute inset-0 z-10 block"
       >
         <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-lg bg-surface-container-lowest/90 px-3 py-2 text-caption font-bold text-primary shadow-sm backdrop-blur-sm">
           <Icon name="map" size={14} />
-          교량 {plotted.length}곳
+          {badge ?? `교량 ${plotted.length}곳`}
         </span>
 
         {/* 마커가 하나도 없을 때. 지도만 덩그러니 두면 '이 지역에 교량이 없다'로

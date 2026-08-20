@@ -21,7 +21,36 @@ import Icon from './Icon'
 
 const MAX_RESULTS = 6
 
-export default function BridgeSearch({ bridges = [], className = '' }) {
+/**
+ * '현재 위치' 상태 문구.
+ *
+ * 거부·시간초과·미지원을 한 문장으로 뭉치지 않는다. 각각 사용자가 해야 할 일이
+ * 다르기 때문이다 — 거부는 브라우저 설정, 시간초과는 다시 누르기, 미지원은
+ * 아무것도 할 수 없음. '위치를 가져오지 못했습니다' 하나로는 어느 쪽인지 알 수 없다.
+ *
+ * 거부를 오류처럼 적지 않는다. 위치를 주지 않는 것은 선택이고, 그래도 화면은
+ * 그대로 쓸 수 있다.
+ */
+const LOCATE_MESSAGE = {
+  idle: '‘현재 위치’를 누르면 위치 권한을 물어보고 가까운 교량부터 보여줍니다. 좌표는 브라우저 밖으로 나가지 않습니다.',
+  locating: '위치를 확인하고 있습니다. 브라우저가 권한을 물어보면 허용해 주세요.',
+  ready: '내 위치에서 가까운 교량을 지도에 표시했습니다. 좌표는 브라우저 밖으로 나가지 않았습니다.',
+  denied:
+    '위치 권한을 주지 않으셨습니다. 지도는 등록된 교량 전체를 그대로 보여줍니다 — 이름이나 지역명으로 찾으실 수 있습니다.',
+  failed:
+    '위치를 확인하지 못했습니다. 실내이거나 신호가 약할 때 생깁니다 — 다시 눌러 보시거나 이름으로 찾아 주세요.',
+  unsupported: '이 브라우저는 위치 확인을 지원하지 않습니다. 이름이나 지역명으로 찾아 주세요.',
+}
+
+export default function BridgeSearch({
+  bridges = [],
+  className = '',
+  /** 있으면 '현재 위치'가 이 화면에서 위치를 얻는 버튼이 된다 (부모가 지도를 바꾼다). */
+  onLocate = null,
+  locating = false,
+  /** idle | locating | ready | denied | failed | unsupported */
+  locateStatus = 'idle',
+}) {
   const [query, setQuery] = useState('')
   const keyword = query.trim().toLowerCase()
 
@@ -66,16 +95,29 @@ export default function BridgeSearch({ bridges = [], className = '' }) {
           />
         </label>
 
-        {/* 이름을 모를 때의 경로. /bridges 가 위치 권한을 물어 가까운 순서로
-            정렬해 주는 화면이다 (F-01). 좌표는 브라우저에서만 쓰고 서버로
-            보내지 않는다. 권한을 거부하면 그 화면이 지역명 검색으로 넘어간다. */}
-        <Link
-          href="/map"
-          className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90"
-        >
-          <Icon name="map-pin" size={18} />
-          현재 위치
-        </Link>
+        {/* 이름을 모를 때의 경로. onLocate 를 받으면 **이 화면에서** 위치 권한을 물어
+            위의 지도를 내 주변으로 바꾼다 (부모가 NearbyPanel 이다). 넘겨받지 못하면
+            지도 화면으로 보낸다 — 버튼이 있는데 아무 일도 없는 것보다 낫다.
+            좌표는 브라우저에서만 쓰고 서버로 보내지 않는다 (PRD §15.7). */}
+        {onLocate ? (
+          <button
+            type="button"
+            onClick={onLocate}
+            disabled={locating}
+            className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90 disabled:opacity-60"
+          >
+            <Icon name="map-pin" size={18} />
+            {locating ? '위치 확인 중' : '현재 위치'}
+          </button>
+        ) : (
+          <Link
+            href="/map"
+            className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-label-md font-medium text-on-primary transition-colors hover:bg-primary/90"
+          >
+            <Icon name="map-pin" size={18} />
+            현재 위치
+          </Link>
+        )}
       </div>
 
       <p className="mt-2 text-caption text-on-surface-variant" aria-live="polite">
@@ -83,9 +125,8 @@ export default function BridgeSearch({ bridges = [], className = '' }) {
           ? `등록된 교량 ${bridges.length}곳 중 ${matchedAll}곳이 맞았습니다.`
           : `등록된 교량 ${bridges.length}곳에서 찾습니다. 아직 공공데이터 연동 전이라 전국 교량이 다 들어 있지는 않습니다.`}
       </p>
-      <p className="mt-1 text-caption text-on-surface-variant">
-        ‘현재 위치’를 누르면 위치 권한을 물어보고 가까운 교량부터 보여줍니다. 좌표는 브라우저 밖으로
-        나가지 않습니다.
+      <p className="mt-1 text-caption text-on-surface-variant" aria-live="polite">
+        {LOCATE_MESSAGE[locateStatus] ?? LOCATE_MESSAGE.idle}
       </p>
 
       {keyword && (

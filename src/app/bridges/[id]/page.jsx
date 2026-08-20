@@ -9,7 +9,6 @@ import EmptyNotice from '@/components/EmptyNotice'
 import Icon from '@/components/Icon'
 import { fetchBridgeDetail, hasReadEnv } from '@/lib/supabase/readClient'
 import { describeInfoState, resolveInfoState, INFO_STATE } from '@/lib/infoState'
-import { summarizeManagement } from '@/lib/history'
 
 /**
  * F-02 교량 상세 — Stitch `실시간 모니터링 대시보드` 구성을 옮긴 것.
@@ -41,6 +40,15 @@ import { summarizeManagement } from '@/lib/history'
  *     그 사실을 배지 옆에 적는다.
  *   · 상단 내비의 Reports · Safety Guidelines · 알림 · 설정 · 프로필 → 없는 화면과
  *     없는 로그인이다. 앱 공통 헤더를 쓴다.
+ *
+ * '관리 요약' 카드는 뺐다. 준공·마지막 점검·마지막 보수를 한 줄에 나란히 두던
+ * 카드인데(F-02 ③ 은 준공연도를 단독으로 강조하지 말라고 한다), 같은 값이 바로
+ * 아래 타임라인에 사건으로 다시 나오고 준공년도는 기본 제원에서 연장과 나란히
+ * 놓여 있어 그 요구는 그대로 지켜진다. 한 화면에서 같은 값을 세 번 보여줄 이유가 없다.
+ *
+ * 타임라인 카드에만 초록 포인트를 준다 — 이 화면의 본체가 관리 이력이기 때문이다
+ * (F-03 '제품의 중심'). 밝은 초록은 테두리와 아이콘 배지에만 쓰고 글자는 짙은
+ * 초록으로 둔다. 밝은 초록 글자는 흰 배경에서 대비가 모자란다.
  *
  * 안전등급은 이력 항목 안에 있다 (F-02.1) — 교량의 항상적 속성이 아니라 그 시점의
  * 점검 결과이기 때문이다. 그래서 상단에 등급을 크게 뽑지 않는다.
@@ -82,7 +90,6 @@ export default async function BridgeDetailPage({ params }) {
   const { bridge, history, summary } = detail
   const info = resolveInfoState(history)
   const described = describeInfoState(info.state, info.recordCount)
-  const management = summarizeManagement(history)
   const asOf = bridge.fetched_at?.slice(0, 10)
 
   return (
@@ -103,7 +110,6 @@ export default async function BridgeDetailPage({ params }) {
               summaryText={summary?.summary_text ?? null}
               historyHref={`/bridges/${id}/history`}
             />
-            <ManagementSummary management={management} bridge={bridge} asOf={asOf} />
             <HistoryTimeline history={history} id={id} described={described} info={info} />
           </div>
         </div>
@@ -201,38 +207,6 @@ function Specs({ bridge, asOf }) {
   )
 }
 
-/* ── 오른쪽 : 관리 요약 ───────────────────────────────────────────────── */
-
-/** F-02 ③ — 준공연도를 단독으로 강조하지 않고 점검·보수와 나란히 둔다. */
-function ManagementSummary({ management, bridge, asOf }) {
-  return (
-    <Card icon="scale" title="관리 요약">
-      <dl className="grid grid-cols-1 gap-md sm:grid-cols-3">
-        <Field
-          label="준공"
-          value={bridge.completed_year ? `${bridge.completed_year}년` : null}
-          source={bridge.source}
-          asOf={asOf}
-        />
-        <Field
-          label="마지막 점검"
-          value={management.lastInspectionYearMonth}
-          detail={management.lastInspection?.event_type}
-          source={management.lastInspection?.source}
-          asOf={management.lastInspection?.data_as_of}
-        />
-        <Field
-          label="마지막 보수"
-          value={management.lastRepairYearMonth}
-          detail={management.lastRepair?.event_type}
-          source={management.lastRepair?.source}
-          asOf={management.lastRepair?.data_as_of}
-        />
-      </dl>
-    </Card>
-  )
-}
-
 /* ── 오른쪽 : 타임라인 ────────────────────────────────────────────────── */
 
 /**
@@ -257,7 +231,12 @@ function HistoryTimeline({ history, id, described, info }) {
     .slice(0, TIMELINE_PREVIEW)
 
   return (
-    <Card icon="clock" title="유지보수 및 안전 이력" action={{ href: `/bridges/${id}/history`, label: '전체 보기' }}>
+    <Card
+      icon="clock"
+      title="교량의 타임라인"
+      accent
+      action={{ href: `/bridges/${id}/history`, label: '전체 보기' }}
+    >
       {rows.length === 0 ? (
         <p className="text-body-md text-on-surface-variant">{described.headline}</p>
       ) : (
@@ -299,12 +278,42 @@ function HistoryTimeline({ history, id, described, info }) {
 
 /* ── 공통 조각 ────────────────────────────────────────────────────────── */
 
-function Card({ icon, title, action, children }) {
+/**
+ * `accent` 를 주면 초록 포인트가 붙는다 — 왼쪽 굵은 테두리, 초록 제목, 초록 아이콘 배지.
+ *
+ * 색은 theme.css 의 secondary 계열이다. 밝은 초록(secondary-fixed-dim #4ae183)은
+ * 테두리와 배지에만 쓰고 **글자에는 쓰지 않는다** — 흰 배경 위에서 대비가 모자라
+ * 읽기 어려워진다. 글자는 짙은 초록(secondary #006d37)이고, 이건 AA 를 넘는다.
+ *
+ * 이 초록은 교량의 상태를 말하는 색이 아니라 '이 카드가 이 화면의 본체'라는 표시다.
+ * 교량마다 색이 달라지지 않으므로 등급을 판정하는 색이 되지 않는다.
+ */
+function Card({ icon, title, action, accent = false, children }) {
   return (
-    <section className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
-      <div className="mb-md flex items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <h2 className="flex items-center gap-2 text-headline-md font-semibold text-primary">
-          <Icon name={icon} size={20} />
+    <section
+      className={`rounded-2xl border bg-surface-container-lowest p-6 shadow-sm ${
+        accent
+          ? 'border-secondary-container border-l-4 border-l-secondary-fixed-dim'
+          : 'border-outline-variant'
+      }`}
+    >
+      <div
+        className={`mb-md flex items-center justify-between gap-3 border-b pb-4 ${
+          accent ? 'border-secondary-container' : 'border-outline-variant'
+        }`}
+      >
+        <h2
+          className={`flex items-center gap-2 font-semibold ${
+            accent ? 'text-[22px] leading-8 text-secondary' : 'text-headline-md text-primary'
+          }`}
+        >
+          {accent ? (
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary-fixed-dim text-on-secondary-fixed">
+              <Icon name={icon} size={20} />
+            </span>
+          ) : (
+            <Icon name={icon} size={20} />
+          )}
           {title}
         </h2>
         {action && (

@@ -77,23 +77,22 @@ export default async function NewsPage() {
       <main className="screen-wide flex w-full flex-1 flex-col gap-xl px-margin-mobile py-xl md:px-margin-desktop">
         <Intro refreshedAt={refreshedAt} count={rows.length} />
 
-        {rows.length === 0 ? (
-          <NotCollectedYet />
-        ) : (
-          <>
-            <Featured row={featured} />
+        {/* 기사가 없어도 화면 골격은 그대로 두고, 각 자리에 왜 비어 있는지 적는다
+            (CLAUDE.md — 값이 없을 때 자리를 남기고 이유를 쓴다). 안내 한 장으로
+            화면을 대체하면 만들어지지 않은 화면으로 읽힌다.
+            다만 칩 필터는 비어 있을 때 아예 만들지 않는다 — 고를 것이 없는데
+            누를 수 있게 두면 눌러도 아무 일이 없는 조작이 된다. */}
+        {featured ? <Featured row={featured} /> : <FeaturedEmpty />}
 
-            <div className="flex w-full flex-col gap-xl lg:flex-row">
-              <div className="w-full lg:w-3/4">
-                <NewsExplorer rows={rest} />
-              </div>
-              <aside className="flex w-full flex-col gap-md lg:w-1/4">
-                <Queries rows={rows} />
-                <MatchedWords rows={rows} />
-              </aside>
-            </div>
-          </>
-        )}
+        <div className="flex w-full flex-col gap-xl lg:flex-row">
+          <div className="w-full lg:w-3/4">
+            {rows.length === 0 ? <NotCollectedYet /> : <NewsExplorer rows={rest} />}
+          </div>
+          <aside className="flex w-full flex-col gap-md lg:w-1/4">
+            <Queries rows={rows} />
+            <MatchedWords rows={rows} />
+          </aside>
+        </div>
 
         <NewsDisclaimer className="border-t border-outline-variant/30 pt-3" />
       </main>
@@ -183,6 +182,35 @@ function Featured({ row }) {
   )
 }
 
+/**
+ * 머리기사 자리가 비어 있을 때. 같은 크기·같은 바탕을 두고 이유만 적는다.
+ * 링크를 걸지 않는다 — 갈 곳이 없는데 누를 수 있게 두면 고장으로 읽힌다.
+ */
+function FeaturedEmpty() {
+  return (
+    <section className="relative flex min-h-[280px] items-end overflow-hidden rounded-xl shadow-sm md:min-h-[360px]">
+      <div
+        className="bg-grid-pattern absolute inset-0"
+        style={{
+          backgroundColor: '#031635',
+          backgroundImage: 'linear-gradient(115deg, #031635 0%, #1a2b4b 55%, #364768 100%)',
+        }}
+        aria-hidden="true"
+      />
+      <div className="relative z-10 flex w-full flex-col gap-sm p-lg md:w-3/4">
+        <span className="flex w-max items-center gap-1.5 rounded-full bg-on-primary/15 px-3 py-1 text-label-md font-bold text-on-primary">
+          <Icon name="minus-circle" size={16} />
+          머리기사 자리
+        </span>
+        <p className="max-w-2xl text-body-lg text-on-primary/80">
+          수집된 기사가 없어 비어 있습니다. 기사가 들어오면 말머리가 [긴급]·[공지]인 것을 먼저,
+          그다음 발표일 최신순으로 이 자리에 놓입니다. 저희가 중요도를 매기지 않습니다.
+        </p>
+      </div>
+    </section>
+  )
+}
+
 /* ── 사이드바 ────────────────────────────────────────────────────────── */
 
 /** 이 목록을 만든 검색어. bridge_news.query 에 수집 당시 검색어가 남는다. */
@@ -198,7 +226,9 @@ function Queries({ rows }) {
     <SideCard icon="search" title="이 목록을 만든 검색어">
       {entries.length === 0 ? (
         <p className="text-body-md text-on-surface-variant">
-          수집 당시 검색어가 기록되지 않은 기사들입니다.
+          {rows.length === 0
+            ? '아직 수집된 기사가 없어 보여줄 검색어가 없습니다.'
+            : '수집 당시 검색어가 기록되지 않은 기사들입니다.'}
         </p>
       ) : (
         <ul className="flex flex-col gap-sm">
@@ -229,7 +259,9 @@ function MatchedWords({ rows }) {
     <SideCard icon="info" title="분류에 걸린 낱말">
       {entries.length === 0 ? (
         <p className="text-body-md text-on-surface-variant">
-          제목·요약에서 분류 낱말이 걸리지 않아 전부 ‘기타’로 두었습니다.
+          {rows.length === 0
+            ? '아직 수집된 기사가 없어 걸린 낱말이 없습니다.'
+            : '제목·요약에서 분류 낱말이 걸리지 않아 전부 ‘기타’로 두었습니다.'}
         </p>
       ) : (
         <div className="flex flex-wrap gap-xs">

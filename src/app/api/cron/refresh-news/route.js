@@ -59,6 +59,18 @@ export async function GET(request) {
   try {
     const report = await refreshNews({ logger: (message) => lines.push(message) })
 
+    // 보고를 응답으로만 돌려주면 스케줄러가 부를 때는 아무도 읽지 않는다.
+    // 버셀 크론은 응답 본문을 버리므로, 저장이 0건이어도 왜 그런지 알 수 없었다.
+    // 실행 기록은 로그에도 남긴다 — 조용히 아무것도 저장하지 않는 스케줄러가
+    // 이 제품에서 가장 찾기 어려운 고장이다.
+    for (const line of lines) console.log(`[refresh-news] ${line}`)
+    for (const failure of report.failures) {
+      console.error(`[refresh-news] 검색 "${failure.query}" 실패 — ${failure.error}`)
+    }
+    console.log(
+      `[refresh-news] 저장 ${report.saved}건 · 삭제 ${report.deleted}건 · 실패 ${report.failures.length}건 · ${Date.now() - startedAt}ms`,
+    )
+
     return Response.json({
       ok: report.failures.length === 0,
       elapsedMs: Date.now() - startedAt,
@@ -66,6 +78,9 @@ export async function GET(request) {
       log: lines,
     })
   } catch (error) {
+    for (const line of lines) console.log(`[refresh-news] ${line}`)
+    console.error(`[refresh-news] 중단 — ${error.message}`)
+
     return Response.json(
       { ok: false, error: error.message, elapsedMs: Date.now() - startedAt, log: lines },
       { status: 500 },
